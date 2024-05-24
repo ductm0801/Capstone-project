@@ -1,0 +1,165 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.inputForm {
+  padding-left: 350px;
+  align-self: center;
+}
+.login-content {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  align-items: flex-start;
+  background-color: #efefef;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+}
+.loginInput {
+  width: 336px;
+  height: 40px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding-left: 12px;
+  margin-bottom: 12px;
+}
+.loginLogo {
+  padding-bottom: 48px;
+}
+button {
+  background-color: #c6c61a;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 32px 2px;
+  cursor: pointer;
+  width: 377px;
+  height: 48px;
+  border-radius: 8px;
+}
+
+img {
+  display: block;
+}
+@media (max-width: 1460px) {
+  .loginImage {
+    min-width: 768px;
+  }
+  .inputForm {
+    padding-left: 171px;
+    align-self: center;
+  }
+  .login-content {
+    position: relative;
+    min-width: 100vh;
+
+    background-color: #efefef;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 1315px) {
+  .loginImage {
+    display: none;
+  }
+  .inputForm {
+    justify-content: center;
+  }
+
+  .login-content {
+    position: relative;
+    background-color: #efefef;
+    overflow: hidden;
+  }
+}
+@media (max-width: 700px) {
+  .loginImage {
+    display: none;
+  }
+  .inputForm {
+    justify-content: center;
+  }
+
+  .login-content {
+    justify-content: center;
+    background-color: #efefef;
+    overflow: hidden;
+  }
+  .login-content {
+    justify-content: center;
+    background-color: #efefef;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 900px) {
+  .loginImage {
+    display: none;
+  }
+
+  .inputForm {
+    justify-content: center;
+  }
+  .login-content {
+    justify-content: center;
+    background-color: #efefef;
+    overflow: hidden;
+  }
+  .login-content {
+    justify-content: center;
+    background-color: #efefef;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 1200px) {
+  .loginImage {
+    display: none;
+  }
+
+  .inputForm {
+    justify-content: center;
+  }
+  .login-content {
+    justify-content: center;
+    background-color: #efefef;
+    overflow: hidden;
+  }
+  .login-content {
+    justify-content: center;
+    background-color: #efefef;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 600px) {
+  .loginImage {
+    display: none;
+  }
+
+  .inputForm {
+    justify-content: center;
+  }
+  .login-content {
+    justify-content: center;
+    background-color: #efefef;
+    overflow: hidden;
+  }
+  .login-content {
+    justify-content: center;
+    background-color: #efefef;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
