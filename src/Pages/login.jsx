@@ -4,26 +4,28 @@ import loginImage from "../images/Login_image.png";
 import "../styles/Login.css";
 import logo from "../images/Logo.png";
 import axios from "axios";
-const baseURL = "https://localhost:7208/api/User/Login";
-const Login = ({ setToken }) => {
+import { toast } from "react-toastify";
+const baseURL = "http://localhost:5000/api/User/Login";
+const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const loginApi = (username, password) => {
     return axios.post(baseURL, {
-      username: username,
+      userName: username,
       password: password,
     });
   };
   const handleSubmit = async () => {
     if (!username || !password) {
-      alert("Please enter username and password");
+      toast.error("Wrong username or password!");
       return;
     }
     let res = await loginApi(username, password);
 
-    if (res && res.data && res.data.token) {
-      localStorage.setItem("token", res.token);
+    if (res) {
+      localStorage.setItem("token", res.data);
+      toast.success("Login successful!");
       navigate("/");
     }
   };
@@ -65,8 +67,11 @@ const Login = ({ setToken }) => {
               <span style={{ fontWeight: "semi-bold", paddingTop: "20px" }}>
                 Not Registed?
               </span>
-              <span style={{ color: "#033987" }}>
-                <Link to="/register"> Create an account</Link>
+              <span>
+                <Link style={{ color: "blue" }} to="/signup">
+                  {" "}
+                  Create an account
+                </Link>
               </span>
             </div>
 

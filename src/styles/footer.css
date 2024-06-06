@@ -1,0 +1,29 @@
+.footer-bg {
+  background-image: url("../images/footer-bg.png");
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 64px;
+  padding-bottom: 48px;
+  max-height: 300px;
+  color: #121212;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.logo-footer {
+  width: 227px;
+  height: 69px;
+}
+.footer-content-left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: auto;
+  font-weight: bold;
+  font-size: 16px;
+
+  padding-left: 0;
+}
+.footer-content {
+  display: flex;
+  flex-direction: column;
+}

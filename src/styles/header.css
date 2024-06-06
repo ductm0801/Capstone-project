@@ -1,0 +1,74 @@
+.navbar {
+  background: linear-gradient(to right, #155bbf, #0c1b6e);
+  width: 100vw;
+  height: 80px;
+}
+.navbar-content {
+  display: flex;
+  font-weight: medium;
+}
+.logo {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  width: 177px;
+  height: 48px;
+}
+.avatar {
+  margin-right: 112px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  width: 48px;
+  height: 48px;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+li {
+  list-style: none;
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-top: 30px;
+}
+li:nth-of-type(1) {
+  margin-left: auto;
+}
+li:nth-of-type(4) {
+  margin-right: 112px;
+}
+.dropDownProfile {
+  position: absolute;
+  top: 5.5rem;
+  right: 6.9rem;
+  width: 80px;
+  padding: 15px;
+  border-radius: 15px;
+  background-color: white;
+  border: 1px solid gray;
+}
+.dropDownProfile li {
+  margin: auto;
+}
+.dropDownProfile::before {
+  content: "";
+  position: absolute;
+  top: -0.7rem;
+  right: 0.8rem;
+  width: 20px;
+  height: 20px;
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+  transform: rotate(45deg);
+  background-color: white;
+}
+.header-btn {
+  width: 95px;
+  height: 44px;
+  margin-top: 18px;
+  margin-bottom: 3px;
+  padding: 0;
+  margin-right: 112px;
+}
+ul {
+  margin-top: 0;
+}
