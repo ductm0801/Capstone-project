@@ -16,7 +16,26 @@ const Footer = () => {
           fontWeight: "bold",
         }}
       >
-        <img className="logo-footer" src={logo} alt=""></img>
+        <div>
+          <img className="logo-footer" src={logo} alt=""></img>
+          <div style={{ marginTop: "32px" }}>
+            PickleBall Tournament Management Software
+          </div>
+          <ul className="footer-content-left">
+            <li>Contact Us</li>
+            <li>Privacy Policy</li>
+            <li>Terms of Service</li>
+            <li>Support</li>
+          </ul>
+          <div style={{ display: "flex" }}>
+            <i style={{ marginRight: "24px" }}>
+              <TfiEmail />
+            </i>
+            <i>
+              <FaFacebook />
+            </i>
+          </div>
+        </div>
         <div>
           <p>Experiment our mobile app on</p>
           <div>
@@ -37,25 +56,7 @@ const Footer = () => {
             justifyContent: "space-between",
             fontWeight: "bold",
           }}
-        >
-          <div style={{ marginBottom: "32px", maxHeight: 16 }}>
-            PickleBall Tournament Management Software
-          </div>
-        </div>
-        <ul className="footer-content-left">
-          <li>Contact Us</li>
-          <li>Privacy Policy</li>
-          <li>Terms of Service</li>
-          <li>Support</li>
-        </ul>
-        <div style={{ display: "flex" }}>
-          <i style={{ marginRight: "24px" }}>
-            <TfiEmail />
-          </i>
-          <i>
-            <FaFacebook />
-          </i>
-        </div>
+        ></div>
       </div>
     </div>
   );
