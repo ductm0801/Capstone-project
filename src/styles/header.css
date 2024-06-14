@@ -1,7 +1,13 @@
 .navbar {
-  background: linear-gradient(to right, #155bbf, #0c1b6e);
+  background: transparent;
   width: 100vw;
   height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+.navbar.active {
+  background: linear-gradient(to right, #155bbf, #0c1b6e);
 }
 .navbar-content {
   display: flex;

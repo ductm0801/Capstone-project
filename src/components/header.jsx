@@ -10,6 +10,7 @@ const Header = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [openProfile, setOpenProfile] = useState(false);
+  const [navbar, setNavbar] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -24,8 +25,18 @@ const Header = () => {
     }
   }, []);
 
+  const changeBackground = () => {
+    if (window.scrollY >= 80) {
+      setNavbar(true);
+    } else {
+      setNavbar(false);
+    }
+  };
+
+  window.addEventListener("scroll", changeBackground);
+
   return (
-    <div className="navbar">
+    <div className={navbar ? "navbar active" : "navbar"}>
       <ul>
         {userRole === "Manager" && (
           <div className="navbar-content">

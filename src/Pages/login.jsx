@@ -63,17 +63,6 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             ></input>
-            <div style={{ marginLeft: "12px" }}>
-              <span style={{ fontWeight: "semi-bold", paddingTop: "20px" }}>
-                Not Registed?
-              </span>
-              <span>
-                <Link style={{ color: "blue" }} to="/signup">
-                  {" "}
-                  Create an account
-                </Link>
-              </span>
-            </div>
 
             <div>
               <button

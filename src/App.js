@@ -19,14 +19,14 @@ const App = () => {
 
 const ConditionalLayout = () => {
   const location = useLocation();
-  const showHeaderFooter = location.pathname !== '/login' && location.pathname !== '/signup';
+  const showHeaderFooter = location.pathname !== '/login';
   
   return (
     <>
       {showHeaderFooter && <Header />}
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        
         <Route path="/" element={<Home />} />
       </Routes>
       {showHeaderFooter && <Footer />}
