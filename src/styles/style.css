@@ -1,0 +1,19 @@
+rect {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 300px;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: blue; /* Change background color here */
+  color: white; /* Change text color to ensure readability */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for better visual */
+  transition: background-color 0.3s, transform 0.3s; /* Add transition effects */
+}
+
+rect:hover {
+  background-color: purple; /* Background color on hover */
+  transform: translateY(-3px); /* Slight lift on hover */
+}

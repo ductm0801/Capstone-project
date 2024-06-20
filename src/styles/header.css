@@ -12,10 +12,11 @@
 .navbar-content {
   display: flex;
   font-weight: medium;
+  color: white;
 }
 .logo {
-  padding-top: 16px;
-  padding-bottom: 16px;
+  margin-top: 16px;
+  margin-left: 112px;
   width: 177px;
   height: 48px;
 }
@@ -74,6 +75,10 @@ li:nth-of-type(4) {
   margin-bottom: 3px;
   padding: 0;
   margin-right: 112px;
+  background-color: #c6c61a;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
 }
 ul {
   margin-top: 0;

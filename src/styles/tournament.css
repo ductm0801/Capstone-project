@@ -1,0 +1,10 @@
+div.dropdown-toggle.dropdown {
+  width: 137px;
+  height: 44px;
+  text-align: center;
+  align-content: center;
+  border-radius: 8px;
+  border-color: #d0d5dd;
+  border: 1px solid;
+  color: "black";
+}

@@ -36,42 +36,44 @@ const Login = () => {
         <div className="loginImage">
           <img src={loginImage} alt="logo"></img>
         </div>
-        <div className="inputForm">
-          <div className="loginLogo">
-            <img src={logo} alt="logo"></img>
-          </div>
-          <div>
-            <div style={{ paddingBottom: "8px", marginLeft: "12px" }}>
-              Username
+        <div className="flex justify-center">
+          <div className="inputForm justify-center">
+            <div className="loginLogo">
+              <img src={logo} alt="logo"></img>
             </div>
-            <input
-              className="loginInput"
-              id="username"
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUserName(e.target.value)}
-            ></input>
-            <div style={{ paddingBottom: "8px", marginLeft: "12px" }}>
-              Password
-            </div>
-            <input
-              className="loginInput"
-              id="password"
-              type="password"
-              placeholder="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            ></input>
-
             <div>
-              <button
-                className="login-btn"
-                type="submit"
-                onClick={() => handleSubmit()}
-              >
-                Login
-              </button>
+              <div style={{ paddingBottom: "8px", marginLeft: "12px" }}>
+                Username
+              </div>
+              <input
+                className="loginInput"
+                id="username"
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+              ></input>
+              <div style={{ paddingBottom: "8px", marginLeft: "12px" }}>
+                Password
+              </div>
+              <input
+                className="loginInput"
+                id="password"
+                type="password"
+                placeholder="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              ></input>
+
+              <div>
+                <button
+                  className="login-btn"
+                  type="submit"
+                  onClick={() => handleSubmit()}
+                >
+                  Login
+                </button>
+              </div>
             </div>
           </div>
         </div>

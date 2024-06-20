@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import logo from "../images/menu_logo.png";
 import "../styles/header.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import DropdownProfile from "./DropDownProfile";
 import Avatar from "../images/Avatar.png";
 
@@ -11,6 +11,7 @@ const Header = () => {
   const [userRole, setUserRole] = useState(null);
   const [openProfile, setOpenProfile] = useState(false);
   const [navbar, setNavbar] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -26,14 +27,23 @@ const Header = () => {
   }, []);
 
   const changeBackground = () => {
-    if (window.scrollY >= 80) {
+    if (window.scrollY >= 100) {
       setNavbar(true);
     } else {
       setNavbar(false);
     }
   };
 
-  window.addEventListener("scroll", changeBackground);
+  useEffect(() => {
+    if (location.pathname === "/") {
+      window.addEventListener("scroll", changeBackground);
+      return () => {
+        window.removeEventListener("scroll", changeBackground);
+      };
+    } else {
+      setNavbar(true);
+    }
+  }, [location.pathname]);
 
   return (
     <div className={navbar ? "navbar active" : "navbar"}>
@@ -50,14 +60,12 @@ const Header = () => {
             <li>
               <Link to="/manager">Find Tournament</Link>
             </li>
-
             <img
               className="avatar"
               onClick={() => setOpenProfile((prev) => !prev)}
               src={Avatar}
               alt=""
             />
-
             {openProfile && <DropdownProfile />}
           </div>
         )}
@@ -67,18 +75,15 @@ const Header = () => {
             <li>
               <Link to="/">Home</Link>
             </li>
-
             <li>
               <Link to="/manager">Find Tournament</Link>
             </li>
-
             <img
               className="avatar"
               onClick={() => setOpenProfile((prev) => !prev)}
               src={Avatar}
               alt=""
             />
-
             {openProfile && <DropdownProfile />}
           </div>
         )}
