@@ -9,6 +9,7 @@ import Test from '../src/Pages/test';
 import Footer from '../src/components/footer';
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import '@fontsource/roboto/300.css';
 
 const App = () => {
   return (

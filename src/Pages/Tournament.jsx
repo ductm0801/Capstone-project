@@ -1,14 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import searchicon from "../images/Frame 4.png";
 import { FaChevronDown } from "react-icons/fa";
 import { FaChevronUp } from "react-icons/fa";
-import { keyboard } from "@testing-library/user-event/dist/keyboard";
+import { MdFormatListBulleted } from "react-icons/md";
+import { FiGrid } from "react-icons/fi";
+import axios from "axios";
 const Tournament = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
   const [selected, setSelected] = useState("Status");
   const [selected1, setSelected1] = useState("Last Update");
+  const [tournaments, setTournaments] = useState([]);
+  const [isGridLayout, setIsGridLayout] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const URL = "https://6538f1b3a543859d1bb23e2e.mockapi.io/User";
+
+  const getListTournament = async () => {
+    const res = await axios.get(`${URL}`);
+    if (res.status === 200) {
+      setTournaments(res.data);
+    }
+  };
+  const toggleLayout = () => {
+    setIsGridLayout(!isGridLayout);
+  };
+
+  useEffect(() => {
+    getListTournament();
+  }, []);
   const optionsStatus = [
     "Scheduled",
     "InProgress",
@@ -37,9 +58,11 @@ const Tournament = () => {
           }}
         >
           <input
-            className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4"
+            className="border-2 border-inherit rounded-l-lg w-[320px] h-[44px] p-4"
             type="text"
             placeholder="Search"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
           ></input>{" "}
           <img src={searchicon} alt=""></img>
         </div>
@@ -110,7 +133,94 @@ const Tournament = () => {
           </div>
         </div>
       </div>
-      <div className="bg-slate-100 w-full h-[600px]"></div>
+      <div className="bg-slate-200">
+        <div className="flex justify-between">
+          <p className="ml-[112px] pt-[40px] mb-[56px]">
+            {" "}
+            {tournaments.length} Tournaments
+          </p>
+          <div className=" flex justify-center items-center mr-[112px] pt-[40px] mb-[56px]">
+            <div
+              className={`w-[56px] h-[40px] border-2 border-solid border-slate-300 rounded-l-lg cursor-pointer flex justify-center items-center ${
+                !isGridLayout ? "bg-[#C6C61A]" : "bg-white"
+              }`}
+              onClick={() => toggleLayout(false)}
+            >
+              <MdFormatListBulleted className="w-[24px] h-[24px] mx-[16px] my-[8px]" />
+            </div>
+            <div
+              className={`w-[56px] h-[40px] border-2 border-solid border-slate-300 rounded-r-lg cursor-pointer flex justify-center items-center ${
+                isGridLayout ? "bg-[#C6C61A]" : "bg-white"
+              }`}
+              onClick={() => toggleLayout(true)}
+            >
+              <FiGrid className="w-[24px] h-[24px]  mx-[16px] my-[8px]" />
+            </div>
+          </div>
+        </div>
+        <div>
+          {isGridLayout ? (
+            <div className="grid grid-cols-[384px_minmax(0,_384px)_384px] gap-8 justify-items-center justify-center pb-[120px] ">
+              {tournaments &&
+                tournaments
+                  .filter((tournament) => {
+                    return search.toLowerCase() === ""
+                      ? tournament
+                      : tournament.name.includes(search);
+                  })
+                  .map((tournament) => (
+                    <div
+                      className="w-[384px] h-[308px] p-0"
+                      key={tournament.id}
+                    >
+                      <div className="flex flex-col justify-around items-center w-[384px] h-[308px] border-2 border-solid bg-white rounded-lg">
+                        <img
+                          className="w-[64px] h-[64px]"
+                          src={tournament.avatar}
+                          alt={tournament.id}
+                        />
+                        <p className="font-bold text-lg">{tournament.name}</p>
+                        <p className="text-base">
+                          Round and KnockOut | PickleBall |{" "}
+                          {tournament.CreatedBy}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center">
+              {tournaments &&
+                tournaments
+                  .filter((tournament) => {
+                    return search.toLowerCase() === ""
+                      ? tournament
+                      : tournament.name.includes(search);
+                  })
+                  .map((tournament) => (
+                    <div key={tournament.id}>
+                      <div className=" flex  rounded-lg gap-6 border-2 w-[1008px] h-[188px] bg-white border-solid my-[16px]">
+                        <img
+                          className="w-[156px] h-[156px] m-[16px]"
+                          src={tournament.avatar}
+                          alt={tournament.id}
+                        />
+                        <div>
+                          <p className="my-[16px] font-bold text-lg">
+                            {tournament.name}
+                          </p>
+                          <p className="text-base">
+                            Round and KnockOut | PickleBall |{" "}
+                            {tournament.CreatedBy}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

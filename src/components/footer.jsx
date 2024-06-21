@@ -27,12 +27,12 @@ const Footer = () => {
             <li>Terms of Service</li>
             <li>Support</li>
           </ul>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", marginTop: "36px" }}>
             <i style={{ marginRight: "24px" }}>
-              <TfiEmail />
+              <TfiEmail style={{ color: "gray" }} />
             </i>
             <i>
-              <FaFacebook />
+              <FaFacebook style={{ color: "gray" }} />
             </i>
           </div>
         </div>

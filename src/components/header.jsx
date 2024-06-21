@@ -47,7 +47,7 @@ const Header = () => {
 
   return (
     <div className={navbar ? "navbar active" : "navbar"}>
-      <ul>
+      <ul className="nav">
         {userRole === "Manager" && (
           <div className="navbar-content">
             <img className="logo" src={logo} alt="" />
