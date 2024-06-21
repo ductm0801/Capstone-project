@@ -6,6 +6,7 @@ import { FaChevronUp } from "react-icons/fa";
 import { MdFormatListBulleted } from "react-icons/md";
 import { FiGrid } from "react-icons/fi";
 import axios from "axios";
+import { Link } from "react-router-dom";
 const Tournament = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
@@ -173,18 +174,20 @@ const Tournament = () => {
                       className="w-[384px] h-[308px] p-0"
                       key={tournament.id}
                     >
-                      <div className="flex flex-col justify-around items-center w-[384px] h-[308px] border-2 border-solid bg-white rounded-lg">
-                        <img
-                          className="w-[64px] h-[64px]"
-                          src={tournament.avatar}
-                          alt={tournament.id}
-                        />
-                        <p className="font-bold text-lg">{tournament.name}</p>
-                        <p className="text-base">
-                          Round and KnockOut | PickleBall |{" "}
-                          {tournament.CreatedBy}
-                        </p>
-                      </div>
+                      <Link to={`/tournamentDetail/${tournament.id}`}>
+                        <div className="flex flex-col justify-around items-center w-[384px] h-[308px] border-2 border-solid bg-white rounded-lg">
+                          <img
+                            className="w-[64px] h-[64px]"
+                            src={tournament.avatar}
+                            alt={tournament.id}
+                          />
+                          <p className="font-bold text-lg">{tournament.name}</p>
+                          <p className="text-base">
+                            Round and KnockOut | PickleBall |{" "}
+                            {tournament.CreatedBy}
+                          </p>
+                        </div>
+                      </Link>
                     </div>
                   ))}
             </div>
@@ -199,22 +202,24 @@ const Tournament = () => {
                   })
                   .map((tournament) => (
                     <div key={tournament.id}>
-                      <div className=" flex  rounded-lg gap-6 border-2 w-[1008px] h-[188px] bg-white border-solid my-[16px]">
-                        <img
-                          className="w-[156px] h-[156px] m-[16px]"
-                          src={tournament.avatar}
-                          alt={tournament.id}
-                        />
-                        <div>
-                          <p className="my-[16px] font-bold text-lg">
-                            {tournament.name}
-                          </p>
-                          <p className="text-base">
-                            Round and KnockOut | PickleBall |{" "}
-                            {tournament.CreatedBy}
-                          </p>
+                      <Link to={`/tournamentDetail/${tournament.id}`}>
+                        <div className=" flex  rounded-lg gap-6 border-2 w-[1008px] h-[188px] bg-white border-solid my-[16px]">
+                          <img
+                            className="w-[156px] h-[156px] m-[16px]"
+                            src={tournament.avatar}
+                            alt={tournament.id}
+                          />
+                          <div>
+                            <p className="my-[16px] font-bold text-lg">
+                              {tournament.name}
+                            </p>
+                            <p className="text-base">
+                              Round and KnockOut | PickleBall |{" "}
+                              {tournament.CreatedBy}
+                            </p>
+                          </div>
                         </div>
-                      </div>
+                      </Link>
                     </div>
                   ))}
             </div>

@@ -38,7 +38,7 @@ const Footer = () => {
         </div>
         <div>
           <p>Experiment our mobile app on</p>
-          <div>
+          <div className="mt-[16px]">
             <img
               style={{ marginLeft: "auto", marginBottom: "16px" }}
               src={appstore}
