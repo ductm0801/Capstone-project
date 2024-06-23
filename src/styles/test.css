@@ -72,6 +72,7 @@
   width: 10px;
   right: -11px;
 }
+
 .team-item.item-left:nth-of-type(odd):after {
   border-right-style: solid;
   border-top-style: solid;

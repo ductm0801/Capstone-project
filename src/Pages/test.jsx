@@ -29,17 +29,45 @@ function generateFakeData(maxRound) {
       data.push({
         Team1Id: team1,
         Team2Id: team2,
-        WinningTeam: [team1, team2][Math.floor(Math.random() * 2)],
+        // WinningTeam: [team1, team2][Math.floor(Math.random() * 2)],
         Round: String(currentRound),
       });
     }
   }
 
-  data.pop();
-
   return data;
 }
-let data = generateFakeData(5);
+let data = [
+  { Team1Id: "C", Team2Id: "D", WinningTeam: "C", Round: "1" },
+
+  { Team1Id: "E", Team2Id: "F", WinningTeam: "E", Round: "1" },
+
+  { Team1Id: "G", Team2Id: "H", WinningTeam: "G", Round: "1" },
+
+  { Team1Id: "J", Team2Id: "K", WinningTeam: "J", Round: "1" },
+
+  { Team1Id: "", Team2Id: "", WinningTeam: "", Round: "1" },
+
+  { Team1Id: "", Team2Id: "", WinningTeam: "", Round: "1" },
+
+  { Team1Id: "", Team2Id: "", WinningTeam: "", Round: "1" },
+
+  { Team1Id: "", Team2Id: "", WinningTeam: "", Round: "1" },
+
+  { Team1Id: "C", Team2Id: "E", WinningTeam: "C", Round: "2" },
+
+  { Team1Id: "", Team2Id: "", WinningTeam: "", Round: "2" },
+
+  { Team1Id: "", Team2Id: "", WinningTeam: "", Round: "2" },
+
+  { Team1Id: "M", Team2Id: "N", WinningTeam: "", Round: "2" },
+
+  { Team1Id: "E", Team2Id: "F", WinningTeam: "F", Round: "3" },
+
+  { Team1Id: "I", Team2Id: "L", WinningTeam: "I", Round: "3" },
+
+  { Team1Id: "", Team2Id: "", WinningTeam: "", Round: "4" },
+];
 console.log(data); // MIN: 2 -> 2^2 | MAX: 8 -> 2^8
 
 function Test() {
@@ -76,12 +104,10 @@ function Test() {
               <ul
                 key={index}
                 className={`bracket bracket-${round} ${
-                  data.length === 3
+                  +round === Math.max(...rounds) - 1
                     ? "after:[&>*:nth-of-type(odd)]:!h-0"
-                    : data.length === 1
-                    ? "after:[&>*:nth-of-type(odd)]:hidden !border-none"
                     : ""
-                }`}
+                } `}
               >
                 {matches.map((match, idx) => (
                   <li
@@ -90,9 +116,25 @@ function Test() {
                       Math.max(...rounds) === +round ? "mid" : position
                     }`}
                   >
-                    {match.WinningTeam
-                      ? match.WinningTeam
-                      : `${match.Team1Id} --- ${match.Team2Id}`}
+                    {match.Round === "1" ||
+                    match.Round === "2" ||
+                    match.Round === "3" ||
+                    match.Round === "4" ? (
+                      match.WinningTeam ? (
+                        <div className="border-2 rounded-lg mb-2">
+                          {match.WinningTeam}
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="border-2 rounded-lg mb-2">
+                            {match.Team1Id || "?"}
+                          </div>
+                          <div className="border-2 rounded-lg mb-2">
+                            {match.Team2Id || "?"}
+                          </div>
+                        </div>
+                      )
+                    ) : null}
                   </li>
                 ))}
               </ul>

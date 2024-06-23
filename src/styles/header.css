@@ -80,3 +80,11 @@ div .navbar-content li:nth-of-type(4) {
 .nav ul {
   margin-top: 0;
 }
+.navbar-content li:hover {
+  background-color: #c6c61a;
+  color: white;
+  border-radius: 8px;
+  padding: 6px;
+  margin-top: 18px;
+  align-self: center;
+}

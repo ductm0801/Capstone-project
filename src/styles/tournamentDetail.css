@@ -1,0 +1,53 @@
+.tDetail-bg {
+  background-image: url(../images/tDetail.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.tab-item {
+  position: relative;
+  color: gray;
+  cursor: pointer;
+}
+.tab-item.active {
+  color: white;
+}
+
+.tab-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -12px; /* Adjust as necessary to position the triangle */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid white; /* Color of the triangle */
+}
+.tab-content {
+  display: none;
+  /* Hide all content sections by default */
+}
+
+.tab-content.active {
+  display: block;
+  color: black; /* Show the active content section */
+}
+.add-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #1244a2;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}

@@ -4,6 +4,7 @@ import Login from '../src/Pages/login';
 import Header from '../src/components/header';
 import Home from '../src/Pages/Home';
 import Tournament from '../src/Pages/Tournament';
+import TournamentDetail from '../src/Pages/TournamentDetail';
 import SignUp from '../src/Pages/SignUp';
 import Test from '../src/Pages/test';
 import Footer from '../src/components/footer';
@@ -25,7 +26,7 @@ const ConditionalLayout = () => {
   const showHeaderFooter = location.pathname !== '/login';
   
   return (
-    <>
+     <>
       {showHeaderFooter && <Header />}
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -33,6 +34,7 @@ const ConditionalLayout = () => {
         <Route path="/" element={<Home />} />
         <Route path="/test" element={<Test />} />
         <Route path="/findTournament" element={ <Tournament/>} />
+        <Route path="/tournamentDetail/:id" element={ <TournamentDetail/>} />
       </Routes>
       {showHeaderFooter && <Footer />}
     </>
