@@ -5,6 +5,7 @@ import Header from '../src/components/header';
 import Home from '../src/Pages/Home';
 import Tournament from '../src/Pages/Tournament';
 import TournamentDetail from '../src/Pages/TournamentDetail';
+import CreateTournament from "../src/Pages/createTournament"
 import SignUp from '../src/Pages/SignUp';
 import Test from '../src/Pages/test';
 import Footer from '../src/components/footer';
@@ -34,6 +35,7 @@ const ConditionalLayout = () => {
         <Route path="/" element={<Home />} />
         <Route path="/test" element={<Test />} />
         <Route path="/findTournament" element={ <Tournament/>} />
+        <Route path="/createTournament" element={ <CreateTournament/>} />
         <Route path="/tournamentDetail/:id" element={ <TournamentDetail/>} />
       </Routes>
       {showHeaderFooter && <Footer />}

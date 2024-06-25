@@ -55,10 +55,10 @@ const Header = () => {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/manager">Create Tournament</Link>
+              <Link to="/createTournament">Create Tournament</Link>
             </li>
             <li>
-              <Link to="/manager">Find Tournament</Link>
+              <Link to="/findTournament">Find Tournament</Link>
             </li>
             <img
               className="avatar"
@@ -76,7 +76,7 @@ const Header = () => {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/manager">Find Tournament</Link>
+              <Link to="/findTournament">Find Tournament</Link>
             </li>
             <img
               className="avatar"

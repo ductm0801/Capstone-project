@@ -4,12 +4,26 @@ import { useParams } from "react-router-dom";
 import "../styles/tournamentDetail.css";
 import Test from "./test";
 import CreateTournamentFormat from "../components/CreateTournamentFormat";
+import { jwtDecode } from "jwt-decode";
 const TournamentDetail = () => {
   const URL = "https://6538f1b3a543859d1bb23e2e.mockapi.io/User";
   const [tournament, SetTournament] = useState("");
   const [activeTab, setActiveTab] = useState("Format");
   const [showPopup, setShowPopup] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const { id } = useParams();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    try {
+      const decoded = jwtDecode(token);
+      const role =
+        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      setUserRole(role);
+    } catch (error) {
+      console.error("Invalid token:", error);
+    }
+  }, []);
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -126,9 +140,11 @@ const TournamentDetail = () => {
         <h1>About</h1>
         <p>Content for About.</p>
       </div>
-      <button className="add-button" onClick={handleAddButtonClick}>
-        +
-      </button>
+      {userRole === "Manager" && (
+        <button className="add-button" onClick={handleAddButtonClick}>
+          +
+        </button>
+      )}
       <CreateTournamentFormat
         show={showPopup}
         handleClose={handleClosePopup}

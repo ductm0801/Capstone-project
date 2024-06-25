@@ -42,28 +42,25 @@ div .navbar-content li:nth-of-type(4) {
 }
 .dropDownProfile {
   position: absolute;
-  top: 5.5rem;
+  top: 75px;
   right: 6.9rem;
-  width: 80px;
-  padding: 15px;
+  width: 100px;
   border-radius: 15px;
   background-color: white;
   border: 1px solid gray;
+  z-index: -99;
 }
-.dropDownProfile li {
-  margin: auto;
-}
+
 .dropDownProfile::before {
   content: "";
   position: absolute;
-  top: -0.7rem;
-  right: 0.8rem;
+  top: -5px;
+  right: 15px;
   width: 20px;
   height: 20px;
-  border-left: 1px solid gray;
-  border-top: 1px solid gray;
   transform: rotate(45deg);
   background-color: white;
+  z-index: -99;
 }
 .header-btn {
   width: 95px;
@@ -80,7 +77,7 @@ div .navbar-content li:nth-of-type(4) {
 .nav ul {
   margin-top: 0;
 }
-.navbar-content li:hover {
+li .navbar-content :hover {
   background-color: #c6c61a;
   color: white;
   border-radius: 8px;

@@ -8,30 +8,25 @@ const DropdownProfile = () => {
     localStorage.clear();
   };
   return (
-    <div className=" dropDownProfile">
-      <ul
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          padding: "0",
-        }}
-      >
-        <li>
-          <Link to="/profile" style={{ color: "black" }} href="/Profile">
-            Profile <CgProfile />
+    <div className="dropDownProfile">
+      <div className="flex flex-col items-center justify-center">
+        <div className="text-black ">
+          <Link to="/profile" href="/Profile">
+            <div className="flex items-center m-4 border-b-2 gap-2 ">
+              <CgProfile />
+              <div>Profile</div>
+            </div>
           </Link>
-        </li>
-        <li>
-          <Link
-            to="/login"
-            onClick={Logout}
-            style={{ color: "black" }}
-            href="/Logout"
-          >
-            Logout <RiLogoutBoxRLine />
+        </div>
+        <div className="text-black ">
+          <Link to="/login" href="/Profile">
+            <div className="flex items-center border-b-2  mb-4 gap-2 ">
+              <RiLogoutBoxRLine />
+              <div onClick={Logout}>Logout</div>
+            </div>
           </Link>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   );
 };
