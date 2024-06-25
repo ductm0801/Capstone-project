@@ -2,9 +2,27 @@ import React, { useState } from "react";
 import "../styles/createtournament.css";
 import defaultImg from "../images/defaultImg.png";
 import { FaEdit } from "react-icons/fa";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 const CreateTournament = () => {
+  const URL = "http://localhost:5000/api/Tournament/CreateTournament";
+  const navigate = useNavigate();
+  const addNewTournament = async (data) => {
+    try {
+      const res = await axios.post(URL, data);
+      if (res.status === 200 || res.status === 201) {
+        toast.success("New tournament has been added successfully ~");
+        navigate(`/findTournament`);
+      }
+    } catch (error) {
+      toast.error("Failed to add new tournament ");
+    }
+  };
+
   const [formData, setFormData] = useState({
-    name: "",
+    tournamentName: "",
     startDate: "",
     location: "",
     endDate: "",
@@ -22,8 +40,16 @@ const CreateTournament = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (new Date(formData.startDate) < new Date()) {
+      toast.error("Start date cannot be in the past");
+      return;
+    }
+    if (new Date(formData.endDate) < new Date(formData.startDate)) {
+      toast.error("End date cannot be earlier than start date");
+      return;
+    }
     console.log(formData);
-    // Add your form submission logic here
+    addNewTournament(formData);
   };
 
   const handleImageChange = (e) => {
@@ -37,7 +63,7 @@ const CreateTournament = () => {
   };
 
   return (
-    <div className="wrapper">
+    <div className="wrapper bg-gray-300">
       <form className="form-container" onSubmit={handleSubmit}>
         <div className="header">
           <h1>Create Tournament</h1>
@@ -61,15 +87,15 @@ const CreateTournament = () => {
           <div className="flex gap-8">
             <div>
               <div className="form-group flex flex-col">
-                <label htmlFor="name">
+                <label htmlFor="tournamentName">
                   Name <span className="text-red-500 font-bold">*</span>
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  placeholder="Name"
-                  value={formData.name}
+                  id="tournamentName"
+                  name="tournamentName"
+                  placeholder="tournamentName"
+                  value={formData.tournamentName}
                   onChange={handleChange}
                   required
                   className="border-2 border-inherit rounded-lg p-2 mb-4"
@@ -94,13 +120,13 @@ const CreateTournament = () => {
             <div className="flex flex-col">
               <div>
                 <div className="form-group flex flex-col">
-                  <label htmlFor="endDatestartDate ">
+                  <label htmlFor="startDate">
                     Start Date <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input
                     type="date"
                     id="startDate"
-                    name="startDate "
+                    name="startDate"
                     placeholder="dd/mm/yyyy"
                     value={formData.startDate}
                     onChange={handleChange}
