@@ -8,3 +8,23 @@ div.dropdown-toggle.dropdown {
   border: 1px solid;
   color: "black";
 }
+@media (min-width: 640px) {
+  .sm\:grid-cols-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(384px, 384px));
+  }
+}
+@media (min-width: 768px) {
+  .md\:grid-cols-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(384px, 384px));
+  }
+}
+@media (min-width: 1024px) {
+  .lg\:grid-cols-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(384px, 384px));
+  }
+}
+@media (min-width: 1280px) {
+  .xl\:grid-cols-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(384px, 384px));
+  }
+}

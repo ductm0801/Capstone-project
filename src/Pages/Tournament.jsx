@@ -7,6 +7,7 @@ import { MdFormatListBulleted } from "react-icons/md";
 import { FiGrid } from "react-icons/fi";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "../styles/tournament.css";
 const Tournament = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
@@ -59,7 +60,7 @@ const Tournament = () => {
           }}
         >
           <input
-            className="border-2 border-inherit rounded-l-lg w-[320px] h-[44px] p-4"
+            className="border-2 border-inherit rounded-l-lg w-full sm:w-[320px] h-[44px] p-4 sm:p-2 md:p-4 lg:p-6 bg-white"
             type="text"
             placeholder="Search"
             onChange={(e) => setSearch(e.target.value)}
@@ -103,7 +104,7 @@ const Tournament = () => {
               </div>
             )}
           </div>
-          <div className="flex flex-col items-center w-[147px] h-[44px] justify-between rounded-lg border-gray-300 border-2 text-base px-3">
+          <div className="flex flex-wrap flex-col items-center w-[147px] h-[44px] justify-between rounded-lg border-gray-300 border-2 text-base px-3">
             <button
               onClick={() => setIsOpen1((prev) => !prev)}
               className="flex justify-between w-full items-center p-1"
@@ -140,7 +141,7 @@ const Tournament = () => {
             {" "}
             {tournaments.length} Tournaments
           </p>
-          <div className=" flex justify-center items-center mr-[112px] pt-[40px] mb-[56px]">
+          <div className=" flex flex-wrap justify-center items-center mr-[112px] pt-[40px] mb-[56px]">
             <div
               className={`w-[56px] h-[40px] border-2 border-solid border-slate-300 rounded-l-lg cursor-pointer flex justify-center items-center ${
                 !isGridLayout ? "bg-[#C6C61A]" : "bg-white"
@@ -161,7 +162,7 @@ const Tournament = () => {
         </div>
         <div>
           {isGridLayout ? (
-            <div className="grid grid-cols-[384px_minmax(0,_384px)_384px] gap-8 justify-items-center justify-center pb-[120px] ">
+            <div className="grid grid-cols-1 sm:grid-cols-auto-fit md:grid-cols-auto-fit lg:grid-cols-auto-fit xl:grid-cols-auto-fit gap-8 justify-items-center justify-center pb-[120px] ">
               {tournaments &&
                 tournaments
                   .filter((tournament) => {
@@ -175,7 +176,7 @@ const Tournament = () => {
                       key={tournament.id}
                     >
                       <Link to={`/tournamentDetail/${tournament.id}`}>
-                        <div className="flex flex-col justify-around items-center w-[384px] h-[308px] border-2 border-solid bg-white rounded-lg">
+                        <div className="flex flex-wrap flex-col justify-around items-center w-[384px] h-[308px] border-2 border-solid bg-white rounded-lg">
                           <img
                             className="w-[64px] h-[64px]"
                             src={tournament.avatar}
@@ -192,7 +193,7 @@ const Tournament = () => {
                   ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center">
+            <div className="flex flex-wrap flex-col items-center">
               {tournaments &&
                 tournaments
                   .filter((tournament) => {
@@ -203,13 +204,13 @@ const Tournament = () => {
                   .map((tournament) => (
                     <div key={tournament.id}>
                       <Link to={`/tournamentDetail/${tournament.id}`}>
-                        <div className=" flex  rounded-lg gap-6 border-2 w-[1008px] h-[188px] bg-white border-solid my-[16px]">
+                        <div className="flex flex-wrap xl:flex-nowrap items-center rounded-lg gap-6 border-2 w-full xl:w-[1008px] h-auto bg-white border-solid my-[16px] p-4">
                           <img
-                            className="w-[156px] h-[156px] m-[16px]"
+                            className="w-[156px] h-[156px] m-[16px] flex-shrink-0"
                             src={tournament.avatar}
                             alt={tournament.id}
                           />
-                          <div>
+                          <div className="flex-1">
                             <p className="my-[16px] font-bold text-lg">
                               {tournament.name}
                             </p>

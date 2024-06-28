@@ -7,17 +7,16 @@ import DropdownProfile from "./DropDownProfile";
 import Avatar from "../images/Avatar.png";
 
 const Header = () => {
-  const [decodedToken, setDecodedToken] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [openProfile, setOpenProfile] = useState(false);
   const [navbar, setNavbar] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     try {
       const decoded = jwtDecode(token);
-      setDecodedToken(decoded);
       const role =
         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       setUserRole(role);
@@ -33,6 +32,9 @@ const Header = () => {
       setNavbar(false);
     }
   };
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
 
   useEffect(() => {
     if (location.pathname === "/") {
@@ -46,65 +48,160 @@ const Header = () => {
   }, [location.pathname]);
 
   return (
-    <div className={navbar ? "navbar active" : "navbar"}>
-      <ul className="nav">
-        {userRole === "Manager" && (
-          <div className="navbar-content">
-            <img className="logo" src={logo} alt="" />
+    <div
+      className={`fixed w-full ${
+        navbar ? "navbar active " : "navbar"
+      } transition-all duration-300`}
+    >
+      <div className="flex justify-between items-center p-4">
+        <img className="h-12 ml-[112px]" src={logo} alt="Logo" />
+        <div className="block lg:hidden">
+          <button
+            onClick={toggleDrawer}
+            className="text-white focus:outline-none"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <ul className="hidden lg:flex space-x-12 items-center">
+          <li>
+            <Link to="/" className="text-white">
+              Home
+            </Link>
+          </li>
+          {userRole === "Manager" && (
+            <>
+              <li>
+                <Link to="/createTournament" className="text-white">
+                  Create Tournament
+                </Link>
+              </li>
+              <li>
+                <Link to="/findTournament" className="text-white">
+                  Find Tournament
+                </Link>
+              </li>
+            </>
+          )}
+          {userRole === "Athletes" && (
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/findTournament" className="text-white">
+                Find Tournament
+              </Link>
             </li>
+          )}
+          {!userRole && (
+            <>
+              <li>
+                <Link to="/findTournament" className="text-white">
+                  Find Tournament
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className="text-white">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/signup"
+                  className="text-white bg-[#C6C61A] mr-[112px] px-4 py-2 rounded-lg"
+                >
+                  Sign Up
+                </Link>
+              </li>
+            </>
+          )}
+          {(userRole === "Manager" || userRole === "Athletes") && (
             <li>
-              <Link to="/createTournament">Create Tournament</Link>
+              <img
+                className="h-12 w-12 mr-[112px] rounded-full cursor-pointer"
+                onClick={() => setOpenProfile(!openProfile)}
+                src={Avatar}
+                alt="Avatar"
+              />
+              {openProfile && <DropdownProfile />}
             </li>
+          )}
+        </ul>
+      </div>
+
+      <div className={`lg:hidden ${isDrawerOpen ? "block" : "hidden"}`}>
+        <ul className="flex flex-col items-center space-y-4">
+          <li>
+            <Link to="/" className="text-white">
+              Home
+            </Link>
+          </li>
+          {userRole === "Manager" && (
+            <>
+              <li>
+                <Link to="/createTournament" className="text-white">
+                  Create Tournament
+                </Link>
+              </li>
+              <li>
+                <Link to="/findTournament" className="text-white">
+                  Find Tournament
+                </Link>
+              </li>
+            </>
+          )}
+          {userRole === "Athletes" && (
             <li>
-              <Link to="/findTournament">Find Tournament</Link>
+              <Link to="/findTournament" className="text-white">
+                Find Tournament
+              </Link>
             </li>
-            <img
-              className="avatar"
-              onClick={() => setOpenProfile((prev) => !prev)}
-              src={Avatar}
-              alt=""
-            />
-            {openProfile && <DropdownProfile />}
-          </div>
-        )}
-        {userRole === "Athletes" && (
-          <div className="navbar-content">
-            <img className="logo" src={logo} alt="" />
+          )}
+          {!userRole && (
+            <>
+              <li>
+                <Link to="/findTournament" className="text-white">
+                  Find Tournament
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className="text-white">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/signup"
+                  className="text-white bg-blue-500 px-4 py-2 rounded-lg"
+                >
+                  Sign Up
+                </Link>
+              </li>
+            </>
+          )}
+          {(userRole === "Manager" || userRole === "Athletes") && (
             <li>
-              <Link to="/">Home</Link>
+              <img
+                className="h-8 w-8 rounded-full cursor-pointer mb-6"
+                onClick={() => setOpenProfile(!openProfile)}
+                src={Avatar}
+                alt="Avatar"
+              />
+              {openProfile && <DropdownProfile />}
             </li>
-            <li>
-              <Link to="/findTournament">Find Tournament</Link>
-            </li>
-            <img
-              className="avatar"
-              onClick={() => setOpenProfile((prev) => !prev)}
-              src={Avatar}
-              alt=""
-            />
-            {openProfile && <DropdownProfile />}
-          </div>
-        )}
-        {!userRole && (
-          <div className="navbar-content">
-            <img className="logo" src={logo} alt="" />
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/findTournament">Find Tournament</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <button className="header-btn">
-              <Link to="/signup">Sign Up</Link>
-            </button>
-          </div>
-        )}
-      </ul>
+          )}
+        </ul>
+      </div>
     </div>
   );
 };

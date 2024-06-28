@@ -1,7 +1,7 @@
 .navbar {
   background: transparent;
   width: 100vw;
-  height: 80px;
+  height: auto;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -42,8 +42,8 @@ div .navbar-content li:nth-of-type(4) {
 }
 .dropDownProfile {
   position: absolute;
-  top: 75px;
-  right: 6.9rem;
+  top: 80px;
+  right: 125px;
   width: 100px;
   border-radius: 15px;
   background-color: white;
@@ -84,4 +84,26 @@ li .navbar-content :hover {
   padding: 6px;
   margin-top: 18px;
   align-self: center;
+}
+@media (max-width: 1022px) {
+  .dropDownProfile {
+    position: absolute;
+    top: 250px;
+    right: 485px;
+    width: 100px;
+    border-radius: 15px;
+    background-color: white;
+    border: 1px solid gray;
+  }
+}
+.dropDownProfile::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  right: 15px;
+  width: 20px;
+  height: 20px;
+  transform: rotate(45deg);
+  background-color: white;
+  z-index: -99;
 }
