@@ -47,7 +47,7 @@ const TournamentDetail = () => {
 
   return (
     <div>
-      <div className="tDetail-bg">
+      <div className="tDetail-bg mt-16">
         <div className=" flex ">
           <img
             className="w-[120px] h-[120px] rounded-full mt-[32px] ml-[112px] mb-[97px]"
