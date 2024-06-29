@@ -60,13 +60,13 @@ const Tournament = () => {
           }}
         >
           <input
-            className="border-2 border-inherit rounded-l-lg w-full sm:w-[320px] h-[44px] p-4 sm:p-2 md:p-4 lg:p-6 bg-white"
+            className="border-2 border-inherit mt-16 rounded-l-lg w-full sm:w-[320px] h-[44px] p-4 sm:p-2 md:p-4 lg:p-6 bg-white"
             type="text"
             placeholder="Search"
             onChange={(e) => setSearch(e.target.value)}
             value={search}
           ></input>{" "}
-          <img src={searchicon} alt=""></img>
+          <img className="mt-16" src={searchicon} alt=""></img>
         </div>
         <div
           style={{
@@ -75,7 +75,7 @@ const Tournament = () => {
             gap: "16px",
           }}
         >
-          <div className="flex flex-col items-center w-[137px] h-[44px] justify-between rounded-lg border-gray-300 border-2 text-base px-3">
+          <div className="flex flex-col mt-16 items-center w-[137px] h-[44px] justify-between rounded-lg border-gray-300 border-2 text-base px-3">
             <button
               onClick={() => setIsOpen((prev) => !prev)}
               className="flex justify-between w-full items-center p-1"
@@ -88,7 +88,7 @@ const Tournament = () => {
               )}
             </button>
             {isOpen && (
-              <div className="bg-white border-gray-300 border-2 absolute top-44 w-[137px] flex flex-col items-start rounded-lg p-2">
+              <div className="bg-white  border-gray-300 border-2 absolute top-44 w-[137px] flex flex-col items-start rounded-lg p-2">
                 {optionsStatus.map((option, i) => (
                   <div
                     onClick={(e) => {
@@ -104,7 +104,7 @@ const Tournament = () => {
               </div>
             )}
           </div>
-          <div className="flex flex-wrap flex-col items-center w-[147px] h-[44px] justify-between rounded-lg border-gray-300 border-2 text-base px-3">
+          <div className="flex flex-wrap mt-16 flex-col items-center w-[147px] h-[44px] justify-between rounded-lg border-gray-300 border-2 text-base px-3">
             <button
               onClick={() => setIsOpen1((prev) => !prev)}
               className="flex justify-between w-full items-center p-1"
@@ -162,7 +162,7 @@ const Tournament = () => {
         </div>
         <div>
           {isGridLayout ? (
-            <div className="grid grid-cols-1 sm:grid-cols-auto-fit md:grid-cols-auto-fit lg:grid-cols-auto-fit xl:grid-cols-auto-fit gap-8 justify-items-center justify-center pb-[120px] ">
+            <div className="grid grid-cols-auto-fit sm:grid-cols-auto-fit md:grid-cols-auto-fit lg:grid-cols-auto-fit xl:grid-cols-auto-fit gap-8 justify-items-center justify-center pb-[120px] ">
               {tournaments &&
                 tournaments
                   .filter((tournament) => {
