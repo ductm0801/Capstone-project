@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/tournamentDetail.css";
 import Test from "./test";
+import Competitor from "../components/Competitor";
 import CreateTournamentFormat from "../components/CreateTournamentFormat";
 import { jwtDecode } from "jwt-decode";
 const TournamentDetail = () => {
@@ -117,8 +118,7 @@ const TournamentDetail = () => {
         className={`tab-content ${activeTab === "Competitor" ? "active" : ""}`}
         id="Competitor"
       >
-        <h1>Competitors</h1>
-        <p>Content for Competitors.</p>
+        <Competitor />
       </div>
       <div
         className={`tab-content ${activeTab === "Tournament" ? "active" : ""}`}

@@ -23,6 +23,7 @@ const CreateTournament = () => {
 
   const [formData, setFormData] = useState({
     tournamentName: "",
+    image: "",
     startDate: "",
     location: "",
     endDate: "",
@@ -56,9 +57,15 @@ const CreateTournament = () => {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (event) => {
+        const base64String = event.target.result.split(",")[1];
+        setFormData({
+          ...formData,
+          image: base64String,
+        });
         setImageSrc(event.target.result);
       };
       reader.readAsDataURL(e.target.files[0]);
+      console.log(formData);
     }
   };
 
@@ -70,17 +77,17 @@ const CreateTournament = () => {
           <p>Please fulfill properly data for all required fields!</p>
         </div>
         <div className="form-content border-t-2 border-inherit justify-center pt-4">
-          <div className="image-container">
-            <p className="mb-4">Tournament Logo</p>
+          <div className="image-container relative">
+            <p className="mb-4 ">Tournament Logo</p>
             <img src={imageSrc} alt="Upload" />
             <input
               type="file"
               accept="image/*"
-              id="fileInput"
+              id="image"
               onChange={handleImageChange}
             />
-            <label htmlFor="fileInput">
-              <FaEdit className="text-black absolute top-[450px] left-[800px]" />
+            <label htmlFor="image">
+              <FaEdit className="text-black absolute top-7 right-2 cursor-pointer" />
             </label>
           </div>
 
@@ -94,7 +101,7 @@ const CreateTournament = () => {
                   type="text"
                   id="tournamentName"
                   name="tournamentName"
-                  placeholder="tournamentName"
+                  placeholder="Name"
                   value={formData.tournamentName}
                   onChange={handleChange}
                   required

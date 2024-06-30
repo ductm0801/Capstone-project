@@ -1,0 +1,60 @@
+.gradient-bg {
+  position: relative;
+  width: 360px;
+  height: 540px;
+  place-content: center;
+  align-items: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.card-bg {
+  position: absolute;
+  bottom: 0;
+  width: 360px;
+  height: 203px;
+  background-image: linear-gradient(0deg, #592ae0ff 41%, #9990 81%);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto;
+  overflow: hidden;
+}
+.name {
+  color: #fff;
+  font-size: 30px;
+  line-height: 38px;
+  font-weight: 600;
+  position: absolute;
+  left: 16px;
+  top: 69px;
+  width: min-content;
+  height: min-content;
+  white-space: nowrap;
+  flex-direction: column;
+}
+.textAndSupportingText {
+  position: absolute;
+  left: 16px;
+  top: 131px;
+  width: 272px;
+  height: min-content;
+  flex-direction: column;
+  gap: 4px;
+}
+.text {
+  color: #fff;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 600;
+  height: min-content;
+  align-self: stretch;
+  flex-direction: column;
+}
+.supportingText {
+  color: #fff;
+  font-size: 16px;
+  line-height: 24px;
+  height: min-content;
+  align-self: stretch;
+  flex-direction: column;
+}
