@@ -16,8 +16,7 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const URL =
-    "http:localhost:5000/api/TournamentWithFormatType/CreateTouranmentWithFormatType";
+  const URL = "http:localhost:5000//api/tournament-formats";
 
   const addNewTournamentFormat = async (data) => {
     try {

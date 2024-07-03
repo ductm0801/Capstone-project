@@ -12,6 +12,7 @@ import Footer from '../src/components/footer';
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import '@fontsource/roboto/300.css';
+import Manager from "../src/Pages/Manager"
 
 const App = () => {
   return (
@@ -24,19 +25,19 @@ const App = () => {
 
 const ConditionalLayout = () => {
   const location = useLocation();
-  const showHeaderFooter = location.pathname !== '/login';
+  const showHeaderFooter = location.pathname !== '/login' && location.pathname !=='/manager';
   
   return (
      <>
       {showHeaderFooter && <Header />}
       <Routes>
         <Route path="/login" element={<Login />} />
-        
         <Route path="/" element={<Home />} />
         <Route path="/test" element={<Test />} />
         <Route path="/findTournament" element={ <Tournament/>} />
         <Route path="/createTournament" element={ <CreateTournament/>} />
         <Route path="/tournamentDetail/:id" element={ <TournamentDetail/>} />
+        <Route path="/manager" element={ <Manager/>} />
       </Routes>
       {showHeaderFooter && <Footer />}
     </>

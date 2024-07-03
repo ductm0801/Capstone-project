@@ -12,7 +12,7 @@ const Home = () => {
   return (
     <div>
       <div className="bg-top">
-        <div className="hp-container">
+        <div className="hp-container justify-center gap-16">
           <div>
             <p
               style={{

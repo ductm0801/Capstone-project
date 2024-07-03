@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/createtournament.css";
 import defaultImg from "../images/defaultImg.png";
 import { FaEdit } from "react-icons/fa";
@@ -7,27 +7,32 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const CreateTournament = () => {
-  const URL = "http://localhost:5000/api/Tournament/CreateTournament";
+  const URL = "http://localhost:5000/api/tournament-campaign";
   const navigate = useNavigate();
   const addNewTournament = async (data) => {
+    const token = localStorage.getItem("token");
+
     try {
-      const res = await axios.post(URL, data);
+      const res = await axios.post(URL, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       if (res.status === 200 || res.status === 201) {
-        toast.success("New tournament has been added successfully ~");
+        toast.success("New tournament has been added successfully");
         navigate(`/findTournament`);
       }
     } catch (error) {
-      toast.error("Failed to add new tournament ");
+      toast.error("Failed to add new tournament");
     }
   };
 
   const [formData, setFormData] = useState({
     tournamentName: "",
-    image: "",
     startDate: "",
     location: "",
     endDate: "",
-    description: "",
   });
   const [imageSrc, setImageSrc] = useState(defaultImg);
 

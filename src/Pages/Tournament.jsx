@@ -7,6 +7,7 @@ import { MdFormatListBulleted } from "react-icons/md";
 import { FiGrid } from "react-icons/fi";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import defaultImg from "../images/defaultImg.png";
 import "../styles/tournament.css";
 const Tournament = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +18,7 @@ const Tournament = () => {
   const [isGridLayout, setIsGridLayout] = useState(false);
   const [search, setSearch] = useState("");
 
-  const URL = "https://6538f1b3a543859d1bb23e2e.mockapi.io/User";
+  const URL = "http://localhost:5000/api/tournament-campaign";
 
   const getListTournament = async () => {
     const res = await axios.get(`${URL}`);
@@ -179,10 +180,12 @@ const Tournament = () => {
                         <div className="flex flex-wrap flex-col justify-around items-center w-[384px] h-[308px] border-2 border-solid bg-white rounded-lg">
                           <img
                             className="w-[64px] h-[64px]"
-                            src={tournament.avatar}
+                            src={tournament.img ? tournament.img : defaultImg}
                             alt={tournament.id}
                           />
-                          <p className="font-bold text-lg">{tournament.name}</p>
+                          <p className="font-bold text-lg">
+                            {tournament.tournamentName}
+                          </p>
                           <p className="text-base">
                             Round and KnockOut | PickleBall |{" "}
                             {tournament.CreatedBy}
@@ -207,12 +210,12 @@ const Tournament = () => {
                         <div className="flex flex-wrap xl:flex-nowrap items-center rounded-lg gap-6 border-2 w-full xl:w-[1008px] h-auto bg-white border-solid my-[16px] p-4">
                           <img
                             className="w-[156px] h-[156px] m-[16px] flex-shrink-0"
-                            src={tournament.avatar}
+                            src={tournament.img ? tournament.img : defaultImg}
                             alt={tournament.id}
                           />
                           <div className="flex-1">
                             <p className="my-[16px] font-bold text-lg">
-                              {tournament.name}
+                              {tournament.tournamentName}
                             </p>
                             <p className="text-base">
                               Round and KnockOut | PickleBall |{" "}

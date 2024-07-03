@@ -17,7 +17,6 @@
   margin-top: 176px;
   margin-bottom: 162px;
   display: flex;
-  justify-content: space-around;
 }
 .hp-middle {
   background-image: url("../images/hp-bg-2.png");

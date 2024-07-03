@@ -5,9 +5,10 @@ import "../styles/tournamentDetail.css";
 import Test from "./test";
 import Competitor from "../components/Competitor";
 import CreateTournamentFormat from "../components/CreateTournamentFormat";
+import defaultImg from "../images/defaultImg.png";
 import { jwtDecode } from "jwt-decode";
 const TournamentDetail = () => {
-  const URL = "https://6538f1b3a543859d1bb23e2e.mockapi.io/User";
+  const URL = "http://localhost:5000/api/tournament-campaign";
   const [tournament, SetTournament] = useState("");
   const [activeTab, setActiveTab] = useState("Format");
   const [showPopup, setShowPopup] = useState(false);
@@ -52,11 +53,11 @@ const TournamentDetail = () => {
         <div className=" flex ">
           <img
             className="w-[120px] h-[120px] rounded-full mt-[32px] ml-[112px] mb-[97px]"
-            src={tournament.avatar}
+            src={tournament.img ? tournament.img : defaultImg}
             alt={tournament.id}
           />
           <div className="mt-[32px] ml-[24px]">
-            <h1 className="text-white">{tournament.name}</h1>
+            <h1 className="text-white">{tournament.tournamentName}</h1>
             <p className="text-white">
               Rounded and KnockDown | PickleBall | {tournament.createdBy}
             </p>

@@ -5,7 +5,8 @@ import "../styles/Login.css";
 import logo from "../images/Logo.png";
 import axios from "axios";
 import { toast } from "react-toastify";
-const baseURL = "http://localhost:5000/api/Account/UserLogin/UserLogin";
+const baseURL =
+  "https://webapi123loi.azurewebsites.net//api/accounts/UserLogin";
 const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -39,20 +40,22 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <div className="login-content">
+    <div className="flex justify-between">
+      <div className="login-content flex gap-48">
         <div className="loginImage">
-          <img src={loginImage} alt="logo"></img>
+          <img
+            className="bg-cover bg-center relative "
+            src={loginImage}
+            alt="logo"
+          ></img>
         </div>
         <div className="flex justify-center">
-          <div className="inputForm justify-center">
+          <div className="inputForm items-center justify-center">
             <div className="loginLogo">
               <img src={logo} alt="logo"></img>
             </div>
-            <div>
-              <div style={{ paddingBottom: "8px", marginLeft: "12px" }}>
-                Username
-              </div>
+            <div className="flex flex-col items-center gap-2">
+              <p className="w-[320px]">Username</p>
               <input
                 className="loginInput"
                 id="username"
@@ -61,9 +64,7 @@ const Login = () => {
                 value={username}
                 onChange={(e) => setUserName(e.target.value)}
               ></input>
-              <div style={{ paddingBottom: "8px", marginLeft: "12px" }}>
-                Password
-              </div>
+              <div className="w-[320px]">Password</div>
               <input
                 className="loginInput"
                 id="password"

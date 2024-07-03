@@ -7,23 +7,21 @@
 .loginImage {
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
+  width: 50vw;
 }
 .inputForm {
-  padding-left: 550px;
-  align-self: center;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  align-items: center;
 }
 .login-content {
-  position: relative;
   width: 100vw;
-  height: 100vh;
   align-items: center;
   background-color: #efefef;
   overflow: hidden;
   display: flex;
-  flex-wrap: wrap;
 }
 .loginInput {
   width: 336px;
@@ -31,8 +29,6 @@
   border: 1px solid #d0d5dd;
   border-radius: 8px;
   padding-left: 12px;
-  margin-bottom: 12px;
-  margin-left: 12px;
 }
 .loginLogo {
   padding-bottom: 48px;
@@ -57,14 +53,10 @@ img {
   display: block;
 }
 @media (max-width: 1700px) {
-  .loginImage {
-    display: none;
-  }
   .inputForm {
     align-self: center;
   }
   .login-content {
-    position: relative;
     min-width: 100vh;
 
     background-color: #efefef;
@@ -74,15 +66,10 @@ img {
   }
 }
 @media (max-width: 1460px) {
-  .loginImage {
-    min-width: 768px;
-  }
   .inputForm {
-    padding-left: 171px;
     align-self: center;
   }
   .login-content {
-    position: relative;
     min-width: 100vh;
 
     background-color: #efefef;
@@ -95,18 +82,13 @@ img {
   .loginImage {
     display: none;
   }
-  .inputForm {
-    padding-left: 200px;
-    align-self: center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
 
   .login-content {
-    position: relative;
+    display: grid;
+    align-items: center;
     background-color: #efefef;
     overflow: hidden;
+    height: 100vh;
   }
 }
 @media (max-width: 700px) {
@@ -179,6 +161,8 @@ img {
 
   .inputForm {
     justify-content: center;
+    align-items: center;
+    height: 100vh;
   }
   .login-content {
     justify-content: center;
