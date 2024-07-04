@@ -110,7 +110,7 @@ const CreateTournament = () => {
                   value={formData.tournamentName}
                   onChange={handleChange}
                   required
-                  className="border-2 border-inherit rounded-lg p-2 mb-4"
+                  className="border-2 border-inherit rounded-lg p-2 mb-4 focus:outline-none"
                 />
               </div>
               <div className="form-group flex flex-col">
@@ -125,7 +125,7 @@ const CreateTournament = () => {
                   value={formData.location}
                   onChange={handleChange}
                   required
-                  className="border-2 border-inherit rounded-lg p-2"
+                  className="border-2 border-inherit rounded-lg p-2 focus:outline-none"
                 />
               </div>
             </div>
@@ -143,12 +143,12 @@ const CreateTournament = () => {
                     value={formData.startDate}
                     onChange={handleChange}
                     required
-                    className="border-2 border-inherit rounded-lg p-2 mb-4"
+                    className="border-2 border-inherit rounded-lg p-2 mb-4 focus:outline-none"
                   />
                 </div>
                 <div className="form-group flex flex-col">
                   <label htmlFor="endDate">
-                    End Date <span className="text-red-500 font-bold">*</span>
+                    End Date <span className="text-red-500 font-bold ">*</span>
                   </label>
                   <input
                     type="date"
@@ -158,7 +158,7 @@ const CreateTournament = () => {
                     value={formData.endDate}
                     onChange={handleChange}
                     required
-                    className="border-2 border-inherit rounded-lg p-2"
+                    className="border-2 border-inherit rounded-lg p-2 focus:outline-none"
                   />
                 </div>
               </div>

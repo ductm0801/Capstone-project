@@ -96,7 +96,7 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
               Name <span className="text-red-500 font-bold">*</span>
             </label>
             <input
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4"
+              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
               type="text"
               placeholder="Name"
               value={name}

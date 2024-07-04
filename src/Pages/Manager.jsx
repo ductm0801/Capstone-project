@@ -16,11 +16,13 @@ import { GiPodiumWinner } from "react-icons/gi";
 import { FaUser } from "react-icons/fa6";
 
 import { useState } from "react";
+import ManageUser from "../components/ManageUser";
 
 const Manager = () => {
   const [userDropdown, setUserDropdown] = useState(false);
   const [clubDropdown, setClubDropdown] = useState(false);
   const [tournamentDropdown, setTournamentDropdown] = useState(false);
+  const [activeComponent, setActiveComponent] = useState(null);
 
   const toggleDropdown = (dropdown) => {
     if (dropdown === "user") {
@@ -37,6 +39,18 @@ const Manager = () => {
       setClubDropdown(false);
     }
   };
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case "ManageUser":
+        return <ManageUser />;
+      case "ManageClub":
+
+      case "ManageTournament":
+
+      default:
+        return <h1>Welcome to the Manager Dashboard</h1>;
+    }
+  };
   return (
     <div className="flex">
       <div className="manager-header relative">
@@ -50,7 +64,7 @@ const Manager = () => {
         <div className="grow">
           <ul className="flex flex-col manager-menu text-white">
             <li
-              className={`flex items-center gap-2 menu-span ${
+              className={`flex items-center gap-2 menu-span cursor-pointer ${
                 userDropdown ? "active" : ""
               }`}
               onClick={() => toggleDropdown("user")}
@@ -72,16 +86,19 @@ const Manager = () => {
                   userDropdown ? "active" : ""
                 }`}
               >
-                <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4">
+                <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
                   <AiOutlineUsergroupAdd /> Add User
                 </div>
-                <div className="dropdown-item menu-span gap-2 border-b border-white h-[60px] flex items-center pl-4">
+                <div
+                  className="dropdown-item menu-span gap-2 border-b border-white h-[60px] flex items-center pl-4 cursor-pointer"
+                  onClick={() => setActiveComponent("ManageUser")}
+                >
                   <FaUserEdit /> Manage User
                 </div>
               </div>
             )}
             <li
-              className={`flex items-center gap-2 menu-span ${
+              className={`flex items-center gap-2 menu-span cursor-pointer ${
                 clubDropdown ? "active" : ""
               }`}
               onClick={() => toggleDropdown("club")}
@@ -103,10 +120,10 @@ const Manager = () => {
                     clubDropdown ? "active" : ""
                   }`}
                 >
-                  <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4">
+                  <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
                     <GoChecklist /> List Club Register
                   </div>
-                  <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4">
+                  <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
                     <AiOutlineUserAdd /> Club Members
                     <div />
                   </div>
@@ -114,7 +131,7 @@ const Manager = () => {
               </div>
             )}
             <li
-              className={`flex items-center gap-2 menu-span ${
+              className={`flex items-center gap-2 menu-span cursor-pointer ${
                 tournamentDropdown ? "active" : ""
               }`}
               onClick={() => toggleDropdown("tournament")}
@@ -135,11 +152,11 @@ const Manager = () => {
                   tournamentDropdown ? "active" : ""
                 }`}
               >
-                <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4">
+                <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
                   <RiCalendarScheduleLine />
                   Schedule
                 </div>
-                <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4">
+                <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
                   <GiPodiumWinner />
                   Results
                   <div />
@@ -150,88 +167,7 @@ const Manager = () => {
           </ul>
         </div>
       </div>
-      <div className="manager-content">
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-        <h1>Welcome to the Manager Dashboard</h1>
-      </div>
+      <div className="manager-content">{renderComponent()}</div>
     </div>
   );
 };

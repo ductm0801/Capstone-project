@@ -61,7 +61,7 @@ const Tournament = () => {
           }}
         >
           <input
-            className="border-2 border-inherit mt-16 rounded-l-lg w-full sm:w-[320px] h-[44px] p-4 sm:p-2 md:p-4 lg:p-6 bg-white"
+            className="border-2 border-inherit mt-16 rounded-l-lg w-full sm:w-[320px] h-[44px] p-4 sm:p-2 md:p-4 lg:p-6 bg-white focus:outline-none"
             type="text"
             placeholder="Search"
             onChange={(e) => setSearch(e.target.value)}

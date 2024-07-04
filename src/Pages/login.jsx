@@ -57,7 +57,7 @@ const Login = () => {
             <div className="flex flex-col items-center gap-2">
               <p className="w-[320px]">Username</p>
               <input
-                className="loginInput"
+                className="loginInput focus:outline-none"
                 id="username"
                 type="text"
                 placeholder="Username"
@@ -66,7 +66,7 @@ const Login = () => {
               ></input>
               <div className="w-[320px]">Password</div>
               <input
-                className="loginInput"
+                className="loginInput focus:outline-none"
                 id="password"
                 type="password"
                 placeholder="password"
