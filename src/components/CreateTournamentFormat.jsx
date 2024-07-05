@@ -16,14 +16,21 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const URL = "http:localhost:5000//api/tournament-formats";
+  const URL = "http://localhost:5000/api/tournament";
+  const token = localStorage.getItem("token");
 
   const addNewTournamentFormat = async (data) => {
     try {
-      const res = await axios.post(URL, data);
+      const res = await axios.post(URL, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       if (res.status === 200 || res.status === 201) {
         toast.success("New tournament format has been added successfully ~");
         navigate(`/tournamentDetail/${id}`);
+        handleClose();
       }
     } catch (error) {
       toast.error("Failed to add new tournament format");
@@ -60,7 +67,7 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
       formatType: selectedType,
       numberOfTeams: value,
       rank: rank,
-      tournamentId: id,
+      tournamentCampaignId: id,
     };
     console.log(data);
     addNewTournamentFormat(data);

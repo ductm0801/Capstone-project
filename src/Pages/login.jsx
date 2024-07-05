@@ -5,8 +5,7 @@ import "../styles/Login.css";
 import logo from "../images/Logo.png";
 import axios from "axios";
 import { toast } from "react-toastify";
-const baseURL =
-  "https://webapi123loi.azurewebsites.net//api/accounts/UserLogin";
+const baseURL = "http://localhost:5000/api/accounts/UserLogin";
 const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");

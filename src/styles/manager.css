@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  border-top: 1px solid #eee;
+  border-radius: 9999px !important;
   transition: background-color 0.3s ease;
 }
 

@@ -17,6 +17,7 @@ import { FaUser } from "react-icons/fa6";
 
 import { useState } from "react";
 import ManageUser from "../components/ManageUser";
+import ClubRegister from "../components/ClubRegister";
 
 const Manager = () => {
   const [userDropdown, setUserDropdown] = useState(false);
@@ -43,8 +44,8 @@ const Manager = () => {
     switch (activeComponent) {
       case "ManageUser":
         return <ManageUser />;
-      case "ManageClub":
-
+      case "ClubRegister":
+        return <ClubRegister />;
       case "ManageTournament":
 
       default:
@@ -120,7 +121,10 @@ const Manager = () => {
                     clubDropdown ? "active" : ""
                   }`}
                 >
-                  <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
+                  <div
+                    className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
+                    onClick={() => setActiveComponent("ClubRegister")}
+                  >
                     <GoChecklist /> List Club Register
                   </div>
                   <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
