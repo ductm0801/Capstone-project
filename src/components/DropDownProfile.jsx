@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import Profile from "./Profile";
 
 const DropdownProfile = () => {
+  const [showPopup, setShowPopup] = useState(false);
+  const handleProfileClick = () => {
+    setShowPopup(true);
+  };
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
   const Logout = () => {
     localStorage.clear();
   };
@@ -11,15 +19,16 @@ const DropdownProfile = () => {
     <div className="dropDownProfile">
       <div className="flex flex-col items-center justify-center">
         <div className="text-black ">
-          <Link to="/profile" href="/Profile">
-            <div className="flex items-center m-4 border-b-2 gap-2 ">
-              <CgProfile />
-              <div>Profile</div>
-            </div>
-          </Link>
+          <div
+            className="flex items-center m-4 border-b-2 gap-2 "
+            onClick={handleProfileClick}
+          >
+            <CgProfile />
+            <div>Profile</div>
+          </div>
         </div>
         <div className="text-black ">
-          <Link to="/login" href="/Profile">
+          <Link to="/login">
             <div className="flex items-center border-b-2  mb-4 gap-2 ">
               <RiLogoutBoxRLine />
               <div onClick={Logout}>Logout</div>
@@ -27,6 +36,7 @@ const DropdownProfile = () => {
           </Link>
         </div>
       </div>
+      <Profile show={showPopup} handleClose={handleClosePopup}></Profile>
     </div>
   );
 };

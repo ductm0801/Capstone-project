@@ -7,6 +7,8 @@ import Competitor from "../components/Competitor";
 import CreateTournamentFormat from "../components/CreateTournamentFormat";
 import defaultImg from "../images/defaultImg.png";
 import { jwtDecode } from "jwt-decode";
+import FormatType from "../components/FormatType";
+import { IoIosChatbubbles } from "react-icons/io";
 const TournamentDetail = () => {
   const URL = "http://localhost:5000/api/tournament-campaign";
   const [tournament, SetTournament] = useState("");
@@ -83,14 +85,6 @@ const TournamentDetail = () => {
             </li>
             <li
               className={`tab-item ${
-                activeTab === "Tournament" ? "active" : ""
-              } mb-[12px] `}
-              onClick={() => handleTabClick("Tournament")}
-            >
-              Tournament
-            </li>
-            <li
-              className={`tab-item ${
                 activeTab === "Schedule" ? "active" : ""
               } mb-[12px] `}
               onClick={() => handleTabClick("Schedule")}
@@ -112,8 +106,7 @@ const TournamentDetail = () => {
         className={`tab-content ${activeTab === "Format" ? "active" : ""}`}
         id="Format"
       >
-        <h1>Format</h1>
-        <p>Content for Competition Format.</p>
+        <FormatType />
       </div>
       <div
         className={`tab-content ${activeTab === "Competitor" ? "active" : ""}`}
@@ -121,12 +114,7 @@ const TournamentDetail = () => {
       >
         <Competitor />
       </div>
-      <div
-        className={`tab-content ${activeTab === "Tournament" ? "active" : ""}`}
-        id="Tournament"
-      >
-        <Test />
-      </div>
+
       <div
         className={`tab-content ${activeTab === "Schedule" ? "active" : ""}`}
         id="Schedule"
@@ -150,6 +138,19 @@ const TournamentDetail = () => {
         show={showPopup}
         handleClose={handleClosePopup}
       ></CreateTournamentFormat>
+      <div className="flex flex-col mx-[112px] mt-[52px]">
+        <h1 className="flex items-center gap-2 text-3xl text-[#C6C61A] mb-[24px]">
+          <span>
+            <IoIosChatbubbles className="text-blue-900" />
+          </span>
+          Comments
+        </h1>
+        <textarea
+          type="text"
+          placeholder="Write your comment"
+          className="mb-[24px] p-4 border rounded-lg"
+        />
+      </div>
     </div>
   );
 };

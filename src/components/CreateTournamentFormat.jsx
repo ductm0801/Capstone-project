@@ -13,6 +13,8 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
   const [rank, setRank] = useState("1");
   const [selectedType, setSelectedType] = useState("Men's Single");
   const [name, setName] = useState("");
+  const [startDate, setstartDate] = useState("");
+  const [endDate, setendDate] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -65,6 +67,8 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
     const data = {
       tournamentName: name,
       formatType: selectedType,
+      startDate: startDate,
+      endDate: endDate,
       numberOfTeams: value,
       rank: rank,
       tournamentCampaignId: id,
@@ -76,7 +80,6 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
     <div className={showHideClassName}>
       <section className="popup-main">
         <h1 className="text-left text-3xl font-bold px-3">
-          {" "}
           Create tournament format
         </h1>
         <p className="text-left px-3 py-4">
@@ -103,7 +106,7 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
               Name <span className="text-red-500 font-bold">*</span>
             </label>
             <input
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
+              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none mb-4"
               type="text"
               placeholder="Name"
               value={name}
@@ -112,6 +115,36 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
               name="name"
               onChange={(e) => setName(e.target.value)}
             ></input>
+            <div className="w-[320px] flex flex-col">
+              <div className="text-left mb-4">
+                Start Date <span className="text-red-500 font-bold">*</span>
+              </div>
+              <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                placeholder="dd/mm/yyyy"
+                value={startDate}
+                onChange={(e) => setstartDate(e.target.value)}
+                required
+                className="border-2 border-inherit rounded-lg p-2 mb-4 focus:outline-none"
+              />
+            </div>
+            <div className="w-[320px] flex flex-col">
+              <div className="text-left mb-4">
+                End Date <span className="text-red-500 font-bold">*</span>
+              </div>
+              <input
+                type="date"
+                id="endDate"
+                name="endDate"
+                placeholder="dd/mm/yyyy"
+                value={endDate}
+                onChange={(e) => setendDate(e.target.value)}
+                required
+                className="border-2 border-inherit rounded-lg p-2 mb-4 focus:outline-none"
+              />
+            </div>
             <p className="text-left py-[16px]">
               Competitor type <span className="text-red-500 font-bold">*</span>
             </p>
@@ -154,7 +187,7 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
                     Rank <span className="text-red-500 font-bold">*</span>
                   </p>
                   <select
-                    className="border-2 border-inherit width-[248px] rounded-lg"
+                    className="border-2 border-inherit rounded-lg"
                     value={rank}
                     onChange={handleChangeRank}
                   >

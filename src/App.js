@@ -13,13 +13,16 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import '@fontsource/roboto/300.css';
 import Manager from "../src/Pages/Manager"
+import { UserProvider } from './UserContext';
 
 const App = () => {
   return (
+    <UserProvider>
     <BrowserRouter>
       <ConditionalLayout />
       <ToastContainer position="top-right" autoClose={2000} />
     </BrowserRouter>
+    </UserProvider>
   );
 }
 
@@ -33,7 +36,7 @@ const ConditionalLayout = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
-        <Route path="/test" element={<Test />} />
+        <Route path="/test/:tournamentId" element={<Test />} />
         <Route path="/findTournament" element={ <Tournament/>} />
         <Route path="/createTournament" element={ <CreateTournament/>} />
         <Route path="/tournamentDetail/:id" element={ <TournamentDetail/>} />

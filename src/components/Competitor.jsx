@@ -52,19 +52,9 @@ const Competitor = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      console.log("Fetching data...");
-      try {
-        await postListCompetitor(id);
-        await postListGuest(id);
-        await getListCompetitor(id);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-        toast.error("Failed to fetch competitors data.");
-      }
-    };
-
-    fetchData();
+    postListCompetitor(id);
+    postListGuest(id);
+    getListCompetitor(id);
   }, [id]);
 
   useEffect(() => {

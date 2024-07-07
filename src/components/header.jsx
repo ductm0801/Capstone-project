@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import logo from "../images/menu_logo.png";
 import "../styles/header.css";
 import { Link, useLocation } from "react-router-dom";
 import DropdownProfile from "./DropDownProfile";
 import Avatar from "../images/Avatar.png";
+import UserContext from "../UserContext";
 
 const Header = () => {
+  const { setUser } = useContext(UserContext);
   const [userRole, setUserRole] = useState(null);
   const [openProfile, setOpenProfile] = useState(false);
   const [navbar, setNavbar] = useState(false);
@@ -20,6 +22,7 @@ const Header = () => {
       const role =
         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       setUserRole(role);
+      setUser(decoded);
     } catch (error) {
       console.error("Invalid token:", error);
     }

@@ -6,6 +6,7 @@
   display: flex;
   background-color: #fdfdfd;
   margin-bottom: 50px;
+  justify-content: center;
 }
 .bracket {
   display: flex;
@@ -14,8 +15,6 @@
   flex-direction: column;
   justify-content: space-around;
   list-style-type: none;
-  border-right: 1px dashed #ccc;
-  flex: 1;
 }
 .bracket:first-of-type {
   .team-item:before {
@@ -29,13 +28,12 @@
 }
 
 .team-item {
-  background-color: #f4f4f4;
-  padding: 0.5rem;
   display: block;
   margin: 0.5rem 10px;
   position: relative;
   vertical-align: middle;
   line-height: 2;
+  width: 175px;
   text-align: center;
   border-style: unset;
 }
@@ -45,7 +43,7 @@
 .team-item.item-left:before,
 .team-item.item-mid:before {
   content: "";
-  border-top: 2px solid #4f7a38;
+  border-top: 2px solid #7cd4fd;
   position: absolute;
   height: 2px;
   width: 10px;
@@ -55,7 +53,7 @@
 .team-item.item-right:before,
 .team-item.item-mid:after {
   content: "";
-  border-top: 2px solid #4f7a38;
+  border-top: 2px solid #7cd4fd;
   position: absolute;
   height: 2px;
   width: 10px;
@@ -65,7 +63,7 @@
 
 .team-item.item-left:after {
   content: "";
-  border-color: #4f7a38;
+  border-color: #7cd4fd;
   border-width: 2px;
   position: absolute;
   display: block;
@@ -87,7 +85,7 @@
 }
 .team-item.item-left:before {
   content: "";
-  border-top: 2px solid #4f7a38;
+  border-top: 2px solid #7cd4fd;
   position: absolute;
   height: 2px;
   width: 10px;
@@ -97,7 +95,7 @@
 
 .team-item.item-right:after {
   content: "";
-  border-color: #4f7a38;
+  border-color: #7cd4fd;
   border-width: 2px;
   position: absolute;
   display: block;
@@ -118,14 +116,25 @@
 }
 .team-item.item-right:before {
   content: "";
-  border-top: 2px solid #4f7a38;
+  border-top: 2px solid #7cd4fd;
   position: absolute;
   height: 2px;
   width: 10px;
   right: -10px;
   top: 50%;
 }
-
+.bracket.bracket-Round4 {
+  .team-item:nth-of-type(odd):after {
+    height: 0%; /* 2^1 */
+    top: 50%;
+  }
+}
+.bracket.bracket-Round5 {
+  .team-item:nth-of-type(odd):after {
+    height: 0%; /* 2^1 */
+    top: 50%;
+  }
+}
 .bracket-2 {
   .team-item:nth-of-type(odd):after {
     height: 200%; /* 2^1 */
