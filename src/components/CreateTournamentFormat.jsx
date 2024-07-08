@@ -35,7 +35,7 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
         handleClose();
       }
     } catch (error) {
-      toast.error("Failed to add new tournament format");
+      toast.error("Something went wrong, Please Login and try again");
     }
   };
   const competitorTypes = [
@@ -178,7 +178,6 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
                     <option value="16">16</option>
                     <option value="32">32</option>
                     <option value="64">64</option>
-                    <option value="128">128</option>
                   </select>
                 </div>
                 <div>

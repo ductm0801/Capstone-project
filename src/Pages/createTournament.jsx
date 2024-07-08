@@ -24,7 +24,7 @@ const CreateTournament = () => {
         navigate(`/findTournament`);
       }
     } catch (error) {
-      toast.error("Failed to add new tournament");
+      toast.error("Something went wrong, Please Login and try again");
     }
   };
 

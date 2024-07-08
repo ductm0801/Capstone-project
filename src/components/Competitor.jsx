@@ -28,13 +28,10 @@ const Competitor = () => {
       const res = await axios.post(`${getUser}?campaignId=${id}`);
       if (res.status === 200 || res.status === 201) {
         console.log("Successfully posted data:", res.data);
-      } else {
-        throw new Error("Unexpected status code: " + res.status);
+      } else if (res.status === 400) {
+        toast.info("there no new athelete");
       }
-    } catch (error) {
-      console.error("Failed to post data:", error);
-      toast.error("Failed to post data.");
-    }
+    } catch (error) {}
   };
 
   const postListGuest = async (id) => {
@@ -43,18 +40,17 @@ const Competitor = () => {
       if (res.status === 200 || res.status === 201) {
         console.log("Successfully posted data:", res.data);
       } else {
-        throw new Error("Unexpected status code: " + res.status);
       }
-    } catch (error) {
-      console.error("Failed to post data:", error);
-      toast.error("Failed to post data.");
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
-    postListCompetitor(id);
-    postListGuest(id);
-    getListCompetitor(id);
+    const interval = setInterval(() => {
+      postListCompetitor(id);
+      postListGuest(id);
+      getListCompetitor(id);
+    }, 1000);
+    return () => clearInterval(interval);
   }, [id]);
 
   useEffect(() => {

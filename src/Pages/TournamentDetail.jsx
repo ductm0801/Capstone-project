@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/tournamentDetail.css";
-import Test from "./test";
+import Bracket from "./Bracket";
 import Competitor from "../components/Competitor";
 import CreateTournamentFormat from "../components/CreateTournamentFormat";
 import defaultImg from "../images/defaultImg.png";

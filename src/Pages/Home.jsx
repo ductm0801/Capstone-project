@@ -11,7 +11,7 @@ import icon3 from "../images/hp-icon3.png";
 const Home = () => {
   return (
     <div>
-      <div className="bg-top">
+      <div className="bg-top flex-wrap">
         <div className="hp-container justify-center gap-16">
           <div>
             <p

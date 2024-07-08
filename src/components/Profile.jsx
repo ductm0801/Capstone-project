@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import "../styles/header.css";
 import defaultImg from "../images/competitor-img.png";
-import UserContext from "../UserContext";
+import UserContext from "../context/UserContext";
 import { CgSoftwareUpload } from "react-icons/cg";
 
 const Profile = ({ show, handleClose }) => {

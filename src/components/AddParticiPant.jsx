@@ -1,54 +1,121 @@
 import React, { useState } from "react";
 import "../styles/AddParticipant.css";
 import popImg from "../images/addparticipant.png";
+import { toast } from "react-toastify";
+import axios from "axios";
+
+const initialState = {
+  firstTeamInput: "",
+  secondTeamInput: "",
+};
+
+const errorInit = {
+  firstTeamInput_err: "",
+  secondTeamInput_err: "",
+};
 
 const AddParticipant = ({ match, closePopup }) => {
-  const [firstTeamInput, setFirstTeamInput] = useState("");
-  const [secondTeamInput, setSecondTeamInput] = useState("");
-  const [showInputs, setShowInputs] = useState(
-    !match.firstTeam && !match.secondTeam
-  );
+  const [state, setState] = useState(initialState);
+  const [errors, setErrors] = useState(errorInit);
+  const { firstTeamInput, secondTeamInput } = state;
 
-  const handleSave = () => {
-    console.log("First Team:", firstTeamInput);
-    console.log("Second Team:", secondTeamInput);
-    closePopup();
+  const validateForm = () => {
+    let isValid = true;
+    let errors = { ...errorInit };
+
+    if (firstTeamInput.trim() === "") {
+      errors.firstTeamInput_err = "First Team Participant is required";
+      isValid = false;
+    }
+
+    if (secondTeamInput.trim() === "") {
+      errors.secondTeamInput_err = "Second Team Participant is required";
+      isValid = false;
+    }
+
+    setErrors(errors);
+    return isValid;
+  };
+
+  const handleSave = async () => {
+    if (validateForm()) {
+      try {
+        const res = await axios.post(
+          "http://localhost:5000/api/addParticipant",
+          {
+            firstTeamInput,
+            secondTeamInput,
+          }
+        );
+        if (res.status === 200 || res.status === 201) {
+          toast.success("Participants added successfully");
+          closePopup();
+        }
+      } catch (error) {
+        toast.error("Failed to add participants");
+        console.error("Error adding participants:", error);
+      }
+    } else {
+      toast.error("Please fill out all required fields");
+    }
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   return (
     <div className="popup">
       <div className="bg-white rounded-lg flex flex-col items-center justify-center">
-        <h2
+        <div
           className="w-[592px] h-[98px] mb-[44px] rounded-t-lg justify-center flex items-center text-white text-3xl font-bold"
           style={{
             background: `url(${popImg})`,
           }}
         >
           Single
-        </h2>
-        <p>Round: {match.round}</p>
+        </div>
+        <p>Round: {match.roundOrder}</p>
         <p>Match Order: {match.matchOrder}</p>
         <p>First Team: {match.firstTeam || "?"}</p>
         <p>Second Team: {match.secondTeam || "?"}</p>
 
-        {showInputs && (
-          <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center mt-6">
+          <div className="form-group mb-2  flex flex-col text-left">
+            <label className="mb-1" htmlFor="firstTeamInput">
+              First Team Participant <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
-              placeholder="Enter First Team"
+              name="firstTeamInput"
               value={firstTeamInput}
-              onChange={(e) => setFirstTeamInput(e.target.value)}
-              className="mb-4 px-4 py-2 border-2 border-gray-300 rounded-lg"
+              onChange={handleInputChange}
+              className=" px-4 py-2 border-2 border-gray-300 rounded-lg"
             />
+            {errors.firstTeamInput_err && (
+              <span className="error">{errors.firstTeamInput_err}</span>
+            )}
+          </div>
+          <div className="form-group mb-2  flex flex-col text-left">
+            <label className="mb-1" htmlFor="secondTeamInput">
+              Second Team Participant <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
-              placeholder="Enter Second Team"
+              name="secondTeamInput"
               value={secondTeamInput}
-              onChange={(e) => setSecondTeamInput(e.target.value)}
-              className="mb-4 px-4 py-2 border-2 border-gray-300 rounded-lg"
+              onChange={handleInputChange}
+              className=" px-4 py-2 border-2 border-gray-300 rounded-lg"
             />
+            {errors.secondTeamInput_err && (
+              <span className="error">{errors.secondTeamInput_err}</span>
+            )}
           </div>
-        )}
+        </div>
 
         <div className="flex justify-center gap-2">
           <button

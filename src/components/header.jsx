@@ -5,7 +5,7 @@ import "../styles/header.css";
 import { Link, useLocation } from "react-router-dom";
 import DropdownProfile from "./DropDownProfile";
 import Avatar from "../images/Avatar.png";
-import UserContext from "../UserContext";
+import UserContext from "../context/UserContext";
 
 const Header = () => {
   const { setUser } = useContext(UserContext);

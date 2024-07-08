@@ -1,11 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+.tournament-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .tournament-brackets {
   display: flex;
   background-color: #fdfdfd;
-  margin-bottom: 50px;
+  padding-bottom: 100px;
+  padding-right: 100px;
+  padding-left: 100px;
   justify-content: center;
 }
 .bracket {
@@ -123,19 +129,13 @@
   right: -10px;
   top: 50%;
 }
-.bracket.bracket-Round4 {
-  .team-item:nth-of-type(odd):after {
-    height: 0%; /* 2^1 */
-    top: 50%;
-  }
-}
-.bracket.bracket-Round5 {
-  .team-item:nth-of-type(odd):after {
-    height: 0%; /* 2^1 */
-    top: 50%;
-  }
-}
+
 .bracket-2 {
+  .team-item .team-order {
+    background-color: #f79009;
+    border: 1px solid #f79009;
+    color: white;
+  }
   .team-item:nth-of-type(odd):after {
     height: 200%; /* 2^1 */
     top: 50%;
@@ -148,6 +148,11 @@
 }
 
 .bracket-3 {
+  .team-item .team-order {
+    background-color: #fef0c7;
+    border: 1px solid #fef0c7;
+    color: #dc6803;
+  }
   .team-item:nth-of-type(odd):after {
     height: 400%; /* 2^2 */
     top: 50%;
@@ -160,6 +165,11 @@
 }
 
 .bracket-4 {
+  .team-item .team-order {
+    background: linear-gradient(to top, #fef0c7 0%, #f79009 79%);
+    border: 1px solid #db7b22;
+    color: white;
+  }
   .team-item:nth-of-type(odd):after {
     height: 800%; /* 2^3 */
     top: 50%;
@@ -172,6 +182,11 @@
 }
 
 .bracket-5 {
+  .team-item .team-order {
+    background: linear-gradient(to bottom, #e85e40 0%, #db7b22 79%);
+    border: 1px solid #db7b22;
+    color: white;
+  }
   .team-item:nth-of-type(odd):after {
     height: 1600%;
     top: 50%;
@@ -184,6 +199,18 @@
 }
 
 .bracket-6 {
+  .team-item .team-order {
+    background: linear-gradient(
+      -62deg,
+      #e3a835 0%,
+      #ffd79b 15%,
+      #e3a835 36%,
+      #ffd79b 61%,
+      #f3ac42 81%
+    );
+    border: 1px solid gold;
+    color: rgb(84, 84, 196);
+  }
   .team-item:nth-of-type(odd):after {
     height: 3200%;
     top: 50%;
