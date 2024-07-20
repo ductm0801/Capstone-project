@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 
-const CreateTournamentFormat = ({ handleClose, show }) => {
+const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const [imageSrc, setImageSrc] = useState(defaultImg);
   const [value, setValue] = useState("8");
@@ -31,8 +31,9 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
       });
       if (res.status === 200 || res.status === 201) {
         toast.success("New tournament format has been added successfully ~");
-        navigate(`/tournamentDetail/${id}`);
+        onSave();
         handleClose();
+        navigate(`/tournamentDetail/${id}`);
       }
     } catch (error) {
       toast.error("Something went wrong, Please Login and try again");

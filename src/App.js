@@ -16,6 +16,7 @@ import Manager from "../src/Pages/Manager"
 import { UserProvider } from './context/UserContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
+import News from './Pages/News';
 
 const App = () => {
   return (
@@ -40,12 +41,12 @@ const ConditionalLayout = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
-        <Route path="/bracket/:tournamentId" element={<Bracket />} />
+        <Route path="/bracket/:bracketId" element={<Bracket />} />
         <Route path="/findTournament" element={<Tournament />} />
         <Route path="/createTournament" element={
-          <ProtectedRoute requiredRole="Manager">
+          // <ProtectedRoute requiredRole="Manager">
           <CreateTournament />
-          </ProtectedRoute>
+          // </ProtectedRoute>
           } />
         <Route path="/tournamentDetail/:id" element={<TournamentDetail />} />
         <Route 
@@ -56,6 +57,7 @@ const ConditionalLayout = () => {
             // </ProtectedRoute>
           } 
         />
+        <Route path="/news" element={<News />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       {showHeaderFooter && <Footer />}

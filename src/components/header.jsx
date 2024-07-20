@@ -97,6 +97,11 @@ const Header = () => {
                   Find Tournament
                 </Link>
               </li>
+              <li>
+                <Link to="/news" className="text-white">
+                  News
+                </Link>
+              </li>
             </>
           )}
           {userRole === "Athletes" && (
@@ -111,6 +116,11 @@ const Header = () => {
               <li>
                 <Link to="/findTournament" className="text-white">
                   Find Tournament
+                </Link>
+              </li>
+              <li>
+                <Link to="/News" className="text-white">
+                  News
                 </Link>
               </li>
               <li>

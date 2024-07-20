@@ -11,6 +11,11 @@ const Competitor = () => {
   const getUser = "http://localhost:5000/api/athletes/user-athletes";
   const getGuest = "http://localhost:5000/api/athletes/guest-athletes";
   const { id } = useParams();
+  const [, forceUpdate] = useState(false);
+
+  const handleForceUpdate = () => {
+    forceUpdate((prev) => !prev);
+  };
 
   const getListCompetitor = async (id) => {
     try {
@@ -39,45 +44,54 @@ const Competitor = () => {
       const res = await axios.post(`${getGuest}?campaignId=${id}`);
       if (res.status === 200 || res.status === 201) {
         console.log("Successfully posted data:", res.data);
-      } else {
+      } else if (res.status === 400) {
+        toast.info("there no new athelete");
       }
     } catch (error) {}
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      postListCompetitor(id);
-      postListGuest(id);
-      getListCompetitor(id);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [id]);
+  const getListParticipants = () => {
+    postListCompetitor(id);
+    postListGuest(id);
+  };
 
   useEffect(() => {
-    console.log("Competitors state updated:", competitors);
-  }, [competitors]);
+    getListCompetitor(id);
+  }, []);
+  // useEffect(() => {
+  //   postListCompetitor(id);
+  //   postListGuest(id);
+  // }, [id]);
 
   return (
-    <div className="grid grid-cols-auto-fit sm:grid-cols-auto-fit md:grid-cols-auto-fit lg:grid-cols-auto-fit xl:grid-cols-auto-fit gap-8 justify-items-center justify-center pb-[120px]">
-      {competitors &&
-        competitors.map((competitor) => (
-          <div className="gradient-bg" key={competitor.id}>
-            <img
-              className="w-[360px] h-[480px]"
-              src={competitor.avatar ? competitor.avatar : defaultImg}
-              alt={competitor.id}
-            />
-            <div className="card-bg">
-              <div className="name">{competitor.athleteName}</div>
-              <div className="textAndSupportingText">
-                <div className="text">{competitor.rank || "unknown"}</div>
-                <div className="supportingText">
-                  {competitor.gender || "unknown"}
+    <div>
+      <button
+        className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
+        onClick={getListParticipants}
+      >
+        Get List participant
+      </button>
+      <div className="grid grid-cols-auto-fit sm:grid-cols-auto-fit md:grid-cols-auto-fit lg:grid-cols-auto-fit xl:grid-cols-auto-fit gap-8 justify-items-center justify-center pb-[120px]">
+        {competitors &&
+          competitors.map((competitor) => (
+            <div className="gradient-bg" key={competitor.id}>
+              <img
+                className="w-[360px] h-[480px]"
+                src={competitor.avatar ? competitor.avatar : defaultImg}
+                alt={competitor.id}
+              />
+              <div className="card-bg">
+                <div className="name">{competitor.athleteName}</div>
+                <div className="textAndSupportingText">
+                  <div className="text">{competitor.rank || "unknown"}</div>
+                  <div className="supportingText">
+                    {competitor.gender || "unknown"}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+      </div>
     </div>
   );
 };

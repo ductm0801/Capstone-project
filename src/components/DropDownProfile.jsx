@@ -20,7 +20,7 @@ const DropdownProfile = () => {
       <div className="flex flex-col items-center justify-center">
         <div className="text-black ">
           <div
-            className="flex items-center m-4 border-b-2 gap-2 "
+            className="flex items-center m-4 border-b-2 gap-2 cursor-pointer"
             onClick={handleProfileClick}
           >
             <CgProfile />

@@ -1,8 +1,8 @@
-import { useState } from "react";
-import "../styles/formAddUser.css";
-import { toast } from "react-toastify";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import "../styles/formAddUser.css";
+import { Select } from "antd";
 
 const initialState = {
   username: "",
@@ -10,6 +10,8 @@ const initialState = {
   fullName: "",
   phoneNumber: "",
   email: "",
+  rank: "",
+  status: "",
 };
 
 const error_init = {
@@ -20,48 +22,55 @@ const error_init = {
   email_err: "",
 };
 
-const FormAddUser = ({ handleClose, show, onSave, loading }) => {
+const FormEditUser = ({ show, handleClose, onSave, user }) => {
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState(error_init);
-  const { username, password, fullName, phoneNumber, role, email } = state;
-  const { id } = useParams();
-  const URL = "http://localhost:5000/api/accounts/CreateAccount";
 
+  useEffect(() => {
+    if (user) {
+      setState({
+        ...state,
+        username: user.username || "",
+        fullName: user.fullName || "",
+        phoneNumber: user.phoneNumber || "",
+        email: user.email || "",
+        rank: user.rank || "",
+        status: user.status || "active",
+      });
+    }
+  }, [user]);
+
+  const URL = "http://localhost:5000/api/users";
+  const options = Array.from({ length: 10 }, (_, i) => ({
+    value: i + 1,
+    label: i + 1,
+  }));
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 
   const validateForm = () => {
     let isValid = true;
     let errors = { ...error_init };
 
-    if (!username || username.trim() === "" || username.length < 2) {
-      errors.username_err =
-        "Username is required and must be more than 2 characters";
-      isValid = false;
-    }
-
-    if (!password || password.trim() === "" || password.length < 8) {
-      errors.password_err =
-        "Password is required and must be at least 8 characters";
-      isValid = false;
-    }
-
-    if (!fullName || fullName.trim() === "") {
+    if (!state.fullName || state.fullName.trim() === "") {
       errors.fullName_err = "Full name is required";
       isValid = false;
     }
 
     if (
-      !phoneNumber ||
-      phoneNumber.trim() === "" ||
-      !/(84|0[3|5|7|8|9])+([0-9]{8})/.test(phoneNumber)
+      !state.email ||
+      state.email.trim() === "" ||
+      !/\S+@\S+\.\S+/.test(state.email)
+    ) {
+      errors.email_err = "A valid email is required";
+      isValid = false;
+    }
+    if (
+      !state.phoneNumber ||
+      state.phoneNumber.trim() === "" ||
+      !/(84|0[3|5|7|8|9])+([0-9]{8})/.test(state.phoneNumber)
     ) {
       errors.phoneNumber_err =
         "Phone number is required and must be a valid 10-digit number";
-      isValid = false;
-    }
-
-    if (!email || email.trim() === "" || !/\S+@\S+\.\S+/.test(email)) {
-      errors.email_err = "A valid email is required";
       isValid = false;
     }
 
@@ -72,20 +81,20 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateForm()) {
-      addNewUser(state);
+      updateUser(state);
     }
   };
 
-  const addNewUser = async (data) => {
+  const updateUser = async (data) => {
     try {
-      const res = await axios.post(`${URL}`, data);
+      const res = await axios.put(`${URL}/${user.id}`, data);
       if (res.status === 200 || res.status === 201) {
-        toast.success("New User has been added successfully");
+        toast.success("User has been updated successfully");
         onSave();
         handleClose();
       }
     } catch (error) {
-      toast.error("An error occurred while adding the user");
+      toast.error("An error occurred while updating the user");
     }
   };
 
@@ -94,10 +103,14 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
     setState((state) => ({ ...state, [name]: value }));
   };
 
+  const handleSelectChange = (value, field) => {
+    setState((state) => ({ ...state, [field]: value }));
+  };
+
   return (
     <div className={showHideClassName}>
       <section className="popup-main">
-        <h1 className="text-3xl mb-4 text-[#033987] font-bold">Add New User</h1>
+        <h1 className="text-3xl mb-4 text-[#033987] font-bold">Update User</h1>
         <button className="close-button text-3xl " onClick={handleClose}>
           &times;
         </button>
@@ -107,11 +120,12 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
               Username <span className="text-red-500 font-bold">*</span>
             </label>
             <input
+              disabled
               type="text"
               name="username"
               placeholder="Username"
               className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={username}
+              value={state.username}
               onChange={handleInputChange}
             />
             {errors.username_err && (
@@ -119,31 +133,15 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
             )}
           </div>
           <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="password">
-              Password <span className="text-red-500 font-bold">*</span>
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={password}
-              onChange={handleInputChange}
-            />
-            {errors.password_err && (
-              <span className="error">{errors.password_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
             <label htmlFor="fullName">
-              Full Name <span className="text-red-500 font-bold">*</span>{" "}
+              Full Name <span className="text-red-500 font-bold">*</span>
             </label>
             <input
               type="text"
               name="fullName"
               placeholder="Full Name"
               className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={fullName}
+              value={state.fullName}
               onChange={handleInputChange}
             />
             {errors.fullName_err && (
@@ -152,14 +150,14 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
           </div>
           <div className="flex flex-col text-left mb-4 gap-2">
             <label htmlFor="phoneNumber">
-              Phone Number <span className="text-red-500 font-bold">*</span>{" "}
+              Phone Number <span className="text-red-500 font-bold">*</span>
             </label>
             <input
               type="text"
               name="phoneNumber"
               placeholder="Phone Number"
               className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={phoneNumber}
+              value={state.phoneNumber}
               onChange={handleInputChange}
             />
             {errors.phoneNumber_err && (
@@ -168,22 +166,47 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
           </div>
           <div className="flex flex-col text-left mb-4 gap-2">
             <label htmlFor="email">
-              Email <span className="text-red-500 font-bold">*</span>{" "}
+              Email <span className="text-red-500 font-bold">*</span>
             </label>
             <input
               type="email"
               name="email"
               placeholder="Email"
               className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={email}
+              value={state.email}
               onChange={handleInputChange}
             />
             {errors.email_err && (
               <span className="error">{errors.email_err}</span>
             )}
           </div>
+          <div className="flex flex-col text-left mb-4 gap-2">
+            <label htmlFor="rank">
+              Rank <span className="text-red-500 font-bold">*</span>
+            </label>
+            <Select
+              showSearch
+              value={state.rank}
+              options={options}
+              onChange={(value) => handleSelectChange(value, "rank")}
+            />
+          </div>
+          <div className="flex flex-col text-left mb-4 gap-2">
+            <label htmlFor="status">
+              Status <span className="text-red-500 font-bold">*</span>
+            </label>
+            <Select
+              showSearch
+              value={state.status}
+              options={[
+                { value: "active", label: "Active" },
+                { value: "inactive", label: "Inactive" },
+              ]}
+              onChange={(value) => handleSelectChange(value, "status")}
+            />
+          </div>
           <button type="submit" className="form-button">
-            Create
+            Update
           </button>
         </form>
       </section>
@@ -191,4 +214,4 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   );
 };
 
-export default FormAddUser;
+export default FormEditUser;

@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/tournamentDetail.css";
-import Bracket from "./Bracket";
 import Competitor from "../components/Competitor";
 import CreateTournamentFormat from "../components/CreateTournamentFormat";
 import defaultImg from "../images/defaultImg.png";
@@ -13,21 +12,9 @@ const TournamentDetail = () => {
   const URL = "http://localhost:5000/api/tournament-campaign";
   const [tournament, SetTournament] = useState("");
   const [activeTab, setActiveTab] = useState("Format");
-  const [showPopup, setShowPopup] = useState(false);
-  const [userRole, setUserRole] = useState(null);
+  const [refreshFormatType, setRefreshFormatType] = useState(false);
   const { id } = useParams();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    try {
-      const decoded = jwtDecode(token);
-      const role =
-        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      setUserRole(role);
-    } catch (error) {
-      console.error("Invalid token:", error);
-    }
-  }, []);
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -41,13 +28,6 @@ const TournamentDetail = () => {
   useEffect(() => {
     if (id) getOneTournament(id);
   }, [id]);
-
-  const handleAddButtonClick = () => {
-    setShowPopup(true);
-  };
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
 
   return (
     <div>
@@ -106,7 +86,7 @@ const TournamentDetail = () => {
         className={`tab-content ${activeTab === "Format" ? "active" : ""}`}
         id="Format"
       >
-        <FormatType />
+        <FormatType tournamentId={id} refresh={refreshFormatType} />
       </div>
       <div
         className={`tab-content ${activeTab === "Competitor" ? "active" : ""}`}
@@ -129,15 +109,7 @@ const TournamentDetail = () => {
         <h1>About</h1>
         <p>Content for About.</p>
       </div>
-      {userRole === "Manager" && (
-        <button className="add-button" onClick={handleAddButtonClick}>
-          +
-        </button>
-      )}
-      <CreateTournamentFormat
-        show={showPopup}
-        handleClose={handleClosePopup}
-      ></CreateTournamentFormat>
+
       <div className="flex flex-col mx-[112px] mt-[52px]">
         <h1 className="flex items-center gap-2 text-3xl text-[#C6C61A] mb-[24px]">
           <span>

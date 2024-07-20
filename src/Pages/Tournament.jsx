@@ -169,7 +169,7 @@ const Tournament = () => {
                   .filter((tournament) => {
                     return search.toLowerCase() === ""
                       ? tournament
-                      : tournament.name.includes(search);
+                      : tournament.tournamentName.includes(search);
                   })
                   .map((tournament) => (
                     <div
@@ -202,7 +202,7 @@ const Tournament = () => {
                   .filter((tournament) => {
                     return search.toLowerCase() === ""
                       ? tournament
-                      : tournament.name.includes(search);
+                      : tournament.tournamentName.includes(search);
                   })
                   .map((tournament) => (
                     <div key={tournament.id}>

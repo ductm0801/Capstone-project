@@ -15,32 +15,15 @@ const errorInit = {
   firstAthleteId_err: "",
   secondAthleteId_err: "",
 };
-
-const AddParticipant = ({ match, closePopup, tournamentId, onSave }) => {
+const UpdateWinningTeam = ({ match, closePopup, tournamentId, onSave }) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState(errorInit);
   const { firstAthleteId, secondAthleteId } = state;
   const navigate = useNavigate();
-  const URL = "http://localhost:5000/api/athletes/non-teams";
-  const URL2 = "http://localhost:5000/api/pickleball-match/assign-single-team";
+  const URL2 = "/api/pickleball-match/match-result";
 
-  const getParticipants = async () => {
-    try {
-      const res = await axios.get(`${URL}/${tournamentId}`);
-      const { success, message } = res.data;
-      if (res.status === 200) {
-        setParticipants(res.data);
-      }
-    } catch (error) {
-      toast.error("Failed to fetch participants");
-      console.error("Error fetching participants:", error);
-    }
-  };
-
-  useEffect(() => {
-    getParticipants();
-  }, []);
+  console.log(match.matchId);
 
   const options = participants.map((participant) => ({
     label: `${participant.athleteName} (${participant.athleteType})`,
@@ -49,21 +32,20 @@ const AddParticipant = ({ match, closePopup, tournamentId, onSave }) => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    assignParticipants(state);
-    // navigate(`/bracket/${bracketId}`);
+    updateWinningTeam(state);
   };
 
-  const assignParticipants = async (data) => {
+  const updateWinningTeam = async (data) => {
     try {
       const res = await axios.put(`${URL2}/${match.matchId}`, data);
       if (res.status === 200 || res.status === 201) {
-        toast.success("Participants assigned successfully");
+        toast.success("Update Winning Team successfully");
         onSave();
         closePopup();
       }
     } catch (error) {
-      toast.error("Failed to assign participants");
-      console.error("Error assigning participants:", error);
+      toast.error("Failed to Update");
+      console.error("Error Update:", error);
     }
   };
 
@@ -83,12 +65,12 @@ const AddParticipant = ({ match, closePopup, tournamentId, onSave }) => {
             background: `url(${popImg})`,
           }}
         >
-          Single
+          Update Winning Team
         </div>
         <p>Round: {match.roundOrder}</p>
         <p>Match Order: {match.matchOrder}</p>
-        <p>First Team: {match.firstTeam || "?"}</p>
-        <p>Second Team: {match.secondTeam || "?"}</p>
+        <p>First Team: {match.firstAthleteId || "?"}</p>
+        <p>Second Team: {match.secondAthleteId || "?"}</p>
 
         <div className="flex flex-col w-full items-center mt-6">
           <div className="form-group mb-2 flex flex-col text-left">
@@ -143,5 +125,4 @@ const AddParticipant = ({ match, closePopup, tournamentId, onSave }) => {
     </div>
   );
 };
-
-export default AddParticipant;
+export default UpdateWinningTeam;

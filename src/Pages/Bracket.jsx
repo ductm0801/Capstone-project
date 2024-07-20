@@ -4,32 +4,36 @@ import { useLocation, useParams } from "react-router-dom";
 import "../styles/Bracket.css";
 import AddParticiPant from "../components/AddParticiPant";
 import AddTeam from "../components/AddTeam";
+import UpdateWinningTeam from "../components/UpdateWinningTeam";
 import tourbg from "../images/tournament-bg.png";
 
 const Bracket = () => {
   const [data, setData] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
-  const { tournamentId } = useParams();
-  const URL = `http://localhost:5000/api/pickleball-match/${tournamentId}`;
-  const { id } = useParams();
+  const { bracketId } = useParams();
+  const [loading, setLoading] = useState(false);
+  const URL = `http://localhost:5000/api/pickleball-match`;
+
   const location = useLocation();
   const { formatType } = location.state || {};
-  console.log(formatType);
+  const { tournamentId } = location.state || {};
+  console.log(tournamentId, formatType);
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(`${URL}/${bracketId}`);
+      if (res.status === 200) {
+        setData(res.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(URL);
-        if (res.status === 200) {
-          setData(res.data);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchData();
-  }, [tournamentId]);
+  }, []);
+
   console.log(data);
 
   const matchesByRound = data.reduce((acc, match) => {
@@ -46,21 +50,31 @@ const Bracket = () => {
   ];
 
   const handleMatchClick = (match) => {
+    const previousRoundMatches = matchesByRound[match.roundOrder - 1] || [];
     if (match.roundOrder === 1) {
       setSelectedMatch(match);
+    } else if (match.roundOrder === 2) {
+      const PreviousMatchesHaveFirstTeamId = previousRoundMatches.find(
+        (m) => m.firstTeamId
+      );
+      if (PreviousMatchesHaveFirstTeamId) {
+        setSelectedMatch(match);
+      } else {
+        setSelectedMatch(null);
+      }
     }
   };
 
   const closePopup = () => {
     setSelectedMatch(null);
   };
+
   const paddingLeft = data.length === 63 ? "350px" : "0";
   return (
     <div
       className="tournament-container"
       style={{
         background: `url(${tourbg})`,
-
         backgroundPosition: "center",
         backgroundSize: "cover",
         paddingLeft: paddingLeft,
@@ -126,16 +140,43 @@ const Bracket = () => {
       </div>
 
       {selectedMatch &&
-        (formatType === "MenSingles" || formatType === "WomenSingles") && (
-          <AddParticiPant match={selectedMatch} closePopup={closePopup} />
+        (formatType === "MenSingles" || formatType === "WomenSingles") &&
+        selectedMatch.roundOrder === 1 && (
+          <AddParticiPant
+            match={selectedMatch}
+            closePopup={closePopup}
+            tournamentId={tournamentId}
+            bracketId={bracketId}
+            onSave={fetchData}
+            loading={loading}
+          />
         )}
 
       {selectedMatch &&
         (formatType === "MenDual" ||
           formatType === "WomenDual" ||
-          formatType === "DualMixed") && (
-          <AddTeam match={selectedMatch} closePopup={closePopup} />
+          formatType === "DualMixed") &&
+        selectedMatch.roundOrder === 1 && (
+          <AddTeam
+            match={selectedMatch}
+            closePopup={closePopup}
+            tournamentId={tournamentId}
+            bracketId={bracketId}
+            onSave={fetchData}
+            loading={loading}
+          />
         )}
+
+      {selectedMatch && selectedMatch.roundOrder === 2 && (
+        <UpdateWinningTeam
+          match={selectedMatch}
+          closePopup={closePopup}
+          tournamentId={tournamentId}
+          bracketId={bracketId}
+          onSave={fetchData}
+          loading={loading}
+        />
+      )}
     </div>
   );
 };
