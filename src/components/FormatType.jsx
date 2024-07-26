@@ -28,14 +28,25 @@ const FormatType = ({ tournamentId }) => {
   const URL = "http://localhost:5000/campaign";
   const navigate = useNavigate();
   console.log(tournamentId);
+
   const handleTournamentClick = (tournament) => {
+    console.log(tournament.formatType);
     setSelectedTournament(tournament);
-    navigate(`/bracket/${tournament.tournamentId}`, {
-      state: {
-        formatType: tournament.formatType,
-        tournamentId: id,
-      },
-    });
+    if (userRole === "Manager") {
+      navigate(`/addParticipants/${tournament.tournamentId}`, {
+        state: {
+          formatType: tournament.formatType,
+          tournamentId: id,
+        },
+      });
+    } else if (userRole === "Athlete" || !userRole) {
+      navigate(`/bracket/${tournament.tournamentId}`, {
+        state: {
+          formatType: tournament.formatType,
+          tournamentId: id,
+        },
+      });
+    }
   };
   const getAllTournament = async () => {
     try {

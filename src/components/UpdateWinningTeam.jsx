@@ -3,36 +3,39 @@ import "../styles/AddParticipant.css";
 import popImg from "../images/addparticipant.png";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Select } from "antd";
+import { Radio } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
-  firstAthleteId: "",
-  secondAthleteId: "",
+  matchId: "",
+  winningFirstTeamId: "",
+  winningSecondTeamId: "",
 };
 
-const errorInit = {
-  firstAthleteId_err: "",
-  secondAthleteId_err: "",
-};
-const UpdateWinningTeam = ({ match, closePopup, tournamentId, onSave }) => {
-  const [participants, setParticipants] = useState([]);
-  const [state, setState] = useState(initialState);
-  const [errors, setErrors] = useState(errorInit);
-  const { firstAthleteId, secondAthleteId } = state;
-  const navigate = useNavigate();
-  const URL2 = "/api/pickleball-match/match-result";
+const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
+  const [firstTeamParticipants, setFirstTeamParticipants] = useState([]);
+  const [secondTeamParticipants, setSecondTeamParticipants] = useState([]);
+  const [state, setState] = useState({
+    ...initialState,
+    matchId: match.matchId,
+  });
+  const { winningFirstTeamId, winningSecondTeamId } = state;
+  const URL2 = "http://localhost:5000/api/pickleball-match/match-result";
+  const URL = `http://localhost:5000/api/pickleball-match/advanced-match/${match.matchId}`;
 
-  console.log(match.matchId);
-
-  const options = participants.map((participant) => ({
-    label: `${participant.athleteName} (${participant.athleteType})`,
-    value: participant.id,
-  }));
+  const getOptions = (participants) =>
+    participants.map((participant) => ({
+      label: participant.teamName,
+      value: participant.teamId,
+    }));
 
   const handleSave = async (e) => {
     e.preventDefault();
-    updateWinningTeam(state);
+    updateWinningTeam({
+      matchId: state.matchId,
+      winningFirstTeamId,
+      winningSecondTeamId,
+    });
   };
 
   const updateWinningTeam = async (data) => {
@@ -49,10 +52,36 @@ const UpdateWinningTeam = ({ match, closePopup, tournamentId, onSave }) => {
     }
   };
 
-  const handleInputChange = (value, fieldName) => {
+  const getPreviousTeam = async () => {
+    try {
+      const res = await axios.get(URL);
+      if (res.status === 200) {
+        const firstTeams = res.data.firstTeams || [];
+        const secondTeams = res.data.secondTeams || [];
+        setFirstTeamParticipants(firstTeams);
+        setSecondTeamParticipants(secondTeams);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch participants");
+      console.error("Error fetching participants:", error);
+    }
+  };
+
+  useEffect(() => {
+    getPreviousTeam();
+  }, []);
+
+  const handleFirstTeamChange = (e) => {
     setState((prevState) => ({
       ...prevState,
-      [fieldName]: value,
+      winningFirstTeamId: e.target.value,
+    }));
+  };
+
+  const handleSecondTeamChange = (e) => {
+    setState((prevState) => ({
+      ...prevState,
+      winningSecondTeamId: e.target.value,
     }));
   };
 
@@ -69,41 +98,31 @@ const UpdateWinningTeam = ({ match, closePopup, tournamentId, onSave }) => {
         </div>
         <p>Round: {match.roundOrder}</p>
         <p>Match Order: {match.matchOrder}</p>
-        <p>First Team: {match.firstAthleteId || "?"}</p>
-        <p>Second Team: {match.secondAthleteId || "?"}</p>
+        <p>First Team: {match.firstTeam || "?"}</p>
+        <p>Second Team: {match.secondTeam || "?"}</p>
 
         <div className="flex flex-col w-full items-center mt-6">
-          <div className="form-group mb-2 flex flex-col text-left">
-            <label className="mb-1" htmlFor="firstAthleteId">
-              First Team Participant <span className="text-red-500">*</span>
+          <div className="form-group mb-4 w-full flex flex-col items-center">
+            <label className="mb-2 font-bold" htmlFor="firstTeam">
+              Select First Winning Team <span className="text-red-500">*</span>
             </label>
-            <Select
-              showSearch
-              placeholder="First Participant"
-              optionFilterProp="label"
-              options={options}
-              onChange={(value) => handleInputChange(value, "firstAthleteId")}
-              className="w-[180px]"
+            <Radio.Group
+              options={getOptions(firstTeamParticipants)}
+              value={winningFirstTeamId}
+              onChange={handleFirstTeamChange}
+              className="w-full flex justify-center"
             />
-            {errors.firstAthleteId_err && (
-              <span className="error">{errors.firstAthleteId_err}</span>
-            )}
           </div>
-          <div className="form-group mb-2 flex flex-col text-left">
-            <label className="mb-1" htmlFor="secondAthleteId">
-              Second Team Participant <span className="text-red-500">*</span>
+          <div className="form-group mb-4 w-full flex flex-col items-center">
+            <label className="mb-2 font-bold" htmlFor="secondTeam">
+              Select Second Winning Team <span className="text-red-500">*</span>
             </label>
-            <Select
-              showSearch
-              placeholder="Second Participant"
-              optionFilterProp="label"
-              options={options}
-              onChange={(value) => handleInputChange(value, "secondAthleteId")}
-              className="w-[180px]"
+            <Radio.Group
+              options={getOptions(secondTeamParticipants)}
+              value={winningSecondTeamId}
+              onChange={handleSecondTeamChange}
+              className="w-full flex justify-center"
             />
-            {errors.secondAthleteId_err && (
-              <span className="error">{errors.secondAthleteId_err}</span>
-            )}
           </div>
         </div>
 
@@ -125,4 +144,5 @@ const UpdateWinningTeam = ({ match, closePopup, tournamentId, onSave }) => {
     </div>
   );
 };
+
 export default UpdateWinningTeam;

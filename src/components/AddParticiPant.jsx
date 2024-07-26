@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const initialState = {
   firstAthleteId: "",
-  secondAthleteId: "",
+  secondAthleteId: 0,
 };
 
 const errorInit = {
@@ -16,7 +16,13 @@ const errorInit = {
   secondAthleteId_err: "",
 };
 
-const AddParticipant = ({ match, closePopup, tournamentId, onSave }) => {
+const AddParticipant = ({
+  match,
+  closePopup,
+  tournamentId,
+  onSave,
+  bracketId,
+}) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState(errorInit);
@@ -25,9 +31,11 @@ const AddParticipant = ({ match, closePopup, tournamentId, onSave }) => {
   const URL = "http://localhost:5000/api/athletes/non-teams";
   const URL2 = "http://localhost:5000/api/pickleball-match/assign-single-team";
 
+  console.log(participants);
+  console.log(tournamentId);
   const getParticipants = async () => {
     try {
-      const res = await axios.get(`${URL}/${tournamentId}`);
+      const res = await axios.get(`${URL}/${bracketId}`);
       const { success, message } = res.data;
       if (res.status === 200) {
         setParticipants(res.data);

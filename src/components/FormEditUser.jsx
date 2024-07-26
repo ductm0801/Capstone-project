@@ -199,8 +199,8 @@ const FormEditUser = ({ show, handleClose, onSave, user }) => {
               showSearch
               value={state.status}
               options={[
-                { value: "active", label: "Active" },
-                { value: "inactive", label: "Inactive" },
+                { value: "0", label: "Active" },
+                { value: "1", label: "Inactive" },
               ]}
               onChange={(value) => handleSelectChange(value, "status")}
             />

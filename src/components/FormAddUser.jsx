@@ -10,6 +10,7 @@ const initialState = {
   fullName: "",
   phoneNumber: "",
   email: "",
+  Address: "",
 };
 
 const error_init = {
@@ -23,9 +24,10 @@ const error_init = {
 const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState(error_init);
-  const { username, password, fullName, phoneNumber, role, email } = state;
+  const { username, password, fullName, phoneNumber, role, email, Address } =
+    state;
   const { id } = useParams();
-  const URL = "http://localhost:5000/api/accounts/CreateAccount";
+  const URL = "http://localhost:5000/api/users";
 
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 
@@ -160,6 +162,22 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
               placeholder="Phone Number"
               className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
               value={phoneNumber}
+              onChange={handleInputChange}
+            />
+            {errors.phoneNumber_err && (
+              <span className="error">{errors.phoneNumber_err}</span>
+            )}
+          </div>
+          <div className="flex flex-col text-left mb-4 gap-2">
+            <label htmlFor="Address">
+              Address <span className="text-red-500 font-bold">*</span>{" "}
+            </label>
+            <input
+              type="text"
+              name="Address"
+              placeholder="Address"
+              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
+              value={Address}
               onChange={handleInputChange}
             />
             {errors.phoneNumber_err && (

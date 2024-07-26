@@ -14,10 +14,13 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { GiPodiumWinner } from "react-icons/gi";
 import { FaUser } from "react-icons/fa6";
+import { GiTennisCourt } from "react-icons/gi";
 
 import { useState } from "react";
 import ManageUser from "../components/ManageUser";
 import ClubRegister from "../components/ClubRegister";
+import Court from "../components/Court";
+import WinCondition from "../components/WinCondition";
 
 const Manager = () => {
   const [userDropdown, setUserDropdown] = useState(false);
@@ -46,8 +49,10 @@ const Manager = () => {
         return <ManageUser />;
       case "ClubRegister":
         return <ClubRegister />;
-      case "ManageTournament":
-
+      case "Court":
+        return <Court />;
+      case "winCondition":
+        return <WinCondition />;
       default:
         return <h1>Welcome to the Manager Dashboard</h1>;
     }
@@ -125,7 +130,7 @@ const Manager = () => {
                     className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
                     onClick={() => setActiveComponent("ClubRegister")}
                   >
-                    <GoChecklist /> List Club Register
+                    <GoChecklist /> List Tournament Register
                   </div>
                   <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
                     <AiOutlineUserAdd /> Club Members
@@ -160,10 +165,20 @@ const Manager = () => {
                   <RiCalendarScheduleLine />
                   Schedule
                 </div>
-                <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
+                <div
+                  className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
+                  onClick={() => setActiveComponent("winCondition")}
+                >
                   <GiPodiumWinner />
-                  Results
+                  Win Conditon
                   <div />
+                </div>
+                <div
+                  className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
+                  onClick={() => setActiveComponent("Court")}
+                >
+                  <GiTennisCourt />
+                  Court
                 </div>
               </div>
             )}

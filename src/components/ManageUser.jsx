@@ -130,16 +130,16 @@ const ManageUser = () => {
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
                   <div
                     className={`status-item ${
-                      user.isActive ? "status-active" : "status-inactive"
+                      user.status === 0 ? "status-active" : "status-inactive"
                     }`}
                   >
                     <span
                       className={`status-dot ${
-                        user.isActive ? "dot-active" : "dot-inactive"
+                        user.status === 0 ? "dot-active" : "dot-inactive"
                       }`}
                     ></span>
                     <span className="mr-[5px]">
-                      {user.isActive ? "Active" : "Deactivate"}
+                      {user.status === 0 ? "Active" : "Deactivate"}
                     </span>
                   </div>
                 </td>

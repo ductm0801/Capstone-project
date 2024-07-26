@@ -24,7 +24,7 @@ const Competitor = () => {
         setCompetitor(res.data);
       }
     } catch (error) {
-      toast.error("Failed to fetch competitors list.");
+      toast.info("There no new athelete");
     }
   };
 
@@ -53,6 +53,7 @@ const Competitor = () => {
   const getListParticipants = () => {
     postListCompetitor(id);
     postListGuest(id);
+    getListCompetitor(id);
   };
 
   useEffect(() => {

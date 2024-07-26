@@ -105,11 +105,18 @@ const Header = () => {
             </>
           )}
           {userRole === "Athletes" && (
-            <li>
-              <Link to="/findTournament" className="text-white">
-                Find Tournament
-              </Link>
-            </li>
+            <ul className="hidden lg:flex space-x-12 items-center">
+              <li>
+                <Link to="/findTournament" className="text-white">
+                  Find Tournament
+                </Link>
+              </li>
+              <li>
+                <Link to="/news" className="text-white">
+                  News
+                </Link>
+              </li>
+            </ul>
           )}
           {!userRole && (
             <>

@@ -6,18 +6,32 @@ import AddParticiPant from "../components/AddParticiPant";
 import AddTeam from "../components/AddTeam";
 import UpdateWinningTeam from "../components/UpdateWinningTeam";
 import tourbg from "../images/tournament-bg.png";
+import { jwtDecode } from "jwt-decode";
 
 const Bracket = () => {
   const [data, setData] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const { bracketId } = useParams();
   const [loading, setLoading] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const URL = `http://localhost:5000/api/pickleball-match`;
 
   const location = useLocation();
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
   console.log(tournamentId, formatType);
+
+  useEffect(() => {
+    const jwtToken = localStorage.getItem("token");
+    if (jwtToken) {
+      const decodedToken = jwtDecode(jwtToken);
+      setUserRole(
+        decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ]
+      );
+    }
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -50,10 +64,12 @@ const Bracket = () => {
   ];
 
   const handleMatchClick = (match) => {
+    if (userRole !== "Manager") return;
+
     const previousRoundMatches = matchesByRound[match.roundOrder - 1] || [];
     if (match.roundOrder === 1) {
       setSelectedMatch(match);
-    } else if (match.roundOrder === 2) {
+    } else if (match.roundOrder !== 1) {
       const PreviousMatchesHaveFirstTeamId = previousRoundMatches.find(
         (m) => m.firstTeamId
       );
