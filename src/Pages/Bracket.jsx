@@ -183,7 +183,7 @@ const Bracket = () => {
           />
         )}
 
-      {selectedMatch && selectedMatch.roundOrder === 2 && (
+      {selectedMatch && selectedMatch.roundOrder !== 1 && (
         <UpdateWinningTeam
           match={selectedMatch}
           closePopup={closePopup}

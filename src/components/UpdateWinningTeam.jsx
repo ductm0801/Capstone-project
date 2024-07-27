@@ -3,24 +3,32 @@ import "../styles/AddParticipant.css";
 import popImg from "../images/addparticipant.png";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Radio } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Radio, Select } from "antd";
 
 const initialState = {
   matchId: "",
   winningFirstTeamId: "",
   winningSecondTeamId: "",
+  firstMatchWinConditionId: "",
+  secondMatchWinConditionId: "",
 };
 
 const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
   const [firstTeamParticipants, setFirstTeamParticipants] = useState([]);
   const [secondTeamParticipants, setSecondTeamParticipants] = useState([]);
+  const [options, setOptions] = useState([]);
   const [state, setState] = useState({
     ...initialState,
     matchId: match.matchId,
   });
-  const { winningFirstTeamId, winningSecondTeamId } = state;
-  const URL2 = "http://localhost:5000/api/pickleball-match/match-result";
+  const {
+    winningFirstTeamId,
+    winningSecondTeamId,
+    firstMatchWinConditionId,
+    secondMatchWinConditionId,
+  } = state;
+  const URL3 = "http://localhost:5000/api/win-condition";
+  const URL2 = "http://localhost:5000/api/pickleball-match/next-match";
   const URL = `http://localhost:5000/api/pickleball-match/advanced-match/${match.matchId}`;
 
   const getOptions = (participants) =>
@@ -33,10 +41,32 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
     e.preventDefault();
     updateWinningTeam({
       matchId: state.matchId,
-      winningFirstTeamId,
-      winningSecondTeamId,
+      firstTeamId: winningFirstTeamId,
+      secondTeamId: winningSecondTeamId,
+      firstMatchWinConditionId,
+      secondMatchWinConditionId,
     });
   };
+
+  const fetchOptions = async () => {
+    try {
+      const res = await axios.get(URL3);
+      if (res.status === 200) {
+        const formattedOptions = res.data.data.map((option) => ({
+          label: option.conditionName,
+          value: option.winConditionId,
+        }));
+        setOptions(formattedOptions);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch options");
+      console.error("Error fetching options:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOptions();
+  }, []);
 
   const updateWinningTeam = async (data) => {
     try {
@@ -85,6 +115,20 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
     }));
   };
 
+  const handleFirstWinConditionChange = (value) => {
+    setState((prevState) => ({
+      ...prevState,
+      firstMatchWinConditionId: value,
+    }));
+  };
+
+  const handleSecondWinConditionChange = (value) => {
+    setState((prevState) => ({
+      ...prevState,
+      secondMatchWinConditionId: value,
+    }));
+  };
+
   return (
     <div className="popup">
       <div className="bg-white rounded-lg flex flex-col items-center justify-center">
@@ -112,6 +156,13 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
               onChange={handleFirstTeamChange}
               className="w-full flex justify-center"
             />
+            <Select
+              className="w-[180px] mt-2"
+              placeholder="Select Win Condition"
+              options={options}
+              value={firstMatchWinConditionId}
+              onChange={handleFirstWinConditionChange}
+            />
           </div>
           <div className="form-group mb-4 w-full flex flex-col items-center">
             <label className="mb-2 font-bold" htmlFor="secondTeam">
@@ -122,6 +173,14 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
               value={winningSecondTeamId}
               onChange={handleSecondTeamChange}
               className="w-full flex justify-center"
+            />
+
+            <Select
+              className="w-[180px] mt-2"
+              placeholder="Select Win Condition"
+              options={options}
+              value={secondMatchWinConditionId}
+              onChange={handleSecondWinConditionChange}
             />
           </div>
         </div>
