@@ -32,21 +32,27 @@ const FormatType = ({ tournamentId }) => {
   const handleTournamentClick = (tournament) => {
     console.log(tournament.formatType);
     setSelectedTournament(tournament);
-    if (userRole === "Manager") {
-      navigate(`/addParticipants/${tournament.tournamentId}`, {
-        state: {
-          formatType: tournament.formatType,
-          tournamentId: id,
-        },
-      });
-    } else if (userRole === "Athlete" || !userRole) {
-      navigate(`/bracket/${tournament.tournamentId}`, {
-        state: {
-          formatType: tournament.formatType,
-          tournamentId: id,
-        },
-      });
-    }
+    // if (userRole === "Manager") {
+    //   navigate(`/addParticipants/${tournament.tournamentId}`, {
+    //     state: {
+    //       formatType: tournament.formatType,
+    //       tournamentId: id,
+    //     },
+    //   });
+    // } else if (userRole === "Athlete" || !userRole) {
+    //   navigate(`/bracket/${tournament.tournamentId}`, {
+    //     state: {
+    //       formatType: tournament.formatType,
+    //       tournamentId: id,
+    //     },
+    //   });
+    // }
+    navigate(`/bracket/${tournament.tournamentId}`, {
+      state: {
+        formatType: tournament.formatType,
+        tournamentId: id,
+      },
+    });
   };
   const getAllTournament = async () => {
     try {

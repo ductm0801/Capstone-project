@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { IoIosChatbubbles, IoMdSend } from "react-icons/io";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { formatDistanceToNow } from "date-fns";
 
 const About = () => {
   const [comments, setComments] = useState([]);
@@ -12,6 +13,11 @@ const About = () => {
   const [accountId, setAccountId] = useState(null);
   const jwtToken = localStorage.getItem("token");
   const { id } = useParams();
+
+  function getRelativeTime(dateString) {
+    const date = new Date(dateString);
+    return formatDistanceToNow(date, { addSuffix: true });
+  }
 
   useEffect(() => {
     decodeToken();
@@ -79,12 +85,17 @@ const About = () => {
   };
   const fetchComments = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/comments");
+      const response = await axios.get(
+        `http://localhost:5000/api/comment/tournament/${id}`
+      );
       setComments(response.data);
     } catch (error) {
       console.error("There was an error fetching the comments!", error);
     }
   };
+  useEffect(() => {
+    fetchComments();
+  }, []);
   return (
     <div>
       <h1>
@@ -112,13 +123,23 @@ const About = () => {
           </div>
 
           <div>
-            <h1>comment</h1>
-            <h1>comment</h1>
-            <h1>comment</h1>
-            <h1>comment</h1>
-            <h1>comment</h1>
-            <h1>comment</h1>
-            <h1>comment</h1>
+            {comments.length > 0 &&
+              comments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="flex flex-col gap-y-2 mb-[16px]"
+                >
+                  <span className="text-[#1244A2] text-[16px] font-semibold">
+                    Name{" "}
+                    <span className="text-[12px] text-[#667085]">
+                      {getRelativeTime(comment.createDate)}
+                    </span>
+                  </span>
+                  <div className="border rounded-lg px-4 py-4">
+                    {comment.commentText}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </h1>
