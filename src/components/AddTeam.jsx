@@ -7,11 +7,11 @@ import popImg from "../images/addparticipant.png";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
-  team1: {
+  firstTeam: {
     firstAthleteId: 0,
     secondAthleteId: 0,
   },
-  team2: {
+  secondTeam: {
     firstAthleteId: 0,
     secondAthleteId: 0,
   },
@@ -31,13 +31,19 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const URL = "http://localhost:5000/api/athletes";
+  const URL = "http://localhost:5000/api/athletes/non-teams";
   const URL2 = "http://localhost:5000/api/pickleball-match/assign-double-team";
 
   const getParticipants = async () => {
-    const res = await axios.get(`${URL}?campaignId=${tournamentId}`);
-    if (res.status === 200) {
-      setParticipants(res.data);
+    try {
+      const res = await axios.get(`${URL}/${bracketId}`);
+      const { success, message } = res.data;
+      if (res.status === 200) {
+        setParticipants(res.data);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch participants");
+      console.error("Error fetching participants:", error);
     }
   };
 
@@ -109,7 +115,7 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
                   optionFilterProp="label"
                   options={options}
                   onChange={(value) =>
-                    handleInputChange("team1", "firstAthleteId", value)
+                    handleInputChange("firstTeam", "firstAthleteId", value)
                   }
                 />
               </div>
@@ -124,7 +130,7 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
                   optionFilterProp="label"
                   options={options}
                   onChange={(value) =>
-                    handleInputChange("team1", "secondAthleteId", value)
+                    handleInputChange("firstTeam", "secondAthleteId", value)
                   }
                 />
               </div>
@@ -141,7 +147,7 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
                   optionFilterProp="label"
                   options={options}
                   onChange={(value) =>
-                    handleInputChange("team2", "firstAthleteId", value)
+                    handleInputChange("secondTeam", "firstAthleteId", value)
                   }
                 />
               </div>
@@ -156,7 +162,7 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
                   optionFilterProp="label"
                   options={options}
                   onChange={(value) =>
-                    handleInputChange("team2", "secondAthleteId", value)
+                    handleInputChange("secondTeam", "secondAthleteId", value)
                   }
                 />
               </div>

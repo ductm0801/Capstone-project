@@ -7,8 +7,8 @@ import { Radio, Select } from "antd";
 
 const initialState = {
   matchId: "",
-  winningFirstTeamId: "",
-  winningSecondTeamId: "",
+  winningFirstTeamId: 0,
+  winningSecondTeamId: 0,
   firstMatchWinConditionId: "",
   secondMatchWinConditionId: "",
 };
@@ -153,6 +153,7 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
             <Radio.Group
               options={getOptions(firstTeamParticipants)}
               value={winningFirstTeamId}
+              defaultValue={0}
               onChange={handleFirstTeamChange}
               className="w-full flex justify-center"
             />
@@ -171,6 +172,7 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
             <Radio.Group
               options={getOptions(secondTeamParticipants)}
               value={winningSecondTeamId}
+              defaultValue={0}
               onChange={handleSecondTeamChange}
               className="w-full flex justify-center"
             />
