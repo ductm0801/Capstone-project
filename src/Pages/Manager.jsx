@@ -15,34 +15,46 @@ import { RiCalendarScheduleLine } from "react-icons/ri";
 import { GiPodiumWinner } from "react-icons/gi";
 import { FaUser } from "react-icons/fa6";
 import { GiTennisCourt } from "react-icons/gi";
+import { IoNewspaperOutline } from "react-icons/io5";
 
 import { useState } from "react";
 import ManageUser from "../components/ManageUser";
 import ClubRegister from "../components/ClubRegister";
 import Court from "../components/Court";
 import WinCondition from "../components/WinCondition";
+import News from "../components/News";
 
 const Manager = () => {
   const [userDropdown, setUserDropdown] = useState(false);
   const [clubDropdown, setClubDropdown] = useState(false);
   const [tournamentDropdown, setTournamentDropdown] = useState(false);
   const [activeComponent, setActiveComponent] = useState(null);
+  const [active, setActive] = useState(false);
 
   const toggleDropdown = (dropdown) => {
     if (dropdown === "user") {
       setUserDropdown(!userDropdown);
       setClubDropdown(false);
+
       setTournamentDropdown(false);
     } else if (dropdown === "club") {
       setClubDropdown(!clubDropdown);
       setUserDropdown(false);
+
       setTournamentDropdown(false);
     } else if (dropdown === "tournament") {
       setTournamentDropdown(!tournamentDropdown);
       setUserDropdown(false);
+
       setClubDropdown(false);
     }
   };
+
+  const toggleActiveNews = () => {
+    setActive(!active);
+    setActiveComponent("News");
+  };
+
   const renderComponent = () => {
     switch (activeComponent) {
       case "ManageUser":
@@ -53,6 +65,8 @@ const Manager = () => {
         return <Court />;
       case "winCondition":
         return <WinCondition />;
+      case "News":
+        return <News />;
       default:
         return <h1>Welcome to the Manager Dashboard</h1>;
     }
@@ -182,6 +196,15 @@ const Manager = () => {
                 </div>
               </div>
             )}
+            <li
+              className={`flex items-center gap-2 menu-span cursor-pointer ${
+                active ? "bg-[#033987]" : ""
+              }`}
+              onClick={() => toggleActiveNews()}
+            >
+              <IoNewspaperOutline />
+              News
+            </li>
             <li>Sign Out</li>
           </ul>
         </div>

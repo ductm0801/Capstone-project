@@ -1,19 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../styles/createtournament.css";
 import defaultImg from "../images/defaultImg.png";
 import { FaEdit } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 const CreateTournament = () => {
   const URL = "http://localhost:5000/api/tournament-campaign";
   const navigate = useNavigate();
-  const addNewTournament = async (data) => {
+  const [formData, setFormData] = useState({
+    tournamentName: "",
+    startDate: "",
+    location: "",
+    endDate: "",
+    description: "",
+  });
+  const [imageSrc, setImageSrc] = useState(defaultImg);
+
+  dayjs.extend(customParseFormat);
+
+  const disabledDate = (current) => {
+    return current && current < dayjs().endOf("day");
+  };
+
+  const handleChange = (e) => {
+    if (e && e.target) {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleDateChange = (date, dateString, name) => {
+    setFormData({
+      ...formData,
+      [name]: dateString,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (new Date(formData.startDate) < new Date()) {
+      toast.error("Start date cannot be in the past");
+      return;
+    }
+    if (new Date(formData.endDate) < new Date(formData.startDate)) {
+      toast.error("End date cannot be earlier than start date");
+      return;
+    }
+    console.log(formData);
+
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.post(URL, data, {
+      const res = await axios.post(URL, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -26,36 +72,6 @@ const CreateTournament = () => {
     } catch (error) {
       toast.error("Something went wrong, Please Login and try again");
     }
-  };
-
-  const [formData, setFormData] = useState({
-    tournamentName: "",
-    startDate: "",
-    location: "",
-    endDate: "",
-  });
-  const [imageSrc, setImageSrc] = useState(defaultImg);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (new Date(formData.startDate) < new Date()) {
-      toast.error("Start date cannot be in the past");
-      return;
-    }
-    if (new Date(formData.endDate) < new Date(formData.startDate)) {
-      toast.error("End date cannot be earlier than start date");
-      return;
-    }
-    console.log(formData);
-    addNewTournament(formData);
   };
 
   const handleImageChange = (e) => {
@@ -83,7 +99,7 @@ const CreateTournament = () => {
         </div>
         <div className="form-content border-t-2 border-inherit justify-center pt-4">
           <div className="image-container relative">
-            <p className="mb-4 ">Tournament Logo</p>
+            <p className="mb-4">Tournament Logo</p>
             <img src={imageSrc} alt="Upload" />
             <input
               type="file"
@@ -135,28 +151,35 @@ const CreateTournament = () => {
                   <label htmlFor="startDate">
                     Start Date <span className="text-red-500 font-bold">*</span>
                   </label>
-                  <input
-                    type="date"
+                  <DatePicker
+                    format="YYYY-MM-DD"
                     id="startDate"
                     name="startDate"
-                    placeholder="dd/mm/yyyy"
-                    value={formData.startDate}
-                    onChange={handleChange}
+                    disabledDate={disabledDate}
+                    value={
+                      formData.startDate ? dayjs(formData.startDate) : null
+                    }
+                    onChange={(date, dateString) =>
+                      handleDateChange(date, dateString, "startDate")
+                    }
                     required
                     className="border-2 border-inherit rounded-lg p-2 mb-4 focus:outline-none"
                   />
                 </div>
                 <div className="form-group flex flex-col">
                   <label htmlFor="endDate">
-                    End Date <span className="text-red-500 font-bold ">*</span>
+                    End Date <span className="text-red-500 font-bold">*</span>
                   </label>
-                  <input
-                    type="date"
+                  <DatePicker
+                    format="YYYY-MM-DD"
                     id="endDate"
                     name="endDate"
+                    disabledDate={disabledDate}
                     placeholder="dd/mm/yyyy"
-                    value={formData.endDate}
-                    onChange={handleChange}
+                    value={formData.endDate ? dayjs(formData.endDate) : null}
+                    onChange={(date, dateString) =>
+                      handleDateChange(date, dateString, "endDate")
+                    }
                     required
                     className="border-2 border-inherit rounded-lg p-2 focus:outline-none"
                   />

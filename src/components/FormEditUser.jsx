@@ -5,11 +5,11 @@ import "../styles/formAddUser.css";
 import { Select } from "antd";
 
 const initialState = {
-  username: "",
-  password: "",
   fullName: "",
   phoneNumber: "",
   email: "",
+  address: "",
+  gender: "",
   rank: "",
   status: "",
 };
@@ -18,6 +18,8 @@ const error_init = {
   username_err: "",
   password_err: "",
   fullName_err: "",
+  address: "",
+  gender_err: "",
   phoneNumber_err: "",
   email_err: "",
 };
@@ -30,17 +32,18 @@ const FormEditUser = ({ show, handleClose, onSave, user }) => {
     if (user) {
       setState({
         ...state,
-        username: user.username || "",
         fullName: user.fullName || "",
         phoneNumber: user.phoneNumber || "",
         email: user.email || "",
+        address: user.address || "",
         rank: user.rank || "",
+        gender: user.gender || "",
         status: user.status || "active",
       });
     }
   }, [user]);
 
-  const URL = "http://localhost:5000/api/users";
+  const URL = "http://localhost:5000/api/users/update-manager";
   const options = Array.from({ length: 10 }, (_, i) => ({
     value: i + 1,
     label: i + 1,
@@ -84,10 +87,10 @@ const FormEditUser = ({ show, handleClose, onSave, user }) => {
       updateUser(state);
     }
   };
-
+  console.log(user);
   const updateUser = async (data) => {
     try {
-      const res = await axios.put(`${URL}/${user.id}`, data);
+      const res = await axios.put(`${URL}/${user.Id}`, data);
       if (res.status === 200 || res.status === 201) {
         toast.success("User has been updated successfully");
         onSave();
@@ -115,23 +118,6 @@ const FormEditUser = ({ show, handleClose, onSave, user }) => {
           &times;
         </button>
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="username">
-              Username <span className="text-red-500 font-bold">*</span>
-            </label>
-            <input
-              disabled
-              type="text"
-              name="username"
-              placeholder="Username"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={state.username}
-              onChange={handleInputChange}
-            />
-            {errors.username_err && (
-              <span className="error">{errors.username_err}</span>
-            )}
-          </div>
           <div className="flex flex-col text-left mb-4 gap-2">
             <label htmlFor="fullName">
               Full Name <span className="text-red-500 font-bold">*</span>
@@ -179,6 +165,36 @@ const FormEditUser = ({ show, handleClose, onSave, user }) => {
             {errors.email_err && (
               <span className="error">{errors.email_err}</span>
             )}
+          </div>
+          <div className="flex flex-col text-left mb-4 gap-2">
+            <label htmlFor="address">
+              Address <span className="text-red-500 font-bold">*</span>
+            </label>
+            <input
+              type="text"
+              name="address"
+              placeholder="address"
+              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
+              value={state.address}
+              onChange={handleInputChange}
+            />
+            {errors.email_err && (
+              <span className="error">{errors.email_err}</span>
+            )}
+          </div>
+          <div className="flex flex-col text-left mb-4 gap-2">
+            <label htmlFor="gender">
+              Gender <span className="text-red-500 font-bold">*</span>
+            </label>
+            <Select
+              showSearch
+              value={state.gender}
+              options={[
+                { value: "Male", label: "Male" },
+                { value: "Female", label: "Female" },
+              ]}
+              onChange={(value) => handleSelectChange(value, "gender")}
+            />
           </div>
           <div className="flex flex-col text-left mb-4 gap-2">
             <label htmlFor="rank">

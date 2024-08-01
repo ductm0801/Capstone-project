@@ -77,6 +77,7 @@ const About = () => {
       if (response.status === 200) {
         console.log(commentData);
         setComment("");
+        await fetchComments();
       }
     } catch (error) {
       console.error("There was an error submitting the comment!", error);
@@ -129,12 +130,15 @@ const About = () => {
                   key={comment.id}
                   className="flex flex-col gap-y-2 mb-[16px]"
                 >
-                  <span className="text-[#1244A2] text-[16px] font-semibold">
-                    Name{" "}
+                  <div className="flex gap-2 items-center">
+                    <span className="text-[#1244A2] text-[16px] font-semibold ">
+                      {comment.fullName}
+                    </span>
                     <span className="text-[12px] text-[#667085]">
                       {getRelativeTime(comment.createDate)}
                     </span>
-                  </span>
+                  </div>
+
                   <div className="border rounded-lg px-4 py-4">
                     {comment.commentText}
                   </div>
