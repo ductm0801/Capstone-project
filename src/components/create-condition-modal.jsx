@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 
 const CreateModal = ({ handleClose, show, onSave }) => {
@@ -16,8 +16,8 @@ const CreateModal = ({ handleClose, show, onSave }) => {
       } else {
         console.error("Failed to create win condition:", res.data);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      message.error(error.response.data);
     }
   };
 

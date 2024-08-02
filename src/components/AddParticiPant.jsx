@@ -3,7 +3,7 @@ import "../styles/AddParticipant.css";
 import popImg from "../images/addparticipant.png";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Select } from "antd";
+import { message, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
@@ -41,8 +41,7 @@ const AddParticipant = ({
         setParticipants(res.data);
       }
     } catch (error) {
-      toast.error("Failed to fetch participants");
-      console.error("Error fetching participants:", error);
+      message.error(error.response.data);
     }
   };
 
@@ -70,8 +69,7 @@ const AddParticipant = ({
         closePopup();
       }
     } catch (error) {
-      toast.error("Failed to assign participants");
-      console.error("Error assigning participants:", error);
+      message.error(error.response.data);
     }
   };
 

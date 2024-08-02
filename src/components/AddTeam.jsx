@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Select } from "antd";
+import { message, Select } from "antd";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "../styles/formAddUser.css";
@@ -42,8 +42,7 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
         setParticipants(res.data);
       }
     } catch (error) {
-      toast.error("Failed to fetch participants");
-      console.error("Error fetching participants:", error);
+      message.error(error.response.data);
     }
   };
 
@@ -66,8 +65,7 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
         closePopup();
       }
     } catch (error) {
-      toast.error("Failed to assign Teams");
-      console.error("Error assigning Teams:", error);
+      message.error(error.response.data);
     }
   };
 

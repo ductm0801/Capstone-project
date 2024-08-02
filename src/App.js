@@ -18,6 +18,8 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import News from './Pages/News';
 import AddCompetitor from './Pages/AddCompetitor';
+import NewsDetail from './Pages/NewsDetail';
+import ManagerLogin from './Pages/ManagerLogin';
 
 const App = () => {
   return (
@@ -34,7 +36,7 @@ const App = () => {
 
 const ConditionalLayout = () => {
   const location = useLocation();
-  const showHeaderFooter = location.pathname !== '/login' && location.pathname !== '/manager';
+  const showHeaderFooter = location.pathname !== '/login' && location.pathname !== '/manager' && location.pathname !== '/managerlogin';
 
   return (
     <>
@@ -60,6 +62,8 @@ const ConditionalLayout = () => {
           } 
         />
         <Route path="/news" element={<News />} />
+        <Route path="/news/:id" element={<NewsDetail />} />
+        <Route path="/managerlogin" element={<ManagerLogin />} />
         
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

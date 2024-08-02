@@ -3,7 +3,7 @@ import "../styles/AddParticipant.css";
 import popImg from "../images/addparticipant.png";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Radio, Select } from "antd";
+import { message, Radio, Select } from "antd";
 
 const initialState = {
   matchId: "",
@@ -77,8 +77,7 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
         closePopup();
       }
     } catch (error) {
-      toast.error("Failed to Update");
-      console.error("Error Update:", error);
+      message.error(error.response.data);
     }
   };
 
@@ -92,8 +91,7 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
         setSecondTeamParticipants(secondTeams);
       }
     } catch (error) {
-      toast.error("Failed to fetch participants");
-      console.error("Error fetching participants:", error);
+      message.error(error.response.data);
     }
   };
 

@@ -3,7 +3,7 @@ import "../styles/AddParticipant.css";
 import popImg from "../images/addparticipant.png";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Radio, Select } from "antd";
+import { message, Radio, Select } from "antd";
 
 const initialState = {
   matchId: "",
@@ -37,8 +37,7 @@ const UpdateLastRound = ({ match, closePopup, onSave }) => {
         closePopup();
       }
     } catch (error) {
-      toast.error("Failed to Update");
-      console.error("Error Update:", error);
+      message.error(error.response.data);
     }
   };
 
@@ -53,8 +52,7 @@ const UpdateLastRound = ({ match, closePopup, onSave }) => {
         setOptions(formattedOptions);
       }
     } catch (error) {
-      toast.error("Failed to fetch options");
-      console.error("Error fetching options:", error);
+      message.error(error.response.data);
     }
   };
 

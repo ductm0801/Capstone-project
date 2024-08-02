@@ -5,6 +5,7 @@ import defaultImg from "../images/competitor-img.png";
 import UserContext from "../context/UserContext";
 import { CgSoftwareUpload } from "react-icons/cg";
 import { toast } from "react-toastify";
+import { message } from "antd";
 
 const Profile = ({ show, handleClose }) => {
   const { user, setUser } = useContext(UserContext);
@@ -39,7 +40,7 @@ const Profile = ({ show, handleClose }) => {
           data.image ? `data:image/png;base64,${data.image}` : defaultImg
         );
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        message.error(error.response.data);
       }
     };
 

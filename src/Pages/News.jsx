@@ -1,6 +1,30 @@
+import { useEffect, useState } from "react";
 import bg from "../images/tDetail.png";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const News = () => {
+  const [news, setNews] = useState([]);
+  const URL = "http://localhost:5000/api/newarticle";
+  const navigate = useNavigate();
+  const fetchData = async () => {
+    const res = await axios.get(URL);
+    if (res.status === 200) {
+      setNews(res.data);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleClick = (newz) => {
+    console.log(`News clicked ${newz.id}`);
+    navigate(`/news/${newz.id}`, {
+      state: {
+        data: newz,
+      },
+    });
+  };
   return (
     <div className="overflow-x-hidden">
       <div
@@ -14,20 +38,21 @@ const News = () => {
               All
             </li>
             <li className="bg-blue-500 px-20 rounded-lg text-xl text-white">
-              Type 1
+              News
             </li>
             <li className="bg-blue-500 px-20 rounded-lg text-xl text-white">
-              Type 2
-            </li>
-            <li className="bg-blue-500 px-20 rounded-lg text-xl text-white">
-              Type 3
+              Game Play
             </li>
           </ul>
         </div>
       </div>
       <div className="flex flex-col items-start justify-center gap-8 p-4 w-full mx-[112px] mb-[48px] mt-[64px]">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="flex gap-4 w-full p-4">
+        {news.map((newz) => (
+          <div
+            onClick={() => handleClick(newz)}
+            key={newz.id}
+            className="flex gap-4 w-full p-4"
+          >
             <img
               className="max-w-[342px] max-h-[171px]"
               src="https://via.placeholder.com/300x200"
@@ -35,10 +60,10 @@ const News = () => {
             />
             <div>
               <div className="border bg-[#EFF8FF] text-blue-500 mx-2 text-center rounded-lg w-[48px]">
-                Type
+                {newz.newsType === 1 ? "News" : "Game Play"}
               </div>
               <h1 className="font-bold text-gray-600 text-[36px] mt-4 max-w-[800px]">
-                Những điều bạn chưa biết về năm 2023
+                {newz.newsTitle}
               </h1>
               <div className="text-[20px] text-[#344054] mt-4 max-w-[800px]">
                 How do you create compelling

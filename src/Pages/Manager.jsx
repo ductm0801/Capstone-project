@@ -17,12 +17,13 @@ import { FaUser } from "react-icons/fa6";
 import { GiTennisCourt } from "react-icons/gi";
 import { IoNewspaperOutline } from "react-icons/io5";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ManageUser from "../components/ManageUser";
 import ClubRegister from "../components/ClubRegister";
 import Court from "../components/Court";
 import WinCondition from "../components/WinCondition";
 import News from "../components/News";
+import { jwtDecode } from "jwt-decode";
 
 const Manager = () => {
   const [userDropdown, setUserDropdown] = useState(false);
@@ -30,6 +31,7 @@ const Manager = () => {
   const [tournamentDropdown, setTournamentDropdown] = useState(false);
   const [activeComponent, setActiveComponent] = useState(null);
   const [active, setActive] = useState(false);
+  const [user, setUser] = useState(null);
 
   const toggleDropdown = (dropdown) => {
     if (dropdown === "user") {
@@ -49,10 +51,34 @@ const Manager = () => {
       setClubDropdown(false);
     }
   };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUser({
+          userId: decodedToken.UserId,
+          userName: decodedToken.UserName,
+          role: decodedToken[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ],
+        });
+      } catch (error) {
+        console.error("Failed to decode token:", error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
+  }, []);
 
   const toggleActiveNews = () => {
     setActive(!active);
     setActiveComponent("News");
+  };
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/managerlogin";
   };
 
   const renderComponent = () => {
@@ -77,8 +103,8 @@ const Manager = () => {
         <div className="text-white flex gap-4 mb-[48px] pt-[32px] pl-[40px]">
           <img className="w-[48px] h-[48px]" src={Avatar} alt=""></img>
           <div>
-            <p>Tran Minh Duc</p>
-            <p>Manager</p>
+            <p>{user.userName}</p>
+            <p>{user.role}</p>
           </div>
         </div>
         <div className="grow">
@@ -205,7 +231,9 @@ const Manager = () => {
               <IoNewspaperOutline />
               News
             </li>
-            <li>Sign Out</li>
+            <li onClick={() => handleSignOut()} className="cursor-pointer">
+              Sign Out
+            </li>
           </ul>
         </div>
       </div>

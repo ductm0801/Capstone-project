@@ -10,7 +10,7 @@ import FormatType from "../components/FormatType";
 import { IoIosChatbubbles } from "react-icons/io";
 import { IoMdSend } from "react-icons/io";
 import { toast } from "react-toastify";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import Register from "../Pages/SignUp";
 import About from "../components/About";
 import Schedule from "../components/Schedule";
@@ -39,7 +39,7 @@ const TournamentDetail = () => {
         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       setUserRole(role);
     } catch (error) {
-      console.error("Invalid token:", error);
+      message.error(error.response.data);
     }
   }, []);
 

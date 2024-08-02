@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import defaultImg from "../images/defaultImg.png";
 import CreateTournamentFormat from "./CreateTournamentFormat";
 import { jwtDecode } from "jwt-decode";
+import { message } from "antd";
 
 const FormatType = ({ tournamentId }) => {
   const [tournaments, setTournaments] = useState([]);
@@ -61,7 +62,7 @@ const FormatType = ({ tournamentId }) => {
         setTournaments(res.data);
       }
     } catch (error) {
-      console.error(error);
+      message.error(error.response.data);
     }
   };
   const handleAddButtonClick = () => {

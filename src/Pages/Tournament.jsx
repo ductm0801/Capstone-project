@@ -6,7 +6,7 @@ import { FiGrid } from "react-icons/fi";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import defaultImg from "../images/defaultImg.png";
-import { Pagination } from "antd"; // Import Pagination from Ant Design
+import { message, Pagination } from "antd"; // Import Pagination from Ant Design
 import "../styles/tournament.css";
 
 const Tournament = () => {
@@ -39,7 +39,7 @@ const Tournament = () => {
         console.error("Invalid response data:", response.data);
       }
     } catch (error) {
-      console.error("Error fetching tournaments:", error);
+      message.error(error.response.data);
     }
   };
 

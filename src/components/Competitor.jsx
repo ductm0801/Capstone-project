@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { message } from "antd";
 
 const Competitor = () => {
   const [competitors, setCompetitor] = useState([]);
@@ -24,7 +25,7 @@ const Competitor = () => {
         setCompetitor(res.data);
       }
     } catch (error) {
-      toast.info("There no new athelete");
+      message.error(error.response.data);
     }
   };
 
@@ -36,7 +37,9 @@ const Competitor = () => {
       } else if (res.status === 400) {
         toast.info("there no new athelete");
       }
-    } catch (error) {}
+    } catch (error) {
+      message.error(error.response.data);
+    }
   };
 
   const postListGuest = async (id) => {
@@ -47,7 +50,9 @@ const Competitor = () => {
       } else if (res.status === 400) {
         toast.info("there no new athelete");
       }
-    } catch (error) {}
+    } catch (error) {
+      message.error(error.response.data);
+    }
   };
 
   const getListParticipants = () => {

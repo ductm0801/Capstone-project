@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
-import { Select } from "antd";
+import { message, Select } from "antd";
 
 const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
@@ -37,7 +37,7 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
         setcampaignStartDate(res.data.startDate);
       }
     } catch (error) {
-      toast.error("Something went wrong, Please Login and try again");
+      message.error(error.response.data);
     }
   };
   console.log(campaignStartDate);
@@ -60,7 +60,7 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
         navigate(`/tournamentDetail/${id}`);
       }
     } catch (error) {
-      toast.error("Something went wrong, Please Login and try again");
+      message.error(error.response.data);
     }
   };
   const competitorTypes = [
@@ -93,7 +93,7 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
     const campaignStart = new Date(campaignStartDate);
 
     if (start < campaignStart) {
-      toast.error("Tournament start date must be within the campaign dates.");
+      message.error("Tournament start date must be within the campaign dates.");
       return;
     }
 

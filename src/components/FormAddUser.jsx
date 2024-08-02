@@ -3,6 +3,7 @@ import "../styles/formAddUser.css";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { message } from "antd";
 
 const initialState = {
   username: "",
@@ -24,8 +25,7 @@ const error_init = {
 const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState(error_init);
-  const { username, password, fullName, phoneNumber, role, email, Address } =
-    state;
+  const { username, password, fullName, phoneNumber, email, Address } = state;
   const { id } = useParams();
   const URL = "http://localhost:5000/api/users";
 
@@ -87,7 +87,7 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
         handleClose();
       }
     } catch (error) {
-      toast.error("An error occurred while adding the user");
+      message.error(error.message.data);
     }
   };
 

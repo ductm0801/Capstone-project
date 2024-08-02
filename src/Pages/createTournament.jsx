@@ -5,7 +5,7 @@ import { FaEdit } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { DatePicker } from "antd";
+import { DatePicker, message } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
@@ -70,7 +70,7 @@ const CreateTournament = () => {
         navigate(`/findTournament`);
       }
     } catch (error) {
-      toast.error("Something went wrong, Please Login and try again");
+      message.error(error.response.data);
     }
   };
 

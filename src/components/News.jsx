@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Select } from "antd";
+import { Button, Form, Input, message, Modal, Select } from "antd";
 import axios from "axios";
 import { useState } from "react";
 import ReactQuill from "react-quill";
@@ -12,20 +12,22 @@ const News = () => {
 
   const onFinish = async (values) => {
     const data = {
-      title: values.title,
-      content: values.content,
-      newsType: values.newsType,
+      newsTitle: values.title,
+      newsContent: values.content,
+      newsType: parseInt(values.newsType),
+      newsArticleStatus: true,
     };
 
     try {
       const res = await axios.post(URL, data);
-      if (res.status === 200) {
+      if (res.status === 201) {
         toast.success("News posted successfully!");
         setCreate(false);
-        form.resetFields(); // Clear form fields after successful submission
+        form.resetFields();
+        setCreate(false);
       }
-    } catch (err) {
-      toast.error("Failed to post news!");
+    } catch (error) {
+      message.error(error.response.data);
     }
   };
 
@@ -73,11 +75,12 @@ const News = () => {
               <Select
                 allowClear
                 options={[
-                  { value: "news", label: "News" },
-                  { value: "gamePlay", label: "GamePlay" },
+                  { value: "1", label: "News" },
+                  { value: "0", label: "GamePlay" },
                 ]}
               />
             </Form.Item>
+
             <Form.Item
               label={<b>Content</b>}
               name="content"
@@ -89,7 +92,7 @@ const News = () => {
               ]}
             >
               <ReactQuill
-                style={{ height: "150px" }} // Adjust height as needed
+                style={{ height: "150px" }}
                 theme="snow"
                 modules={{
                   toolbar: [

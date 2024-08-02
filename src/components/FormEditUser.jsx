@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "../styles/formAddUser.css";
-import { Select } from "antd";
+import { message, Select } from "antd";
 
 const initialState = {
   fullName: "",
@@ -97,7 +97,7 @@ const FormEditUser = ({ show, handleClose, onSave, user }) => {
         handleClose();
       }
     } catch (error) {
-      toast.error("An error occurred while updating the user");
+      message.error(error.response.data);
     }
   };
 

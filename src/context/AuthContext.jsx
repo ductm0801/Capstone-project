@@ -9,19 +9,28 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decodedToken = jwtDecode(token);
-      setUser({
-        userId: decodedToken.UserId,
-        userName: decodedToken.UserName,
-        role: decodedToken[
-          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ],
-      });
+      try {
+        const decodedToken = jwtDecode(token);
+        setUser({
+          userId: decodedToken.UserId,
+          userName: decodedToken.UserName,
+          role: decodedToken[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ],
+        });
+      } catch (error) {
+        console.error("Failed to decode token:", error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

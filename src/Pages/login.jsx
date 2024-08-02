@@ -5,6 +5,7 @@ import "../styles/Login.css";
 import logo from "../images/Logo.png";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { message } from "antd";
 const baseURL = "http://localhost:5000/api/accounts/user-login";
 const Login = () => {
   const [username, setUserName] = useState("");
@@ -19,7 +20,7 @@ const Login = () => {
   const handleSubmit = async () => {
     try {
       if (!username || !password) {
-        toast.error("Missing username or password!");
+        message.error("Missing username or password!");
         return;
       }
       let res = await loginApi(username, password);
@@ -30,11 +31,7 @@ const Login = () => {
         navigate("/");
       }
     } catch (error) {
-      if (error.response && error.response.status === 500) {
-        toast.error("Invalid username or password");
-      } else {
-        toast.error("An unexpected error occurred");
-      }
+      message.error(error.response.data);
     }
   };
 

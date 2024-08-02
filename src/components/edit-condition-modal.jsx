@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 
 const EditModal = ({ handleClose, show, onSave, data }) => {
@@ -16,8 +16,8 @@ const EditModal = ({ handleClose, show, onSave, data }) => {
       } else {
         console.error("Failed to update win condition:", res.data);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      message.error(error.response.data);
     }
   };
 
