@@ -30,7 +30,7 @@ const ClubRegister = () => {
     <div className="flex flex-col px-[32px]">
       <div className="relative">
         <h1 className="text-2xl text-[#033987] font-bold border-b border-[#C6C61A] mb-[32px] py-6">
-          Club Register
+          Tournament Register
         </h1>
       </div>
       <div className="overflow-hidden rounded-lg border">

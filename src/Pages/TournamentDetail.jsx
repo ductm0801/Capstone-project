@@ -34,12 +34,16 @@ const TournamentDetail = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     try {
-      const decoded = jwtDecode(token);
-      const role =
-        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      setUserRole(role);
+      if (token) {
+        const decoded = jwtDecode(token);
+        const role =
+          decoded[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ];
+        setUserRole(role);
+      }
     } catch (error) {
-      message.error(error.response.data);
+      // message.error(error.response.data);
     }
   }, []);
 
@@ -63,9 +67,18 @@ const TournamentDetail = () => {
   };
 
   const getOneTournament = async (id) => {
-    const res = await axios.get(`${URL}/${id}`);
-    if (res.status === 200) {
-      setTournament(res.data);
+    try {
+      const res = await axios.get(`${URL}/${id}`);
+      if (res.status === 200) {
+        console.log("Tournament data:", res.data);
+        setTournament(res.data);
+      } else {
+        console.error("Failed to fetch tournament details", res);
+        toast.error("Failed to fetch tournament details");
+      }
+    } catch (error) {
+      console.error("Error fetching tournament details:", error);
+      toast.error("Error fetching tournament details");
     }
   };
 

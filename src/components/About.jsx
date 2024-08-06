@@ -4,11 +4,33 @@ import { useEffect, useState } from "react";
 import { IoIosChatbubbles, IoMdSend } from "react-icons/io";
 import { IoEyeSharp } from "react-icons/io5";
 import { FaRegTrashAlt, FaRegEyeSlash } from "react-icons/fa";
+import { PiDotsThreeCircleVertical } from "react-icons/pi";
 import { BiSolidPencil } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatDistanceToNow } from "date-fns";
-import { Button, message, Modal } from "antd";
+import { Button, Dropdown, message, Modal, Input } from "antd";
+
+const items = (handleEditClick, handleDeleteClick) => [
+  {
+    key: 1,
+    label: (
+      <div className="flex items-center gap-2" onClick={handleEditClick}>
+        <span>Edit</span>
+        <BiSolidPencil />
+      </div>
+    ),
+  },
+  {
+    key: 2,
+    label: (
+      <div className="flex items-center gap-2" onClick={handleDeleteClick}>
+        <span>Delete</span>
+        <FaRegTrashAlt />
+      </div>
+    ),
+  },
+];
 
 const About = () => {
   const [comments, setComments] = useState([]);
@@ -17,6 +39,8 @@ const About = () => {
   const [accountId, setAccountId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
+  const [editCommentId, setEditCommentId] = useState(null);
+  const [editCommentText, setEditCommentText] = useState("");
   const jwtToken = localStorage.getItem("token");
   const { id } = useParams();
 
@@ -29,6 +53,10 @@ const About = () => {
     setComment(e.target.value);
   };
 
+  const handleEditCommentChange = (e) => {
+    setEditCommentText(e.target.value);
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -38,11 +66,15 @@ const About = () => {
 
   useEffect(() => {
     try {
-      const decoded = jwtDecode(jwtToken);
-      const role =
-        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      setUserRole(role);
-      setAccountId(decoded.UserId);
+      if (jwtToken) {
+        const decoded = jwtDecode(jwtToken);
+        const role =
+          decoded[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ];
+        setUserRole(role);
+        setAccountId(decoded.UserId);
+      }
     } catch (error) {
       message.error(
         "Failed to decode token: " + (error.response?.data || error.message)
@@ -88,6 +120,34 @@ const About = () => {
     }
   };
 
+  const handleEditCommentSubmit = async () => {
+    if (editCommentText.trim() === "") {
+      alert("Comment cannot be empty");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/comment/${editCommentId}`,
+        { commentText: editCommentText },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Comment updated successfully");
+        setEditCommentId(null);
+        setEditCommentText("");
+        await fetchComments();
+      }
+    } catch (error) {
+      message.error(error.response?.data || "Failed to update comment");
+    }
+  };
+
   const fetchComments = async () => {
     try {
       const response = await axios.get(
@@ -95,16 +155,19 @@ const About = () => {
       );
       setComments(response.data);
     } catch (error) {
-      message.error(error.response?.data || "Failed to fetch comments");
+      // message.error(error.response?.data || "Failed to fetch comments");
     }
   };
 
-  const updateComment = async (comment) => {
+  const deleteComment = async (commentId) => {
     try {
-      const response = await axios.put(
-        `http://localhost:5000/api/comment/softdelete/${comment.id}`,
-        { id: comment.id },
-        { headers: { Authorization: `Bearer ${jwtToken}` } }
+      const response = await axios.delete(
+        `http://localhost:5000/api/comment/permanent/${commentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
       );
       if (response.status === 200) {
         console.log("Comment deleted successfully");
@@ -123,7 +186,7 @@ const About = () => {
   const handleOk = () => {
     setIsModalVisible(false);
     if (commentToDelete) {
-      updateComment(commentToDelete);
+      deleteComment(commentToDelete.id);
       setCommentToDelete(null);
     }
   };
@@ -131,6 +194,11 @@ const About = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
     setCommentToDelete(null);
+  };
+
+  const handleEditClick = (comment) => {
+    setEditCommentId(comment.id);
+    setEditCommentText(comment.commentText);
   };
 
   useEffect(() => {
@@ -178,29 +246,43 @@ const About = () => {
                       <span className="text-[12px] text-[#667085]">
                         {getRelativeTime(comment.createDate)}
                       </span>
-                      <span onClick={() => handleDeleteClick(comment)}>
+                      {/* <span onClick={() => handleDeleteClick(comment)}>
                         {userRole === "Manager" &&
                         comment.isDeleted === false ? (
                           <IoEyeSharp />
                         ) : (
                           <FaRegEyeSlash />
                         )}
-                      </span>
-                    </div>
-                    <div className="mx-4 text-gray-400">
-                      {comment.userId == accountId && (
-                        <FaRegTrashAlt
-                          onClick={() => handleDeleteClick(comment)}
-                        />
-                      )}
+                      </span> */}
                     </div>
                   </div>
 
                   <div>
                     <div className="flex justify-between items-center border rounded-lg px-4 py-4">
-                      {comment.commentText}
+                      {editCommentId === comment.id ? (
+                        <Input
+                          value={editCommentText}
+                          onChange={handleEditCommentChange}
+                          onPressEnter={handleEditCommentSubmit}
+                        />
+                      ) : (
+                        comment.commentText
+                      )}
                       <div>
-                        {comment.userId == accountId && <BiSolidPencil />}
+                        {comment.userId == accountId && (
+                          <Dropdown
+                            menu={{
+                              items: items(
+                                () => handleEditClick(comment),
+                                () => handleDeleteClick(comment)
+                              ),
+                            }}
+                            placement="bottomRight"
+                            trigger={"click"}
+                          >
+                            <PiDotsThreeCircleVertical className="text-2xl" />
+                          </Dropdown>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -212,7 +294,7 @@ const About = () => {
 
       <Modal
         title="Confirm Deletion"
-        visible={isModalVisible}
+        opem={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         okText="Yes"

@@ -89,9 +89,6 @@ const ManageUser = () => {
           <thead className="text-white bg-[#155ABE] pl-[20px] h-[56px]">
             <tr>
               <th className="border border-slate-400 pl-[20px] h-[56px]">
-                User Name
-              </th>
-              <th className="border border-slate-400 pl-[20px] h-[56px]">
                 Full Name
               </th>
               <th className="border border-slate-400 pl-[20px] h-[56px]">
@@ -112,9 +109,6 @@ const ManageUser = () => {
             {users.map((user, index) => (
               <tr key={index} onClick={() => handleUpdateButtonClick(user)}>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
-                  {user.userName}
-                </td>
-                <td className="border border-slate-300 pl-[20px] h-[48px]">
                   {user.fullName}
                 </td>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
@@ -123,7 +117,7 @@ const ManageUser = () => {
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
                   {user.phoneNumber}
                 </td>
-                <td className="border border-slate-300 pl-[20px] h-[48px]">
+                <td className="border border-slate-300 text-center pl-[20px] h-[48px]">
                   {user.rank}
                 </td>
 

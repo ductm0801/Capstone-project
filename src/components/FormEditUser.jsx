@@ -1,230 +1,145 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import "../styles/formAddUser.css";
-import { message, Select } from "antd";
-
-const initialState = {
-  fullName: "",
-  phoneNumber: "",
-  email: "",
-  address: "",
-  gender: "",
-  rank: "",
-  status: "",
-};
-
-const error_init = {
-  username_err: "",
-  password_err: "",
-  fullName_err: "",
-  address: "",
-  gender_err: "",
-  phoneNumber_err: "",
-  email_err: "",
-};
+import { Button, Input, message, Select, Form } from "antd";
 
 const FormEditUser = ({ show, handleClose, onSave, user }) => {
-  const [state, setState] = useState(initialState);
-  const [errors, setErrors] = useState(error_init);
-
-  useEffect(() => {
-    if (user) {
-      setState({
-        ...state,
-        fullName: user.fullName || "",
-        phoneNumber: user.phoneNumber || "",
-        email: user.email || "",
-        address: user.address || "",
-        rank: user.rank || "",
-        gender: user.gender || "",
-        status: user.status || "active",
-      });
-    }
-  }, [user]);
-
+  const [form] = Form.useForm();
   const URL = "http://localhost:5000/api/users/update-manager";
   const options = Array.from({ length: 10 }, (_, i) => ({
     value: i + 1,
-    label: i + 1,
+    label: `Rank ${i + 1}`,
   }));
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 
-  const validateForm = () => {
-    let isValid = true;
-    let errors = { ...error_init };
-
-    if (!state.fullName || state.fullName.trim() === "") {
-      errors.fullName_err = "Full name is required";
-      isValid = false;
-    }
-
-    if (
-      !state.email ||
-      state.email.trim() === "" ||
-      !/\S+@\S+\.\S+/.test(state.email)
-    ) {
-      errors.email_err = "A valid email is required";
-      isValid = false;
-    }
-    if (
-      !state.phoneNumber ||
-      state.phoneNumber.trim() === "" ||
-      !/(84|0[3|5|7|8|9])+([0-9]{8})/.test(state.phoneNumber)
-    ) {
-      errors.phoneNumber_err =
-        "Phone number is required and must be a valid 10-digit number";
-      isValid = false;
-    }
-
-    setErrors(errors);
-    return isValid;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (validateForm()) {
-      updateUser(state);
-    }
-  };
-  console.log(user);
-  const updateUser = async (data) => {
+  const onFinish = async (data) => {
     try {
-      const res = await axios.put(`${URL}/${user.Id}`, data);
-      if (res.status === 200 || res.status === 201) {
+      const res = await axios.put(`${URL}/${user.id}`, data);
+      if (res.status === 204 || res.status === 201) {
         toast.success("User has been updated successfully");
         onSave();
         handleClose();
+        form.resetFields();
       }
     } catch (error) {
-      message.error(error.response.data);
+      const errorMsg =
+        error.response?.data?.message ||
+        "An error occurred while updating the user.";
+      message.error(errorMsg);
     }
   };
 
-  const handleInputChange = (event) => {
-    let { name, value } = event.target;
-    setState((state) => ({ ...state, [name]: value }));
-  };
+  useEffect(() => {
+    console.log("User object:", user);
+    form.setFieldsValue({
+      fullName: user.fullName,
+      address: user.address,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      gender: user.gender,
+      rank: user.rank,
+      status: user.status,
+    });
+  }, [user, form]);
 
-  const handleSelectChange = (value, field) => {
-    setState((state) => ({ ...state, [field]: value }));
+  const handleCancel = () => {
+    handleClose();
+    form.resetFields();
   };
 
   return (
     <div className={showHideClassName}>
       <section className="popup-main">
         <h1 className="text-3xl mb-4 text-[#033987] font-bold">Update User</h1>
-        <button className="close-button text-3xl " onClick={handleClose}>
+        <button className="close-button text-3xl " onClick={handleCancel}>
           &times;
         </button>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="fullName">
-              Full Name <span className="text-red-500 font-bold">*</span>
-            </label>
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Full Name"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={state.fullName}
-              onChange={handleInputChange}
-            />
-            {errors.fullName_err && (
-              <span className="error">{errors.fullName_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="phoneNumber">
-              Phone Number <span className="text-red-500 font-bold">*</span>
-            </label>
-            <input
-              type="text"
-              name="phoneNumber"
-              placeholder="Phone Number"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={state.phoneNumber}
-              onChange={handleInputChange}
-            />
-            {errors.phoneNumber_err && (
-              <span className="error">{errors.phoneNumber_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="email">
-              Email <span className="text-red-500 font-bold">*</span>
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={state.email}
-              onChange={handleInputChange}
-            />
-            {errors.email_err && (
-              <span className="error">{errors.email_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="address">
-              Address <span className="text-red-500 font-bold">*</span>
-            </label>
-            <input
-              type="text"
-              name="address"
-              placeholder="address"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={state.address}
-              onChange={handleInputChange}
-            />
-            {errors.email_err && (
-              <span className="error">{errors.email_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="gender">
-              Gender <span className="text-red-500 font-bold">*</span>
-            </label>
+        <Form form={form} onFinish={onFinish}>
+          <Form.Item
+            name="fullName"
+            label={<b>Full Name</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please enter full name" }]}
+          >
+            <Input placeholder="Full Name" autoFocus />
+          </Form.Item>
+          <Form.Item
+            name="address"
+            label={<b>Address</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please enter address" }]}
+          >
+            <Input placeholder="Address" />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label={<b>Email</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please enter email" }]}
+          >
+            <Input placeholder="Email" />
+          </Form.Item>
+          <Form.Item
+            name="phoneNumber"
+            label={<b>Phone Number</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please enter phone number" }]}
+          >
+            <Input placeholder="Phone Number" />
+          </Form.Item>
+          <Form.Item
+            name="gender"
+            label={<b>Gender</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please select gender" }]}
+          >
             <Select
-              showSearch
-              value={state.gender}
+              placeholder="Please select gender"
               options={[
-                { value: "Male", label: "Male" },
+                {
+                  value: "Male",
+                  label: "Male",
+                },
                 { value: "Female", label: "Female" },
               ]}
-              onChange={(value) => handleSelectChange(value, "gender")}
             />
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="rank">
-              Rank <span className="text-red-500 font-bold">*</span>
-            </label>
+          </Form.Item>
+          <Form.Item
+            name="rank"
+            label={<b>Rank</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please select rank" }]}
+          >
+            <Select placeholder="Please select rank" options={options} />
+          </Form.Item>
+          <Form.Item
+            name="status"
+            label={<b>Status</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please select status" }]}
+          >
             <Select
-              showSearch
-              value={state.rank}
-              options={options}
-              onChange={(value) => handleSelectChange(value, "rank")}
-            />
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="status">
-              Status <span className="text-red-500 font-bold">*</span>
-            </label>
-            <Select
-              showSearch
-              value={state.status}
+              placeholder="Please select status"
               options={[
-                { value: "0", label: "Active" },
-                { value: "1", label: "Inactive" },
+                {
+                  value: 0,
+                  label: "Active",
+                },
+                { value: 1, label: "Deactive" },
               ]}
-              onChange={(value) => handleSelectChange(value, "status")}
             />
-          </div>
-          <button type="submit" className="form-button">
-            Update
-          </button>
-        </form>
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="flex justify-center w-full bg-[#C6C61A]"
+            >
+              Update
+            </Button>
+          </Form.Item>
+        </Form>
       </section>
     </div>
   );

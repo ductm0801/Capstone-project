@@ -15,11 +15,14 @@ import '@fontsource/roboto/300.css';
 import Manager from "../src/Pages/Manager";
 import { UserProvider } from './context/UserContext';
 import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute from './routes/ProtectedRoute';
 import News from './Pages/News';
 import AddCompetitor from './Pages/AddCompetitor';
 import NewsDetail from './Pages/NewsDetail';
 import ManagerLogin from './Pages/ManagerLogin';
+import PrivateRoute from './routes/PrivateRoute';
+
+
 
 const App = () => {
   return (
@@ -47,24 +50,20 @@ const ConditionalLayout = () => {
         <Route path="/bracket/:bracketId" element={<Bracket />} />
         <Route path="/findTournament" element={<Tournament />} />
         <Route path="/createTournament" element={
-          // <ProtectedRoute requiredRole="Manager">
-          <CreateTournament />
-          // </ProtectedRoute>
-          } />
+          <ProtectedRoute requiredRole="Manager">
+            <CreateTournament />
+          </ProtectedRoute>
+        } />
         <Route path="/addParticipants/:tournamentId" element={<AddCompetitor />} />
         <Route path="/tournamentDetail/:id" element={<TournamentDetail />} />
-        <Route 
-          path="/manager" 
-          element={
-            // <ProtectedRoute requiredRole="Manager">
-              <Manager />
-            // </ProtectedRoute>
-          } 
-        />
+        <Route path="/manager" element={
+          <PrivateRoute>
+            <Manager />
+          </PrivateRoute>
+        } />
         <Route path="/news" element={<News />} />
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/managerlogin" element={<ManagerLogin />} />
-        
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       {showHeaderFooter && <Footer />}

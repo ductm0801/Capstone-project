@@ -103,8 +103,8 @@ const Manager = () => {
         <div className="text-white flex gap-4 mb-[48px] pt-[32px] pl-[40px]">
           <img className="w-[48px] h-[48px]" src={Avatar} alt=""></img>
           <div>
-            <p>{user.userName}</p>
-            <p>{user.role}</p>
+            <p>{user?.userName}</p>
+            <p>{user?.role}</p>
           </div>
         </div>
         <div className="grow">
@@ -166,12 +166,6 @@ const Manager = () => {
                     clubDropdown ? "active" : ""
                   }`}
                 >
-                  <div
-                    className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
-                    onClick={() => setActiveComponent("ClubRegister")}
-                  >
-                    <GoChecklist /> List Tournament Register
-                  </div>
                   <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
                     <AiOutlineUserAdd /> Club Members
                     <div />
@@ -219,6 +213,12 @@ const Manager = () => {
                 >
                   <GiTennisCourt />
                   Court
+                </div>
+                <div
+                  className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
+                  onClick={() => setActiveComponent("ClubRegister")}
+                >
+                  <GoChecklist /> List Tournament Register
                 </div>
               </div>
             )}

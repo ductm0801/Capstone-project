@@ -1,209 +1,134 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/formAddUser.css";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { message } from "antd";
-
-const initialState = {
-  username: "",
-  password: "",
-  fullName: "",
-  phoneNumber: "",
-  email: "",
-  Address: "",
-};
-
-const error_init = {
-  username_err: "",
-  password_err: "",
-  fullName_err: "",
-  phoneNumber_err: "",
-  email_err: "",
-};
+import { Button, Form, Input, message, Select } from "antd";
 
 const FormAddUser = ({ handleClose, show, onSave, loading }) => {
-  const [state, setState] = useState(initialState);
-  const [errors, setErrors] = useState(error_init);
-  const { username, password, fullName, phoneNumber, email, Address } = state;
+  const [form] = Form.useForm();
   const { id } = useParams();
-  const URL = "http://localhost:5000/api/users";
+  const URL = "http://localhost:5000/api/accounts/CreateAccount";
 
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 
-  const validateForm = () => {
-    let isValid = true;
-    let errors = { ...error_init };
-
-    if (!username || username.trim() === "" || username.length < 2) {
-      errors.username_err =
-        "Username is required and must be more than 2 characters";
-      isValid = false;
-    }
-
-    if (!password || password.trim() === "" || password.length < 8) {
-      errors.password_err =
-        "Password is required and must be at least 8 characters";
-      isValid = false;
-    }
-
-    if (!fullName || fullName.trim() === "") {
-      errors.fullName_err = "Full name is required";
-      isValid = false;
-    }
-
-    if (
-      !phoneNumber ||
-      phoneNumber.trim() === "" ||
-      !/(84|0[3|5|7|8|9])+([0-9]{8})/.test(phoneNumber)
-    ) {
-      errors.phoneNumber_err =
-        "Phone number is required and must be a valid 10-digit number";
-      isValid = false;
-    }
-
-    if (!email || email.trim() === "" || !/\S+@\S+\.\S+/.test(email)) {
-      errors.email_err = "A valid email is required";
-      isValid = false;
-    }
-
-    setErrors(errors);
-    return isValid;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (validateForm()) {
-      addNewUser(state);
-    }
-  };
-
-  const addNewUser = async (data) => {
+  const onFinish = async (data) => {
     try {
       const res = await axios.post(`${URL}`, data);
       if (res.status === 200 || res.status === 201) {
         toast.success("New User has been added successfully");
         onSave();
+        form.resetFields();
         handleClose();
       }
     } catch (error) {
-      message.error(error.message.data);
+      message.error(error.response?.data?.message || "An error occurred");
     }
   };
 
-  const handleInputChange = (event) => {
-    let { name, value } = event.target;
-    setState((state) => ({ ...state, [name]: value }));
+  const handleCancel = () => {
+    form.resetFields();
+    handleClose();
   };
+
+  useEffect(() => {
+    form.setFieldsValue({
+      fullName: "",
+      address: "",
+      email: "",
+      phoneNumber: "",
+      gender: "",
+      rank: "",
+      status: "",
+    });
+  }, [form]);
 
   return (
     <div className={showHideClassName}>
       <section className="popup-main">
         <h1 className="text-3xl mb-4 text-[#033987] font-bold">Add New User</h1>
-        <button className="close-button text-3xl " onClick={handleClose}>
+        <button className="close-button text-3xl " onClick={handleCancel}>
           &times;
         </button>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="username">
-              Username <span className="text-red-500 font-bold">*</span>
-            </label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={username}
-              onChange={handleInputChange}
+        <Form onFinish={onFinish} form={form}>
+          <Form.Item
+            name="userName"
+            label={<b>User Name</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please enter User Name" }]}
+          >
+            <Input placeholder="User Name" autoFocus />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label={<b>Password</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please enter password" }]}
+          >
+            <Input placeholder="Password" autoFocus />
+          </Form.Item>
+          <Form.Item
+            name="fullName"
+            label={<b>Full Name</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please enter full name" }]}
+          >
+            <Input placeholder="Full Name" autoFocus />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label={<b>Email</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please enter email" }]}
+          >
+            <Input type="email" placeholder="Email" autoFocus />
+          </Form.Item>
+          <Form.Item
+            name="phoneNumber"
+            label={<b>Phone Number</b>}
+            labelCol={{ span: 24 }}
+            rules={[
+              {
+                required: true,
+                message: "Please enter phone number",
+                pattern: /(84|0[3|5|7|8|9])+([0-9]{8})/,
+              },
+            ]}
+          >
+            <Input placeholder="Phone Number" autoFocus />
+          </Form.Item>
+          <Form.Item
+            name="rank"
+            label={<b>Rank</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please select rank" }]}
+          >
+            <Select
+              placeholder="Please select rank"
+              options={[
+                { value: 1, label: "Rank 1" },
+                { value: 2, label: "Rank 2" },
+                { value: 3, label: "Rank 3" },
+                { value: 4, label: "Rank 4" },
+                { value: 5, label: "Rank 5" },
+                { value: 6, label: "Rank 6" },
+                { value: 7, label: "Rank 7" },
+                { value: 8, label: "Rank 8" },
+                { value: 9, label: "Rank 9" },
+                { value: 10, label: "Rank 10" },
+              ]}
             />
-            {errors.username_err && (
-              <span className="error">{errors.username_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="password">
-              Password <span className="text-red-500 font-bold">*</span>
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={password}
-              onChange={handleInputChange}
-            />
-            {errors.password_err && (
-              <span className="error">{errors.password_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="fullName">
-              Full Name <span className="text-red-500 font-bold">*</span>{" "}
-            </label>
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Full Name"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={fullName}
-              onChange={handleInputChange}
-            />
-            {errors.fullName_err && (
-              <span className="error">{errors.fullName_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="phoneNumber">
-              Phone Number <span className="text-red-500 font-bold">*</span>{" "}
-            </label>
-            <input
-              type="text"
-              name="phoneNumber"
-              placeholder="Phone Number"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={phoneNumber}
-              onChange={handleInputChange}
-            />
-            {errors.phoneNumber_err && (
-              <span className="error">{errors.phoneNumber_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="Address">
-              Address <span className="text-red-500 font-bold">*</span>{" "}
-            </label>
-            <input
-              type="text"
-              name="Address"
-              placeholder="Address"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={Address}
-              onChange={handleInputChange}
-            />
-            {errors.phoneNumber_err && (
-              <span className="error">{errors.phoneNumber_err}</span>
-            )}
-          </div>
-          <div className="flex flex-col text-left mb-4 gap-2">
-            <label htmlFor="email">
-              Email <span className="text-red-500 font-bold">*</span>{" "}
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className="border-2 border-inherit rounded-lg w-[320px] h-[44px] p-4 focus:outline-none"
-              value={email}
-              onChange={handleInputChange}
-            />
-            {errors.email_err && (
-              <span className="error">{errors.email_err}</span>
-            )}
-          </div>
-          <button type="submit" className="form-button">
-            Create
-          </button>
-        </form>
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="flex justify-center w-full bg-[#C6C61A]"
+            >
+              Create
+            </Button>
+          </Form.Item>
+        </Form>
       </section>
     </div>
   );

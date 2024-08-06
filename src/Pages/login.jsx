@@ -1,11 +1,12 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../images/Login_image.png";
 import "../styles/Login.css";
 import logo from "../images/Logo.png";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { message } from "antd";
+import { Input, message } from "antd";
+import { jwtDecode } from "jwt-decode";
 const baseURL = "http://localhost:5000/api/accounts/user-login";
 const Login = () => {
   const [username, setUserName] = useState("");
@@ -34,7 +35,7 @@ const Login = () => {
       message.error(error.response.data);
     }
   };
-
+  useEffect(() => {}, []);
   return (
     <div className="flex justify-between">
       <div className="login-content flex gap-48">
@@ -61,14 +62,14 @@ const Login = () => {
                 onChange={(e) => setUserName(e.target.value)}
               ></input>
               <div className="w-[320px]">Password</div>
-              <input
+              <Input.Password
                 className="loginInput focus:outline-none"
                 id="password"
                 type="password"
                 placeholder="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-              ></input>
+              />
 
               <div>
                 <button
