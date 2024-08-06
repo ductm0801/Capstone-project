@@ -43,9 +43,9 @@ const ConditionalLayout = () => {
         <Route path="/bracket/:tournamentId" element={<Bracket />} />
         <Route path="/findTournament" element={<Tournament />} />
         <Route path="/createTournament" element={
-          <ProtectedRoute requiredRole="Manager">
+          // <ProtectedRoute requiredRole="Manager">
           <CreateTournament />
-          </ProtectedRoute>
+          // </ProtectedRoute>
           } />
         <Route path="/tournamentDetail/:id" element={<TournamentDetail />} />
         <Route 
