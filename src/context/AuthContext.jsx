@@ -1,30 +1,29 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import React, { useEffect, useState } from "react";
 
-const AuthContext = createContext();
+// AuthContext.js
+const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decodedToken = jwtDecode(token);
-      setUser({
-        userId: decodedToken.UserId,
-        userName: decodedToken.UserName,
-        role: decodedToken[
-          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-        ],
-      });
+      try {
+        const decoded = jwtDecode(token);
+        setUserRole(decoded.Role);
+        localStorage.setItem("role", userRole);
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
     }
   }, []);
+  console.log(userRole);
 
-  return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
-  );
+  const value = { userRole, setUserRole };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => React.useContext(AuthContext);

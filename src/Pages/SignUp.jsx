@@ -1,150 +1,153 @@
-import React, { useState } from "react";
+import React from "react";
 import logo from "../images/menu_logo.png";
 import "../styles/signup.css";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import popImg from "../images/signup.png";
+import { Button, Form, Input, message, Select } from "antd";
 
-const SignUp = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [gender, setGender] = useState("");
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
-  const baseURL = "http://localhost:5000/api/User/Register";
-  const signUpApi = (username, password, email, dateOfBirth, gender) => {
-    return axios.post(baseURL, {
-      userName: username,
-      password: password,
-      dateOfBirth: dateOfBirth,
-      email: email,
-      gender: gender,
-    });
-  };
-  const validate = () => {
-    const errors = {};
-    if (!username) errors.username = "Username is required";
-    if (!email) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = "Email address is invalid";
-    }
-    if (!password) errors.password = "Password is required";
-    if (!confirmPassword) {
-      errors.confirmPassword = "Confirm password is required";
-    } else if (password !== confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
-    }
-    if (!dateOfBirth) errors.dateOfBirth = "Date of birth is required";
-    if (!gender) errors.gender = "Gender is required";
-    return errors;
-  };
+const SignUp = ({ closePopup, show, onSave }) => {
+  const showHideClassName = show ? "popup display-block" : "popup display-none";
+  const { id } = useParams();
+  const baseURL = "http://localhost:5000/api/tournament-registration";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      // Proceed with form submission
-      try {
-        let res = await signUpApi(
-          username,
-          password,
-          email,
-          dateOfBirth,
-          gender
-        );
-        if (res) {
-          toast.success("Form submitted successfully");
-
-          // Clear the form
-          setUsername("");
-          setPassword("");
-          setConfirmPassword("");
-          setDateOfBirth("");
-          setEmail("");
-          setGender("");
-          setErrors({});
-          navigate("/login");
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-      }
-    }
+  const handleSubmit = async (values) => {
+    try {
+      let res = await axios.post(baseURL, {
+        ...values,
+        tournamentCampaignId: parseInt(id),
+      });
+      message.success(
+        res.data?.message ||
+          "Your registration is sent successfully! Please wait for approval!"
+      );
+      closePopup();
+      onSave();
+    } catch (error) {}
   };
 
   return (
-    <div className="signup-bg">
-      <img className="signup-logo" src={logo} alt=""></img>
+    <div className={showHideClassName}>
+      <section
+        className="popup-main max-w-[600px] w-full"
+        style={{
+          background: `url(${popImg})`,
+        }}
+      >
+        <div>
+          <img className="block m-auto" src={logo} alt=""></img>
 
-      <div className="signup-content">
-        <h2>Create Your Account</h2>
-        <form
-          style={{ display: "flex", flexDirection: "column" }}
-          onSubmit={handleSubmit}
-        >
-          <h4>User Name</h4>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          {errors.username && <p className="error">{errors.username}</p>}
-          <h4>Password</h4>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />{" "}
-          {errors.password && <p className="error">{errors.password}</p>}
-          <h4>Confirm Password</h4>
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          {errors.confirmPassword && (
-            <p className="error">{errors.confirmPassword}</p>
-          )}
-          <h4>Email</h4>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {errors.email && <p className="error">{errors.email}</p>}
-          <h4>Date of Birth</h4>
-          <input
-            type="date"
-            placeholder="Date of Birth"
-            value={dateOfBirth}
-            onChange={(e) => setDateOfBirth(e.target.value)}
-          />
-          {errors.dateOfBirth && <p className="error">{errors.dateOfBirth}</p>}
-          <h4>Gender</h4>
-          <select
-            style={{ height: "40px" }}
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-          {errors.gender && <p className="error">{errors.gender}</p>}
-          <button type="submit">Sign Up</button>
-        </form>
-      </div>
+          <div>
+            <h2 className="text-3xl text-white font-bold m-8">
+              Tournament Register{" "}
+            </h2>
+            <button
+              className="text-white top-2 right-3 absolute text-3xl "
+              onClick={closePopup}
+            >
+              &times;
+            </button>
+            <Form onFinish={handleSubmit}>
+              <Form.Item
+                label={<b className="text-white">Full Name</b>}
+                name="fullName"
+                labelCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input full name",
+                  },
+                ]}
+              >
+                <Input autoFocus />
+              </Form.Item>
+              <Form.Item
+                label={<b className="text-white">Email</b>}
+                name="email"
+                labelCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input email",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label={<b className="text-white">Phone Number</b>}
+                name="phoneNumber"
+                labelCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input phone number",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label={<b className="text-white">Gender</b>}
+                name="gender"
+                labelCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select gender",
+                  },
+                ]}
+              >
+                <Select
+                  options={[
+                    { value: "Male", label: "Male" },
+                    { label: "Female", value: "Female" },
+                  ]}
+                />
+              </Form.Item>
+              <Form.Item
+                label={<b className="text-white">Rank</b>}
+                name="rank"
+                labelCol={{ span: 24 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select rank",
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="Select Rank "
+                  options={[
+                    { label: "Rank 1", value: 1 },
+                    { label: "Rank 2", value: 2 },
+                    { label: "Rank 3", value: 3 },
+                    { label: "Rank 4", value: 4 },
+                    { label: "Rank 5", value: 5 },
+                    { label: "Rank 6", value: 6 },
+                    { label: "Rank 7", value: 7 },
+                    { label: "Rank 8", value: 8 },
+                    { label: "Rank 9", value: 9 },
+                    { label: "Rank 10", value: 10 },
+                  ]}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  className="text-white py-2 px-4 bg-[#C6C61A] rounded-lg mt-6 mx-[80px]"
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Sign Up
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
+
 export default SignUp;

@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/createTournamentFormat.css";
 import defaultImg from "../images/defaultImg.png";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import { message, Select } from "antd";
 
-const CreateTournamentFormat = ({ handleClose, show }) => {
+const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const [imageSrc, setImageSrc] = useState(defaultImg);
   const [value, setValue] = useState("8");
@@ -14,12 +15,35 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
   const [selectedType, setSelectedType] = useState("Men's Single");
   const [name, setName] = useState("");
   const [startDate, setstartDate] = useState("");
+  const [campaignStartDate, setcampaignStartDate] = useState("");
   const [endDate, setendDate] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
 
   const URL = "http://localhost:5000/api/tournament";
+  const URL2 = "http://localhost:5000/api/tournament-campaign";
   const token = localStorage.getItem("token");
+
+  const getTournamentCampaign = async () => {
+    try {
+      const res = await axios.get(`${URL2}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.status === 200) {
+        setName(res.data.name);
+        setcampaignStartDate(res.data.startDate);
+      }
+    } catch (error) {
+      message.error(error.response.data);
+    }
+  };
+  console.log(campaignStartDate);
+  useEffect(() => {
+    getTournamentCampaign();
+  }, []);
 
   const addNewTournamentFormat = async (data) => {
     try {
@@ -31,11 +55,12 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
       });
       if (res.status === 200 || res.status === 201) {
         toast.success("New tournament format has been added successfully ~");
-        navigate(`/tournamentDetail/${id}`);
+        onSave();
         handleClose();
+        navigate(`/tournamentDetail/${id}`);
       }
     } catch (error) {
-      toast.error("Something went wrong, Please Login and try again");
+      message.error(error.response.data);
     }
   };
   const competitorTypes = [
@@ -46,11 +71,11 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
     "Women Dual",
   ];
 
-  const handleChangeValue = (e) => {
-    setValue(e.target.value);
+  const handleChangeValue = (value) => {
+    setValue(value);
   };
-  const handleChangeRank = (e) => {
-    setRank(e.target.value);
+  const handleChangeRank = (value) => {
+    setRank(value);
   };
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -64,6 +89,14 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const start = new Date(startDate);
+    const campaignStart = new Date(campaignStartDate);
+
+    if (start < campaignStart) {
+      message.error("Tournament start date must be within the campaign dates.");
+      return;
+    }
+
     const data = {
       tournamentName: name,
       formatType: selectedType,
@@ -72,6 +105,7 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
       numberOfTeams: value,
       rank: rank,
       tournamentCampaignId: id,
+      tournamentType: "Elimination",
     };
     console.log(data);
     addNewTournamentFormat(data);
@@ -162,48 +196,46 @@ const CreateTournamentFormat = ({ handleClose, show }) => {
               ))}
             </div>
             <div className="flex flex-col items-start justify-start gap-8 pt-[16px]">
-              <div className="flex gap-16 ">
+              <div className="flex gap-16">
                 <div>
-                  <p className="cursor-default">
-                    Number of Competitors{" "}
+                  <p className="cursor-default text-left">
+                    Number of Team{" "}
                     <span className="text-red-500 font-bold">*</span>
                   </p>
-
-                  <select
-                    className="border-2 border-inherit width-[248px] rounded-lg"
-                    value={value}
+                  <Select
+                    className="border-2 border-inherit width-[248px] w-[200px] text-left rounded-lg"
                     onChange={handleChangeValue}
-                  >
-                    <option value="8">8</option>
-                    <option value="16">16</option>
-                    <option value="32">32</option>
-                    <option value="64">64</option>
-                  </select>
+                    options={[
+                      { label: "8 Team", value: "8" },
+                      { label: "16 Team", value: "16" },
+                      { label: "32 Team", value: "32" },
+                      { label: "64 Team", value: "64" },
+                    ]}
+                  />
                 </div>
                 <div>
-                  <p>
+                  <p className="text-left">
                     {" "}
                     Rank <span className="text-red-500 font-bold">*</span>
                   </p>
-                  <select
-                    className="border-2 border-inherit rounded-lg"
-                    value={rank}
+                  <Select
+                    className="border-2 border-inherit w-[150px] text-left rounded-lg"
                     onChange={handleChangeRank}
-                  >
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
+                    options={[
+                      { label: "Rank 1", value: "1" },
+                      { label: "Rank 2", value: "2" },
+                      { label: "Rank 3", value: "3" },
+                      { label: "Rank 4", value: "4" },
+                      { label: "Rank 5", value: "5" },
+                      { label: "Rank 6", value: "6" },
+                      { label: "Rank 7", value: "7" },
+                      { label: "Rank 8", value: "8" },
+                      { label: "Rank 9", value: "9" },
+                      { label: "Rank 10", value: "10" },
+                    ]}
+                  />
                 </div>
               </div>
-
               <button
                 className="bg-[#C6C61A] py-2.5 px-[72px] rounded-lg text-white"
                 onClick={handleSubmit}

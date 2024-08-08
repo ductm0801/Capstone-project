@@ -1,22 +1,57 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import axios from "axios";
 import "../styles/header.css";
 import defaultImg from "../images/competitor-img.png";
 import UserContext from "../context/UserContext";
 import { CgSoftwareUpload } from "react-icons/cg";
+import { toast } from "react-toastify";
+import { message } from "antd";
 
 const Profile = ({ show, handleClose }) => {
   const { user, setUser } = useContext(UserContext);
   const [imageSrc, setImageSrc] = useState(defaultImg);
   const [formData, setFormData] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
+    fullName: "",
+    dateOfBirth: "",
+    email: "",
+    phoneNumber: "",
+    address: "", // Changed password to address
+    gender: "male", // Added gender field
   });
   const showHideClassName = show ? "popup display-block" : "popup display-none";
+
+  useEffect(() => {
+    // Fetch user data from API
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/users/${user.UserId}`
+        );
+        const data = response.data;
+        setFormData({
+          fullName: data.fullName || "",
+          dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split("T")[0] : "",
+          email: data.email || "",
+          phoneNumber: data.phoneNumber || "",
+          address: data.address || "",
+          gender: data.gender || "male",
+        });
+        setImageSrc(
+          data.image ? `data:image/png;base64,${data.image}` : defaultImg
+        );
+      } catch (error) {
+        message.error(error.response.data);
+      }
+    };
+
+    fetchUserData();
+  }, [user.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
@@ -29,14 +64,24 @@ const Profile = ({ show, handleClose }) => {
         setImageSrc(event.target.result);
       };
       reader.readAsDataURL(e.target.files[0]);
-      console.log(formData);
     }
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the updated data to the server
-    setUser({ ...user, ...formData });
-    handleClose();
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/users/${user.UserId}`,
+        formData
+      );
+      if (res.status === 204) {
+        toast.success("Profile updated successfully!");
+        setUser({ ...user, ...formData });
+        handleClose();
+      }
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
   };
 
   return (
@@ -69,13 +114,13 @@ const Profile = ({ show, handleClose }) => {
           >
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
-                Name
+                Full Name
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
-                placeholder={user.UserName}
+                name="fullName"
+                value={formData.fullName || ""}
+                placeholder="Enter your name"
                 onChange={handleChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -85,9 +130,9 @@ const Profile = ({ show, handleClose }) => {
                 Date of Birth
               </label>
               <input
-                type="dateOfBirth"
+                type="date"
                 name="dateOfBirth"
-                value={formData.dateOfBirth}
+                value={formData.dateOfBirth || ""}
                 onChange={handleChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -99,7 +144,7 @@ const Profile = ({ show, handleClose }) => {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={formData.email || ""}
                 onChange={handleChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -109,29 +154,43 @@ const Profile = ({ show, handleClose }) => {
                 Phone Number
               </label>
               <input
-                type="phone"
-                name="phone"
-                value={formData.phone}
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber || ""}
                 onChange={handleChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
-                Password
+                Address
               </label>
               <input
-                type="password"
-                name="password"
-                value={formData.dateOfBirth}
+                type="text"
+                name="address"
+                value={formData.address || ""}
                 onChange={handleChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2 text-left">
+                Gender
+              </label>
+              <select
+                name="gender"
+                value={formData.gender || "male"}
+                onChange={handleChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              >
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
             <div className="mb-4 text-left">
               Rank
               <div className="text-[#C6C61A] mt-1.5">
-                {user.Rank ? user.Rank : "1.0"}
+                {user.rank ? user.rank : "1.0"}
               </div>
             </div>
             <button

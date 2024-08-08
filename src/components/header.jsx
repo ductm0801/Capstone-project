@@ -18,16 +18,18 @@ const Header = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     try {
-      const decoded = jwtDecode(token);
-      const role =
-        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      setUserRole(role);
-      setUser(decoded);
+      if (token) {
+        const decoded = jwtDecode(token);
+        const role = decoded.Role;
+        setUserRole(role);
+        setUser(decoded);
+      }
     } catch (error) {
       console.error("Invalid token:", error);
     }
   }, []);
 
+  localStorage.setItem("role", userRole);
   const changeBackground = () => {
     if (window.scrollY >= 100) {
       setNavbar(true);
@@ -97,20 +99,37 @@ const Header = () => {
                   Find Tournament
                 </Link>
               </li>
+              <li>
+                <Link to="/news" className="text-white">
+                  News
+                </Link>
+              </li>
             </>
           )}
           {userRole === "Athletes" && (
-            <li>
-              <Link to="/findTournament" className="text-white">
-                Find Tournament
-              </Link>
-            </li>
+            <ul className="hidden lg:flex space-x-12 items-center">
+              <li>
+                <Link to="/findTournament" className="text-white">
+                  Find Tournament
+                </Link>
+              </li>
+              <li>
+                <Link to="/news" className="text-white">
+                  News
+                </Link>
+              </li>
+            </ul>
           )}
           {!userRole && (
             <>
               <li>
                 <Link to="/findTournament" className="text-white">
                   Find Tournament
+                </Link>
+              </li>
+              <li>
+                <Link to="/News" className="text-white">
+                  News
                 </Link>
               </li>
               <li>
