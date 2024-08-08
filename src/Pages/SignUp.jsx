@@ -10,7 +10,8 @@ import { Button, Form, Input, message, Select } from "antd";
 const SignUp = ({ closePopup, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const { id } = useParams();
-  const baseURL = "http://localhost:5000/api/tournament-registration";
+  const baseURL =
+    "https://webapi20240806093436.azurewebsites.net/api/tournament-registration";
 
   const handleSubmit = async (values) => {
     try {

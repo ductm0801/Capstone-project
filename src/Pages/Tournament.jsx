@@ -20,7 +20,8 @@ const Tournament = () => {
   const [page, setPage] = useState(1);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
 
-  const URL = "http://localhost:5000/api/tournament-campaign/paging";
+  const URL =
+    "https://webapi20240806093436.azurewebsites.net/api/tournament-campaign/paging";
   const pageSize = 3;
 
   const getListTournament = async (page, pageSize, status, search) => {

@@ -12,7 +12,8 @@ const News = () => {
   const [edit, setEdit] = useState(false);
   const [form] = Form.useForm();
   const detail = useRef({});
-  const URL = "http://localhost:5000/api/newarticle";
+  const URL = "https://webapi20240806093436.azurewebsites.net/api/newarticle";
+
 
   const fetchData = async () => {
     try {

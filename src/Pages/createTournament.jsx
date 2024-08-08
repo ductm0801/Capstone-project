@@ -10,7 +10,8 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 const CreateTournament = () => {
-  const URL = "http://localhost:5000/api/tournament-campaign";
+  const URL =
+    "https://webapi20240806093436.azurewebsites.net/api/tournament-campaign";
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     tournamentName: "",

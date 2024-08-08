@@ -5,9 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const News = () => {
   const [news, setNews] = useState([]);
-  const [filteredNews, setFilteredNews] = useState([]);
-  const [filter, setFilter] = useState("All");
-  const URL = "http://localhost:5000/api/newarticle";
+  const URL = "https://webapi20240806093436.azurewebsites.net/api/newarticle";
   const navigate = useNavigate();
 
   const fetchData = async () => {

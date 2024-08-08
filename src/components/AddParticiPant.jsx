@@ -28,8 +28,10 @@ const AddParticipant = ({
   const [errors, setErrors] = useState(errorInit);
   const { firstAthleteId, secondAthleteId } = state;
   const navigate = useNavigate();
-  const URL = "http://localhost:5000/api/athletes/non-teams";
-  const URL2 = "http://localhost:5000/api/pickleball-match/assign-single-team";
+  const URL =
+    "https://webapi20240806093436.azurewebsites.net/api/athletes/non-teams";
+  const URL2 =
+    "https://webapi20240806093436.azurewebsites.net/api/pickleball-match/assign-single-team";
 
   console.log(participants);
   console.log(tournamentId);

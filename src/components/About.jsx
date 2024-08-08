@@ -98,7 +98,7 @@ const About = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/comment",
+        "https://webapi20240806093436.azurewebsites.net/api/comment",
         commentData,
         {
           headers: {
@@ -125,7 +125,7 @@ const About = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/comment/${editCommentId}`,
+        `https://webapi20240806093436.azurewebsites.net/api/comment/${editCommentId}`,
         { commentText: editCommentText },
         {
           headers: {
@@ -148,7 +148,7 @@ const About = () => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/comment/tournament/${id}`
+        `https://webapi20240806093436.azurewebsites.net/api/comment/tournament/${id}`
       );
       setComments(response.data);
     } catch (error) {
@@ -159,7 +159,7 @@ const About = () => {
   const deleteComment = async (commentId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/comment/permanent/${commentId}`,
+        `https://webapi20240806093436.azurewebsites.net/comment/permanent/${commentId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
