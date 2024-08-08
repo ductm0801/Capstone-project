@@ -17,7 +17,7 @@ const Bracket = () => {
   const [loading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [lastRound, setLastRound] = useState(false);
-  const URL = `http://localhost:5000/api/pickleball-match`;
+  const URL = `https://webapi20240806093436.azurewebsites.net/api/pickleball-match`;
 
   const location = useLocation();
   const { formatType } = location.state || {};

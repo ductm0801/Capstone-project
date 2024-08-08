@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 const News = () => {
   const [create, setCreate] = useState(false);
   const [form] = Form.useForm();
-  const URL = "http://localhost:5000/api/newarticle";
+  const URL = "https://webapi20240806093436.azurewebsites.net/api/newarticle";
 
   const onFinish = async (values) => {
     const data = {

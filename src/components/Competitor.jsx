@@ -8,9 +8,11 @@ import { message } from "antd";
 
 const Competitor = () => {
   const [competitors, setCompetitor] = useState([]);
-  const URL = "http://localhost:5000/api/athletes";
-  const getUser = "http://localhost:5000/api/athletes/user-athletes";
-  const getGuest = "http://localhost:5000/api/athletes/guest-athletes";
+  const URL = "https://webapi20240806093436.azurewebsites.net/api/athletes";
+  const getUser =
+    "https://webapi20240806093436.azurewebsites.net/api/athletes/user-athletes";
+  const getGuest =
+    "https://webapi20240806093436.azurewebsites.net/api/athletes/guest-athletes";
   const { id } = useParams();
   const [, forceUpdate] = useState(false);
 

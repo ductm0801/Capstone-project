@@ -31,8 +31,10 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const URL = "http://localhost:5000/api/athletes/non-teams";
-  const URL2 = "http://localhost:5000/api/pickleball-match/assign-double-team";
+  const URL =
+    "https://webapi20240806093436.azurewebsites.net/api/athletes/non-teams";
+  const URL2 =
+    "https://webapi20240806093436.azurewebsites.net/api/pickleball-match/assign-double-team";
 
   const getParticipants = async () => {
     try {

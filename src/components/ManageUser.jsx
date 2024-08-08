@@ -12,7 +12,7 @@ const ManageUser = () => {
   const [showUpdate, setShowUpdate] = useState(false);
   const [user, setUser] = useState({});
 
-  const URL = "http://localhost:5000/api/users";
+  const URL = "https://webapi20240806093436.azurewebsites.net/api/users";
 
   const getUsers = async () => {
     try {

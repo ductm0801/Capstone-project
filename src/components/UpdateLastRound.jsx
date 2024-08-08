@@ -19,8 +19,10 @@ const UpdateLastRound = ({ match, closePopup, onSave }) => {
   });
 
   const { winningTeamId, winConditionId } = state;
-  const URL3 = "http://localhost:5000/api/win-condition";
-  const URL2 = "http://localhost:5000/api/pickleball-match/match-result";
+  const URL3 =
+    "https://webapi20240806093436.azurewebsites.net/api/win-condition";
+  const URL2 =
+    "https://webapi20240806093436.azurewebsites.net/api/pickleball-match/match-result";
 
   const handleSave = async (e) => {
     e.preventDefault();

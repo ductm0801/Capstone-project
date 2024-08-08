@@ -30,7 +30,7 @@ const FormatType = ({ tournamentId }) => {
   }, []);
 
   const { id } = useParams();
-  const URL = "http://localhost:5000/campaign";
+  const URL = "https://webapi20240806093436.azurewebsites.net/campaign";
   const navigate = useNavigate();
   console.log(tournamentId);
 

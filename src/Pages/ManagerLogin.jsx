@@ -18,7 +18,7 @@ export default function ManagerLogin() {
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/accounts/manager-login",
+        "https://webapi20240806093436.azurewebsites.net/api/accounts/manager-login",
         {
           username,
           password,

@@ -8,7 +8,8 @@ import { Button, Form, Input, message, Select } from "antd";
 const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   const [form] = Form.useForm();
   const { id } = useParams();
-  const URL = "http://localhost:5000/api/accounts/CreateAccount";
+  const URL =
+    "https://webapi20240806093436.azurewebsites.net/api/accounts/CreateAccount";
 
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 

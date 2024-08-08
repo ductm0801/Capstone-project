@@ -20,10 +20,7 @@ const Header = () => {
     try {
       if (token) {
         const decoded = jwtDecode(token);
-        const role =
-          decoded[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-          ];
+        const role = decoded.Role;
         setUserRole(role);
         setUser(decoded);
       }

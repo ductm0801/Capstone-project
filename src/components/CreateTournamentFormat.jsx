@@ -20,8 +20,9 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const URL = "http://localhost:5000/api/tournament";
-  const URL2 = "http://localhost:5000/api/tournament-campaign";
+  const URL = "https://webapi20240806093436.azurewebsites.net/api/tournament";
+  const URL2 =
+    "https://webapi20240806093436.azurewebsites.net/api/tournament-campaign";
   const token = localStorage.getItem("token");
 
   const getTournamentCampaign = async () => {

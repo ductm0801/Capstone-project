@@ -16,7 +16,8 @@ import About from "../components/About";
 import Schedule from "../components/Schedule";
 
 const TournamentDetail = () => {
-  const URL = "http://localhost:5000/api/tournament-campaign";
+  const URL =
+    "https://webapi20240806093436.azurewebsites.net/api/tournament-campaign";
   const [tournament, setTournament] = useState("");
   const [activeTab, setActiveTab] = useState("Format");
   const [refreshFormatType, setRefreshFormatType] = useState(false);
