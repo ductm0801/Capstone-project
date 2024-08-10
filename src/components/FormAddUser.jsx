@@ -9,7 +9,7 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   const [form] = Form.useForm();
   const { id } = useParams();
   const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/accounts/CreateAccount";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/accounts/account";
 
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 
