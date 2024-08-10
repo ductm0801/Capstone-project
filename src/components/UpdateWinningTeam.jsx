@@ -28,10 +28,10 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
     secondMatchWinConditionId,
   } = state;
   const URL3 =
-    "https://webapi20240806093436.azurewebsites.net/api/win-condition";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/win-condition";
   const URL2 =
-    "https://webapi20240806093436.azurewebsites.net/api/pickleball-match/next-match";
-  const URL = `https://webapi20240806093436.azurewebsites.net/api/pickleball-match/advanced-match/${match.matchId}`;
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match/next-match";
+  const URL = `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match/advanced-match/${match.matchId}`;
 
   const getOptions = (participants) =>
     participants.map((participant) => ({

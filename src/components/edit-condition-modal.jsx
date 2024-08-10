@@ -4,7 +4,7 @@ import axios from "axios";
 const EditModal = ({ handleClose, show, onSave, data }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const URL =
-    "https://webapi20240806093436.azurewebsites.net/api/win-condition";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/win-condition";
   const { TextArea } = Input;
   const [form] = Form.useForm();
 

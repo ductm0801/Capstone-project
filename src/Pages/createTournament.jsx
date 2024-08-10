@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/createtournament.css";
 import defaultImg from "../images/defaultImg.png";
 import { FaEdit } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { DatePicker, message } from "antd";
+import { DatePicker, message, Select } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 const CreateTournament = () => {
   const URL =
-    "https://webapi20240806093436.azurewebsites.net/api/tournament-campaign";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-campaign";
+  const courtURL =
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/courtGroups";
   const navigate = useNavigate();
+
+  const [courts, setCourts] = useState([]);
   const [formData, setFormData] = useState({
     tournamentName: "",
     startDate: "",
@@ -28,6 +32,24 @@ const CreateTournament = () => {
     return current && current < dayjs().endOf("day");
   };
 
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(courtURL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setCourts(res.data);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const courtOptions = courts.map((court) => ({
+    label: court.courtGroupName,
+    value: court.courtGroupName,
+  }));
+
   const handleChange = (e) => {
     if (e && e.target) {
       const { name, value } = e.target;
@@ -36,6 +58,13 @@ const CreateTournament = () => {
         [name]: value,
       });
     }
+  };
+
+  const handleSelectChange = (value) => {
+    setFormData({
+      ...formData,
+      location: value,
+    });
   };
 
   const handleDateChange = (date, dateString, name) => {
@@ -71,7 +100,12 @@ const CreateTournament = () => {
         navigate(`/findTournament`);
       }
     } catch (error) {
-      message.error(error.response.data);
+      // Improved error handling
+      if (error.response && error.response.data) {
+        message.error(error.response.data);
+      } else {
+        message.error("An unexpected error occurred. Please try again later.");
+      }
     }
   };
 
@@ -134,15 +168,16 @@ const CreateTournament = () => {
                 <label htmlFor="location">
                   Location <span className="text-red-500 font-bold">*</span>
                 </label>
-                <input
-                  type="text"
+                <Select
                   id="location"
                   name="location"
+                  size="large"
+                  options={courtOptions}
                   placeholder="Location"
                   value={formData.location}
-                  onChange={handleChange}
+                  onChange={handleSelectChange}
                   required
-                  className="border-2 border-inherit rounded-lg p-2 focus:outline-none"
+                  className="border border-inherit rounded-lg focus:outline-none"
                 />
               </div>
             </div>

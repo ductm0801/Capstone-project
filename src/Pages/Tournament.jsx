@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 import defaultImg from "../images/defaultImg.png";
 import { message, Pagination } from "antd"; // Import Pagination from Ant Design
 import "../styles/tournament.css";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat"; // If you're using custom formats
+dayjs.extend(customParseFormat);
 
 const Tournament = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +24,7 @@ const Tournament = () => {
   const [totalItemsCount, setTotalItemsCount] = useState(0);
 
   const URL =
-    "https://webapi20240806093436.azurewebsites.net/api/tournament-campaign/paging";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-campaign/paging";
   const pageSize = 3;
 
   const getListTournament = async (page, pageSize, status, search) => {
@@ -239,8 +242,13 @@ const Tournament = () => {
                               {tournament.tournamentName}
                             </p>
                             <p className="text-xl">
-                              Round and KnockOut | PickleBall |{" "}
-                              {tournament.CreatedBy}
+                              {dayjs(tournament.startDate).format(
+                                "MMM D, YYYY"
+                              )}{" "}
+                              -{" "}
+                              {dayjs(tournament.endDate).format("MMM D, YYYY")}{" "}
+                              {""}
+                              at {tournament.location}
                             </p>
                           </div>
                         </div>

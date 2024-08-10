@@ -28,7 +28,7 @@ const WinCondition = () => {
   const detail = useRef({});
   const [deleteModal, setDeleteModal] = useState(false);
   const URL =
-    "https://webapi20240806093436.azurewebsites.net/api/win-condition";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/win-condition";
 
   console.log(winConditions);
 

@@ -1,8 +1,9 @@
-import { Button, Form, Input, message, Modal, Select } from "antd";
+import { Button, Form, Input, message, Modal, Select, Upload } from "antd";
 import { FaRegTrashAlt } from "react-icons/fa";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import "react-quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 
@@ -12,8 +13,11 @@ const News = () => {
   const [edit, setEdit] = useState(false);
   const [form] = Form.useForm();
   const detail = useRef({});
-  const URL = "https://webapi20240806093436.azurewebsites.net/api/newarticle";
-
+  const [imageUrl, setImageUrl] = useState("");
+  const URL =
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/newarticle";
+  const uploadURL =
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/image/upload";
 
   const fetchData = async () => {
     try {
@@ -40,6 +44,7 @@ const News = () => {
       newsContent: values.newsContent,
       newsType: parseInt(values.newsType),
       newsArticleStatus: true,
+      imageUrl, // Include image URL if available
     };
 
     try {
@@ -61,6 +66,7 @@ const News = () => {
       newsContent: values.newsContent,
       newsType: parseInt(values.newsType),
       newsArticleStatus: true,
+      imageUrl, // Include image URL if available
     };
     try {
       const res = await axios.put(`${URL}/${detail.current.id}`, data);
@@ -88,14 +94,13 @@ const News = () => {
   const handleEdit = (item) => {
     setEdit(true);
     detail.current = item;
+    setImageUrl(item.imageUrl || "");
   };
   const handleDelete = async (item) => {
     try {
       const res = await axios.delete(`${URL}/${item.id}`);
       if (res.status === 204) {
         toast.success("News deleted successfully!");
-        setEdit(false);
-        form.resetFields();
         fetchData();
       }
     } catch (error) {
@@ -114,6 +119,27 @@ const News = () => {
       onOk: () => handleDelete(item),
     });
   };
+
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await axios.post(uploadURL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (res.status === 200) {
+        setImageUrl(res.data.url);
+        return res.data.url;
+      }
+    } catch (error) {
+      handleError(error);
+    }
+    return null;
+  };
+
+  const uploadButton = <Button>Upload</Button>;
 
   return (
     <div>
@@ -145,6 +171,29 @@ const News = () => {
       {create && (
         <Modal onCancel={handleClose} open={create} footer={null} width={1000}>
           <Form form={form} onFinish={onFinish} layout="vertical">
+            <Form.Item label={<b>Image</b>} name="imageUrl">
+              <Upload
+                customRequest={({ file, onSuccess }) => {
+                  uploadImage(file).then((url) => {
+                    onSuccess(url);
+                  });
+                }}
+                listType="picture-card"
+                maxCount={1}
+              >
+                {imageUrl ? (
+                  <div>
+                    {" "}
+                    <PlusOutlined />
+                    Change Image
+                  </div>
+                ) : (
+                  <div>
+                    <PlusOutlined /> Upload
+                  </div>
+                )}
+              </Upload>
+            </Form.Item>
             <Form.Item
               label={<b>Title</b>}
               name="newsTitle"
@@ -214,7 +263,9 @@ const News = () => {
                   "image",
                   "video",
                 ]}
-                onChange={(value) => form.setFieldsValue({ content: value })}
+                onChange={(value) =>
+                  form.setFieldsValue({ newsContent: value })
+                }
               />
             </Form.Item>
             <Form.Item>
@@ -240,6 +291,22 @@ const News = () => {
             initialValues={{ ...detail.current }}
             layout="vertical"
           >
+            <Form.Item label={<b>Image</b>} name="imageUrl">
+              <Upload
+                customRequest={({ file, onSuccess }) => {
+                  uploadImage(file).then((url) => {
+                    onSuccess(url);
+                  });
+                }}
+                showUploadList={false}
+              >
+                {imageUrl ? (
+                  <img src={imageUrl} alt="avatar" style={{ width: "100px" }} />
+                ) : (
+                  uploadButton
+                )}
+              </Upload>
+            </Form.Item>
             <Form.Item
               label={<b>Title</b>}
               name="newsTitle"
@@ -309,7 +376,9 @@ const News = () => {
                   "image",
                   "video",
                 ]}
-                onChange={(value) => form.setFieldsValue({ content: value })}
+                onChange={(value) =>
+                  form.setFieldsValue({ newsContent: value })
+                }
               />
             </Form.Item>
             <Form.Item>

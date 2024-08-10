@@ -12,7 +12,8 @@ const ManageUser = () => {
   const [showUpdate, setShowUpdate] = useState(false);
   const [user, setUser] = useState({});
 
-  const URL = "https://webapi20240806093436.azurewebsites.net/api/users";
+  const URL =
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/users";
 
   const getUsers = async () => {
     try {

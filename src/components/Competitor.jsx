@@ -8,17 +8,14 @@ import { message } from "antd";
 
 const Competitor = () => {
   const [competitors, setCompetitor] = useState([]);
-  const URL = "https://webapi20240806093436.azurewebsites.net/api/athletes";
+  const URL =
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes";
   const getUser =
-    "https://webapi20240806093436.azurewebsites.net/api/athletes/user-athletes";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes/user-athletes";
   const getGuest =
-    "https://webapi20240806093436.azurewebsites.net/api/athletes/guest-athletes";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes/guest-athletes";
   const { id } = useParams();
   const [, forceUpdate] = useState(false);
-
-  const handleForceUpdate = () => {
-    forceUpdate((prev) => !prev);
-  };
 
   const getListCompetitor = async (id) => {
     try {

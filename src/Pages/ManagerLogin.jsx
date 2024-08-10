@@ -18,7 +18,7 @@ export default function ManagerLogin() {
     }
     try {
       const response = await axios.post(
-        "https://webapi20240806093436.azurewebsites.net/api/accounts/manager-login",
+        "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/accounts/manager-login",
         {
           username,
           password,

@@ -27,7 +27,8 @@ const FormatType = ({ tournamentId }) => {
   }, []);
 
   const { id } = useParams();
-  const URL = "https://webapi20240806093436.azurewebsites.net/campaign";
+  const URL =
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/campaign";
   const navigate = useNavigate();
   console.log(tournamentId);
 

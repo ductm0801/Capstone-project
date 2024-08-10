@@ -17,7 +17,7 @@ import Schedule from "../components/Schedule";
 
 const TournamentDetail = () => {
   const URL =
-    "https://webapi20240806093436.azurewebsites.net/api/tournament-campaign";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-campaign";
   const [tournament, setTournament] = useState("");
   const [activeTab, setActiveTab] = useState("Format");
   const [refreshFormatType, setRefreshFormatType] = useState(false);
@@ -126,14 +126,7 @@ const TournamentDetail = () => {
             >
               Competitor
             </li>
-            <li
-              className={`tab-item ${
-                activeTab === "Schedule" ? "active" : ""
-              } mb-[12px]`}
-              onClick={() => handleTabClick("Schedule")}
-            >
-              Schedule
-            </li>
+
             <li
               className={`tab-item ${
                 activeTab === "About" ? "active" : ""
@@ -158,12 +151,6 @@ const TournamentDetail = () => {
         <Competitor />
       </div>
 
-      <div
-        className={`tab-content ${activeTab === "Schedule" ? "active" : ""}`}
-        id="Schedule"
-      >
-        <Schedule />
-      </div>
       <div
         className={`tab-content ${activeTab === "About" ? "active" : ""}`}
         id="About"

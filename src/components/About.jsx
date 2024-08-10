@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatDistanceToNow } from "date-fns";
 import { Button, Dropdown, message, Modal, Input } from "antd";
+import defaultImg from "../images/commentDefault.png";
 
 const items = (handleEditClick, handleDeleteClick) => [
   {
@@ -98,7 +99,7 @@ const About = () => {
 
     try {
       const response = await axios.post(
-        "https://webapi20240806093436.azurewebsites.net/api/comment",
+        "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/comment",
         commentData,
         {
           headers: {
@@ -125,7 +126,7 @@ const About = () => {
 
     try {
       const response = await axios.put(
-        `https://webapi20240806093436.azurewebsites.net/api/comment/${editCommentId}`,
+        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/comment/${editCommentId}`,
         { commentText: editCommentText },
         {
           headers: {
@@ -148,7 +149,7 @@ const About = () => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `https://webapi20240806093436.azurewebsites.net/api/comment/tournament/${id}`
+        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/comment/tournament/${id}`
       );
       setComments(response.data);
     } catch (error) {
@@ -159,7 +160,7 @@ const About = () => {
   const deleteComment = async (commentId) => {
     try {
       const response = await axios.delete(
-        `https://webapi20240806093436.azurewebsites.net/comment/permanent/${commentId}`,
+        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/comment/permanent/${commentId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -237,6 +238,7 @@ const About = () => {
                 >
                   <div className="flex justify-between items-center">
                     <div className="flex gap-2 items-center">
+                      <img src={defaultImg} alt="" />
                       <span className="text-[#1244A2] text-[16px] font-semibold ">
                         {comment.fullName}
                       </span>

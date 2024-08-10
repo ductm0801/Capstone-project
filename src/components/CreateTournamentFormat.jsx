@@ -7,6 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { message, Select } from "antd";
 
+const { Option } = Select;
+
 const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const [imageSrc, setImageSrc] = useState(defaultImg);
@@ -14,15 +16,17 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const [rank, setRank] = useState("1");
   const [selectedType, setSelectedType] = useState("Men's Single");
   const [name, setName] = useState("");
-  const [startDate, setstartDate] = useState("");
-  const [campaignStartDate, setcampaignStartDate] = useState("");
-  const [endDate, setendDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [campaignStartDate, setCampaignStartDate] = useState("");
+  const [tournamentType, setTournamentType] = useState("Elimination");
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const URL = "https://webapi20240806093436.azurewebsites.net/api/tournament";
+  const URL =
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament";
   const URL2 =
-    "https://webapi20240806093436.azurewebsites.net/api/tournament-campaign";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-campaign";
   const token = localStorage.getItem("token");
 
   const getTournamentCampaign = async () => {
@@ -35,13 +39,13 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
       });
       if (res.status === 200) {
         setName(res.data.name);
-        setcampaignStartDate(res.data.startDate);
+        setCampaignStartDate(res.data.startDate);
       }
     } catch (error) {
-      message.error(error.response.data);
+      message.error("Error fetching campaign details.");
     }
   };
-  console.log(campaignStartDate);
+
   useEffect(() => {
     getTournamentCampaign();
   }, []);
@@ -55,15 +59,16 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
         },
       });
       if (res.status === 200 || res.status === 201) {
-        toast.success("New tournament format has been added successfully ~");
+        toast.success("New tournament format has been added successfully!");
         onSave();
         handleClose();
         navigate(`/tournamentDetail/${id}`);
       }
     } catch (error) {
-      message.error(error.response.data);
+      message.error("Error adding tournament format.");
     }
   };
+
   const competitorTypes = [
     "Men's Single",
     "Women's Single",
@@ -72,21 +77,16 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
     "Women Dual",
   ];
 
-  const handleChangeValue = (value) => {
-    setValue(value);
-  };
-  const handleChangeRank = (value) => {
-    setRank(value);
-  };
+  const handleChangeValue = (value) => setValue(value);
+  const handleChangeRank = (value) => setRank(value);
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setImageSrc(event.target.result);
-      };
+      reader.onload = (event) => setImageSrc(event.target.result);
       reader.readAsDataURL(e.target.files[0]);
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -101,42 +101,47 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
     const data = {
       tournamentName: name,
       formatType: selectedType,
-      startDate: startDate,
-      endDate: endDate,
+      startDate,
+      endDate,
       numberOfTeams: value,
-      rank: rank,
+      rank,
       tournamentCampaignId: id,
-      tournamentType: "Elimination",
+      tournamentType,
     };
-    console.log(data);
+
     addNewTournamentFormat(data);
   };
+
   return (
     <div className={showHideClassName}>
       <section className="popup-main">
         <h1 className="text-left text-3xl font-bold px-3">
-          Create tournament format
+          Create Tournament Format
         </h1>
         <p className="text-left px-3 py-4">
-          Please fullfill property data for all required field!
+          Please fulfill all required fields!
         </p>
-        <button className="close-button text-3xl " onClick={handleClose}>
+        <button className="close-button text-3xl" onClick={handleClose}>
           &times;
         </button>
         <div className="border-t-2 border-inherit flex">
-          <div className="image-container">
+          <div className="image-container relative">
             <img src={imageSrc} alt="Upload" className="image" />
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
               id="image-input"
+              className="absolute top-0 left-0 opacity-0"
             />
-            <label htmlFor="image-input">
-              <FaEdit className="text-black absolute top-[120px] left-[140px]" />
+            <label
+              htmlFor="image-input"
+              className="absolute top-7 left-2 cursor-pointer"
+            >
+              <FaEdit className="text-black" />
             </label>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col px-3">
             <label htmlFor="name" className="text-left mb-4">
               Name <span className="text-red-500 font-bold">*</span>
             </label>
@@ -149,45 +154,61 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
               id="name"
               name="name"
               onChange={(e) => setName(e.target.value)}
-            ></input>
-            <div className="w-[320px] flex flex-col">
-              <div className="text-left mb-4">
+            />
+            <div className="w-[320px] flex flex-col mb-4">
+              <label htmlFor="startDate" className="text-left mb-2">
                 Start Date <span className="text-red-500 font-bold">*</span>
-              </div>
+              </label>
               <input
                 type="date"
                 id="startDate"
                 name="startDate"
-                placeholder="dd/mm/yyyy"
                 value={startDate}
-                onChange={(e) => setstartDate(e.target.value)}
+                onChange={(e) => setStartDate(e.target.value)}
                 required
                 className="border-2 border-inherit rounded-lg p-2 mb-4 focus:outline-none"
               />
             </div>
-            <div className="w-[320px] flex flex-col">
-              <div className="text-left mb-4">
+            <div className="w-[320px] flex flex-col mb-4">
+              <label htmlFor="endDate" className="text-left mb-2">
                 End Date <span className="text-red-500 font-bold">*</span>
-              </div>
+              </label>
               <input
                 type="date"
                 id="endDate"
                 name="endDate"
-                placeholder="dd/mm/yyyy"
                 value={endDate}
-                onChange={(e) => setendDate(e.target.value)}
+                onChange={(e) => setEndDate(e.target.value)}
                 required
                 className="border-2 border-inherit rounded-lg p-2 mb-4 focus:outline-none"
               />
             </div>
-            <p className="text-left py-[16px]">
-              Competitor type <span className="text-red-500 font-bold">*</span>
+            <div className="w-[320px] flex flex-col mb-4">
+              <label htmlFor="tournamentType" className="text-left mb-2">
+                Tournament Type{" "}
+                <span className="text-red-500 font-bold">*</span>
+              </label>
+              <Select
+                size="large"
+                id="tournamentType"
+                name="tournamentType"
+                value={tournamentType}
+                onChange={setTournamentType}
+                required
+                className="border border-inherit rounded-lg mb-4"
+              >
+                <Option value="Group Stage">Group Stage</Option>
+                <Option value="Elimination">Elimination</Option>
+              </Select>
+            </div>
+            <p className="text-left py-4">
+              Competitor Type <span className="text-red-500 font-bold">*</span>
             </p>
-            <div className="flex">
+            <div className="flex mb-4">
               {competitorTypes.map((type) => (
                 <div
                   key={type}
-                  className={`option  ${
+                  className={`option ${
                     selectedType === type ? "selected" : ""
                   }`}
                   onClick={() => setSelectedType(type)}
@@ -196,45 +217,39 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
                 </div>
               ))}
             </div>
-            <div className="flex flex-col items-start justify-start gap-8 pt-[16px]">
-              <div className="flex gap-16">
+            <div className="flex flex-col gap-8">
+              <div className="flex gap-16 mb-4">
                 <div>
-                  <p className="cursor-default text-left">
-                    Number of Team{" "}
+                  <p className="text-left">
+                    Number of Teams{" "}
                     <span className="text-red-500 font-bold">*</span>
                   </p>
                   <Select
-                    className="border-2 border-inherit width-[248px] w-[200px] text-left rounded-lg"
+                    className="border border-inherit w-[200px] text-left rounded-lg"
                     onChange={handleChangeValue}
-                    options={[
-                      { label: "8 Team", value: "8" },
-                      { label: "16 Team", value: "16" },
-                      { label: "32 Team", value: "32" },
-                      { label: "64 Team", value: "64" },
-                    ]}
-                  />
+                    value={value}
+                  >
+                    <Option value="8">8 Teams</Option>
+                    <Option value="16">16 Teams</Option>
+                    <Option value="32">32 Teams</Option>
+                    <Option value="64">64 Teams</Option>
+                  </Select>
                 </div>
                 <div>
                   <p className="text-left">
-                    {" "}
                     Rank <span className="text-red-500 font-bold">*</span>
                   </p>
                   <Select
-                    className="border-2 border-inherit w-[150px] text-left rounded-lg"
+                    className="border border-inherit w-[150px] text-left rounded-lg"
                     onChange={handleChangeRank}
-                    options={[
-                      { label: "Rank 1", value: "1" },
-                      { label: "Rank 2", value: "2" },
-                      { label: "Rank 3", value: "3" },
-                      { label: "Rank 4", value: "4" },
-                      { label: "Rank 5", value: "5" },
-                      { label: "Rank 6", value: "6" },
-                      { label: "Rank 7", value: "7" },
-                      { label: "Rank 8", value: "8" },
-                      { label: "Rank 9", value: "9" },
-                      { label: "Rank 10", value: "10" },
-                    ]}
-                  />
+                    value={rank}
+                  >
+                    {[...Array(10)].map((_, i) => (
+                      <Option key={i + 1} value={`${i + 1}`}>
+                        Rank {i + 1}
+                      </Option>
+                    ))}
+                  </Select>
                 </div>
               </div>
               <button

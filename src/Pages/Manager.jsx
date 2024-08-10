@@ -193,10 +193,6 @@ const Manager = () => {
                   tournamentDropdown ? "active" : ""
                 }`}
               >
-                <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
-                  <RiCalendarScheduleLine />
-                  Schedule
-                </div>
                 <div
                   className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
                   onClick={() => setActiveComponent("winCondition")}

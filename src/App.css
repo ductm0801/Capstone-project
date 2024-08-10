@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+.trapezium-container {
+  position: relative;
+  display: inline-block;
+  padding: 10px 48px;
+  background-color: rgb(207, 26, 26);
+  clip-path: polygon(0 100%, 100% 100%, 90% 0%, 10% 0%);
+  transform: rotate(180deg);
+}
+
+.trapezium-text {
+  transform: rotate(180deg);
+  display: inline-block;
+  color: white;
+}

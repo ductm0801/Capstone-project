@@ -32,9 +32,9 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
   const navigate = useNavigate();
 
   const URL =
-    "https://webapi20240806093436.azurewebsites.net/api/athletes/non-teams";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes/non-teams";
   const URL2 =
-    "https://webapi20240806093436.azurewebsites.net/api/pickleball-match/assign-double-team";
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match/assign-double-team";
 
   const getParticipants = async () => {
     try {

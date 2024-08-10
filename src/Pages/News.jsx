@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 
 const News = () => {
   const [news, setNews] = useState([]);
-  const URL = "https://webapi20240806093436.azurewebsites.net/api/newarticle";
+  const [filteredNews, setFilteredNews] = useState([]);
+  const [filter, setFilter] = useState("All");
+  const URL =
+    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/newarticle";
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -71,7 +74,7 @@ const News = () => {
           >
             <img
               className="max-w-[342px] max-h-[171px]"
-              src="https://via.placeholder.com/300x200"
+              src={newz.imageUrl}
               alt="news"
             />
             <div>
