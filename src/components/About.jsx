@@ -160,7 +160,7 @@ const About = () => {
   const deleteComment = async (commentId) => {
     try {
       const response = await axios.delete(
-        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/comment/permanent/${commentId}`,
+        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/comment/permanent/${commentId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
