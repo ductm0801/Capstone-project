@@ -121,11 +121,11 @@ const ManageUser = () => {
                   {user.phoneNumber}
                 </td>
                 <td className="border border-slate-300 text-center pl-[20px] h-[48px]">
-                  {user.gender}
+                {user.rank}
                 </td>
-
+                
                 <td className="border border-slate-300 text-center pl-[20px] h-[48px]">
-                  {user.rank}
+                {user.gender}
                 </td>
 
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
