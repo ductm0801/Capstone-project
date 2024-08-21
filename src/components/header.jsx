@@ -106,7 +106,7 @@ const Header = () => {
               </li>
             </>
           )}
-          {userRole === "Athletes" && (
+          {userRole === "Athlete" && (
             <ul className="hidden lg:flex space-x-12 items-center">
               <li>
                 <Link to="/findTournament" className="text-white">
@@ -147,7 +147,7 @@ const Header = () => {
               </li>
             </>
           )}
-          {(userRole === "Manager" || userRole === "Athletes") && (
+          {(userRole === "Manager" || userRole === "Athlete") && (
             <li>
               <img
                 className="h-12 w-12 mr-[112px] rounded-full cursor-pointer"
@@ -182,7 +182,7 @@ const Header = () => {
               </li>
             </>
           )}
-          {userRole === "Athletes" && (
+          {userRole === "Athlete" && (
             <li>
               <Link to="/findTournament" className="text-white">
                 Find Tournament
@@ -211,7 +211,7 @@ const Header = () => {
               </li>
             </>
           )}
-          {(userRole === "Manager" || userRole === "Athletes") && (
+          {(userRole === "Manager" || userRole === "Athlete") && (
             <li>
               <img
                 className="h-8 w-8 rounded-full cursor-pointer mb-6"

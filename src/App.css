@@ -50,3 +50,26 @@
   display: inline-block;
   color: white;
 }
+
+.background {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: white;
+}
+.background::placeholder {
+  color: white !important;
+}
+.ant-select-selector {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: white;
+}
+.ant-select-selector:focus {
+  outline: none !important;
+}
+.ant-select-selection-placeholder {
+  color: white !important;
+}
+.ant-select-arrow {
+  color: white !important;
+}

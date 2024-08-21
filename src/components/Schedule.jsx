@@ -4,23 +4,7 @@ import defaultImg from "../images/Avatar.png";
 import "../App.css";
 import tourch from "../images/torch.png";
 
-const Schedule = ({ id }) => {
-  const [match, setMatch] = useState([]);
-
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match";
-
-  const fetchData = async () => {
-    const res = await fetch(`${URL}/${id}`);
-    const data = await res.json();
-    setMatch(data);
-  };
-  console.log(id);
-
-  useEffect(() => {
-    fetchData();
-  }, [id]);
-
+const Schedule = ({ match }) => {
   return (
     <div className="bg-[#EFEFEF] pt-[48px] pb-[48px]">
       <h1 className="text-3xl font-semibold ml-[112px] mb-[48px]">

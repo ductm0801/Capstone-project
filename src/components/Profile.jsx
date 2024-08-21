@@ -25,7 +25,7 @@ const Profile = ({ show, handleClose }) => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/users/${user.UserId}`
+          `http://localhost:5000/api/users/${user.UserId}`
         );
         const data = response.data;
         setFormData({
@@ -71,7 +71,7 @@ const Profile = ({ show, handleClose }) => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/users/${user.UserId}`,
+        `http://localhost:5000/api/users/${user.UserId}`,
         formData
       );
       if (res.status === 204) {

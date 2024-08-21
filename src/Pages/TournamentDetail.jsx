@@ -16,8 +16,7 @@ import About from "../components/About";
 import Schedule from "../components/Schedule";
 
 const TournamentDetail = () => {
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-campaign";
+  const URL = "http://localhost:5000/api/tournament-campaign";
   const [tournament, setTournament] = useState("");
   const [activeTab, setActiveTab] = useState("Format");
   const [refreshFormatType, setRefreshFormatType] = useState(false);

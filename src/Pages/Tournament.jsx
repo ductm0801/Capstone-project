@@ -4,12 +4,13 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdFormatListBulleted } from "react-icons/md";
 import { FiGrid } from "react-icons/fi";
 import axios from "axios";
+import SignUp from "../Pages/SignUp";
 import { Link } from "react-router-dom";
 import defaultImg from "../images/defaultImg.png";
-import { message, Pagination } from "antd"; // Import Pagination from Ant Design
+import { Button, message, Pagination } from "antd";
 import "../styles/tournament.css";
 import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat"; // If you're using custom formats
+import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
 const Tournament = () => {
@@ -22,10 +23,35 @@ const Tournament = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
+  const [open, setOpen] = useState(false);
 
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-campaign/paging";
+  const URL = "http://localhost:5000/api/tournament-campaign/paging";
+  const URL2 = "http://localhost:5000/api/campaign-registration/user";
   const pageSize = 3;
+
+  const userRole = localStorage.getItem("role");
+  const token = localStorage.getItem("token");
+
+  const handleRegister = async (id) => {
+    try {
+      const res = await axios.post(
+        `${URL2}/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Handle response as needed
+      console.log("Response:", res.data);
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("Failed to register. Please try again.");
+    }
+  };
 
   const getListTournament = async (page, pageSize, status, search) => {
     try {
@@ -54,6 +80,10 @@ const Tournament = () => {
   useEffect(() => {
     getListTournament(page, pageSize);
   }, [page]);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const optionsStatus = [
     "Scheduling",
@@ -202,16 +232,37 @@ const Tournament = () => {
                         <div className="flex flex-wrap flex-col justify-around items-center w-[384px] h-[308px] border-2 border-solid bg-white rounded-lg">
                           <img
                             className="w-[80px] h-[80px]"
-                            src={tournament.img ? tournament.img : defaultImg}
+                            src={
+                              tournament.imageUrl
+                                ? tournament.imageUrl
+                                : defaultImg
+                            }
                             alt={tournament.id}
                           />
-                          <p className="font-bold text-3xl">
+                          <p className="font-bold text-2xl">
                             {tournament.tournamentName}
                           </p>
-                          <p className="text-xl">
-                            Round and KnockOut | PickleBall |{" "}
-                            {tournament.CreatedBy}
+                          {userRole === "Athlete" ? (
+                            <Button
+                              className="bg-violet-500 text-white hover:scale-150 mr-4"
+                              onClick={() => handleRegister(tournament.id)}
+                            >
+                              Register
+                            </Button>
+                          ) : (
+                            <Button
+                              className="bg-violet-500 text-white hover:scale-150 mr-4"
+                              onClick={() => setOpen(true)}
+                            >
+                              Register
+                            </Button>
+                          )}
+                          <p className="text-md mx-4">
+                            {dayjs(tournament.startDate).format("MMM D, YYYY")}{" "}
+                            - {dayjs(tournament.endDate).format("MMM D, YYYY")}{" "}
+                            {""}
                           </p>
+                          <p>{tournament.location}</p>
                         </div>
                       </Link>
                     </div>
@@ -230,29 +281,56 @@ const Tournament = () => {
                   })
                   .map((tournament) => (
                     <div key={tournament.id}>
-                      <Link to={`/tournamentDetail/${tournament.id}`}>
-                        <div className="flex flex-wrap xl:flex-nowrap items-center rounded-lg gap-6 border-2 w-full xl:w-[1008px] h-auto bg-white border-solid my-[16px] p-4">
-                          <img
-                            className="w-[156px] h-[156px] m-[16px] flex-shrink-0"
-                            src={tournament.img ? tournament.img : defaultImg}
-                            alt={tournament.id}
-                          />
-                          <div className="flex-1">
-                            <p className="my-[16px] font-bold text-3xl">
-                              {tournament.tournamentName}
-                            </p>
-                            <p className="text-xl">
-                              {dayjs(tournament.startDate).format(
-                                "MMM D, YYYY"
-                              )}{" "}
-                              -{" "}
-                              {dayjs(tournament.endDate).format("MMM D, YYYY")}{" "}
-                              {""}
-                              at {tournament.location}
-                            </p>
+                      <div className="flex flex-wrap xl:flex-nowrap items-center justify-between rounded-lg gap-6 border-2 w-full xl:w-[1008px] h-auto bg-white border-solid my-[16px] p-4">
+                        <Link to={`/tournamentDetail/${tournament.id}`}>
+                          <div className="flex items-center justify-between">
+                            <img
+                              className="w-[156px] h-[156px] m-[16px] flex-shrink-0"
+                              src={
+                                tournament.imageUrl
+                                  ? tournament.imageUrl
+                                  : defaultImg
+                              }
+                              alt={tournament.id}
+                            />
+                            <div className="flex-1">
+                              <p className="my-[16px] font-bold text-3xl">
+                                {tournament.tournamentName}
+                              </p>
+
+                              <p className="text-md">
+                                {dayjs(tournament.startDate).format(
+                                  "MMM D, YYYY"
+                                )}{" "}
+                                -{" "}
+                                {dayjs(tournament.endDate).format(
+                                  "MMM D, YYYY"
+                                )}{" "}
+                                {""}
+                                at {tournament.location}
+                              </p>
+                            </div>
                           </div>
+                        </Link>
+                        <div className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-normal">
+                          In Progress
                         </div>
-                      </Link>
+                        {userRole === "Athlete" ? (
+                          <Button
+                            className="bg-violet-500 text-white hover:scale-150 mr-4"
+                            onClick={() => handleRegister(tournament.id)}
+                          >
+                            Register
+                          </Button>
+                        ) : (
+                          <Button
+                            className="bg-violet-500 text-white hover:scale-150 mr-4"
+                            onClick={() => setOpen(true)}
+                          >
+                            Register
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   ))}
             </div>
@@ -267,6 +345,7 @@ const Tournament = () => {
           />
         </div>
       </div>
+      {open && <SignUp show={open} closePopup={handleClose}></SignUp>}
     </div>
   );
 };

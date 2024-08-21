@@ -13,7 +13,7 @@ const initialState = {
   secondMatchWinConditionId: "",
 };
 
-const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
+const UpdateWinningTeam = ({ match, closePopup, onSave, onSave2 }) => {
   const [firstTeamParticipants, setFirstTeamParticipants] = useState([]);
   const [secondTeamParticipants, setSecondTeamParticipants] = useState([]);
   const [options, setOptions] = useState([]);
@@ -27,11 +27,9 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
     firstMatchWinConditionId,
     secondMatchWinConditionId,
   } = state;
-  const URL3 =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/win-condition";
-  const URL2 =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match/next-match";
-  const URL = `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match/advanced-match/${match.matchId}`;
+  const URL3 = "http://localhost:5000/api/win-condition";
+  const URL2 = "http://localhost:5000/api/pickleball-match/next-match";
+  const URL = `http://localhost:5000/api/pickleball-match/advanced-match/${match.matchId}`;
 
   const getOptions = (participants) =>
     participants.map((participant) => ({
@@ -76,6 +74,7 @@ const UpdateWinningTeam = ({ match, closePopup, onSave }) => {
       if (res.status === 200 || res.status === 201) {
         toast.success("Update Winning Team successfully");
         onSave();
+        onSave2();
         closePopup();
       }
     } catch (error) {

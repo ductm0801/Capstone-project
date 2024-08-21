@@ -15,10 +15,12 @@ const Bracket = () => {
   const [data, setData] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const { bracketId } = useParams();
+  const [match, setMatch] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [lastRound, setLastRound] = useState(false);
-  const URL = `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match`;
+  const URL = `http://localhost:5000/api/pickleball-match`;
+  const URL2 = "http://localhost:5000/api/pickleball-match";
 
   const location = useLocation();
   const { formatType } = location.state || {};
@@ -42,6 +44,16 @@ const Bracket = () => {
       console.error(error);
     }
   };
+
+  const fetchDataSchedule = async () => {
+    const res = await fetch(`${URL2}/${bracketId}`);
+    const data = await res.json();
+    setMatch(data);
+  };
+
+  useEffect(() => {
+    fetchDataSchedule();
+  }, [bracketId]);
 
   useEffect(() => {
     fetchData();
@@ -68,8 +80,6 @@ const Bracket = () => {
     ...Object.keys(matchesByRound).slice(0, -1).reverse(),
   ];
 
-  console.log(Math.max(...rounds));
-
   const handleMatchClick = (match) => {
     if (userRole !== "Manager") return;
 
@@ -94,16 +104,13 @@ const Bracket = () => {
 
   const paddingLeft = data.length === 63 ? "350px" : "0";
   return (
-    <div>
-      <div
-        className="tournament-container"
-        style={{
-          background: `url(${tourbg})`,
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-          paddingLeft: paddingLeft,
-        }}
-      >
+    <div
+      style={{
+        paddingLeft: paddingLeft,
+      }}
+      className="mt-[80px]"
+    >
+      <div>
         <div
           className="tournament-brackets pt-[300px]"
           style={{
@@ -182,6 +189,7 @@ const Bracket = () => {
               tournamentId={tournamentId}
               bracketId={bracketId}
               onSave={fetchData}
+              onSave2={fetchDataSchedule}
               loading={loading}
             />
           )}
@@ -198,6 +206,7 @@ const Bracket = () => {
               tournamentId={tournamentId}
               bracketId={bracketId}
               onSave={fetchData}
+              onSave2={fetchDataSchedule}
               loading={loading}
             />
           )}
@@ -211,6 +220,7 @@ const Bracket = () => {
               tournamentId={tournamentId}
               bracketId={bracketId}
               onSave={fetchData}
+              onSave2={fetchDataSchedule}
               loading={loading}
             />
           )}
@@ -221,12 +231,13 @@ const Bracket = () => {
             tournamentId={tournamentId}
             bracketId={bracketId}
             onSave={fetchData}
+            onSave2={fetchDataSchedule}
             loading={loading}
           />
         )}
       </div>
       <div>
-        <Schedule id={bracketId} />
+        <Schedule match={match} />
       </div>
     </div>
   );

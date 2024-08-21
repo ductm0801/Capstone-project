@@ -27,8 +27,7 @@ const WinCondition = () => {
   const [edit, setEdit] = useState(false);
   const detail = useRef({});
   const [deleteModal, setDeleteModal] = useState(false);
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/win-condition";
+  const URL = "http://localhost:5000/api/win-condition";
 
   console.log(winConditions);
 

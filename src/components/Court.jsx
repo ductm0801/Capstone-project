@@ -6,8 +6,7 @@ import axios from "axios";
 const Court = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [court, setCourt] = useState([]);
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/courtGroups";
+  const URL = "http://localhost:5000/api/courtGroups";
 
   const fetchData = async () => {
     try {

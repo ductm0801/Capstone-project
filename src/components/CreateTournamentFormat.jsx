@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
-import { message, Select } from "antd";
+import { message, Select, Upload } from "antd";
 
 const { Option } = Select;
 
@@ -23,10 +23,9 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament";
-  const URL2 =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-campaign";
+  const URL = "http://localhost:5000/api/tournament";
+  const URL2 = "http://localhost:5000/api/tournament-campaign";
+  const uploadURL = "http://localhost:5000/api/image/upload";
   const token = localStorage.getItem("token");
 
   const getTournamentCampaign = async () => {
@@ -44,6 +43,32 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
     } catch (error) {
       message.error("Error fetching campaign details.");
     }
+  };
+  const handleError = (error) => {
+    if (error.response && error.response.data) {
+      message.error(error.response.data.title || "An error occurred");
+    } else {
+      message.error("An error occurred");
+    }
+  };
+
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await axios.post(uploadURL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (res.status === 200) {
+        setImageSrc(res.data.url);
+        return res.data.url;
+      }
+    } catch (error) {
+      handleError(error);
+    }
+    return null;
   };
 
   useEffect(() => {
@@ -79,13 +104,6 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
 
   const handleChangeValue = (value) => setValue(value);
   const handleChangeRank = (value) => setRank(value);
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => setImageSrc(event.target.result);
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -107,9 +125,11 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
       rank,
       tournamentCampaignId: id,
       tournamentType,
+      imageUrl: imageSrc,
     };
 
     addNewTournamentFormat(data);
+    console.log(data);
   };
 
   return (
@@ -125,22 +145,19 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
           &times;
         </button>
         <div className="border-t-2 border-inherit flex">
-          <div className="image-container relative">
-            <img src={imageSrc} alt="Upload" className="image" />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              id="image-input"
-              className="absolute top-0 left-0 opacity-0"
-            />
-            <label
-              htmlFor="image-input"
-              className="absolute top-7 left-2 cursor-pointer"
-            >
-              <FaEdit className="text-black" />
-            </label>
-          </div>
+          <Upload
+            accept="image/*"
+            id="imageUrl"
+            customRequest={({ file, onSuccess }) => {
+              uploadImage(file).then((url) => {
+                onSuccess(url);
+              });
+            }}
+            listType="picture-card"
+          >
+            Upload
+          </Upload>
+
           <div className="flex flex-col px-3">
             <label htmlFor="name" className="text-left mb-4">
               Name <span className="text-red-500 font-bold">*</span>

@@ -27,6 +27,7 @@ import AddCompetitor from "./Pages/AddCompetitor";
 import NewsDetail from "./Pages/NewsDetail";
 import ManagerLogin from "./Pages/ManagerLogin";
 import PrivateRoute from "./routes/PrivateRoute";
+import RoundGroup from "./components/RoundGroup";
 
 const App = () => {
   return (
@@ -77,6 +78,7 @@ const ConditionalLayout = () => {
             </PrivateRoute>
           }
         />
+        <Route path="/roundGroup/:id" element={<RoundGroup />} />
         <Route path="/news" element={<News />} />
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/managerlogin" element={<ManagerLogin />} />

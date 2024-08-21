@@ -7,8 +7,7 @@ const News = () => {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [filter, setFilter] = useState("All");
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/newarticle";
+  const URL = "http://localhost:5000/api/newarticle";
   const navigate = useNavigate();
 
   const fetchData = async () => {

@@ -5,15 +5,14 @@ import { FaEdit } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { DatePicker, message, Select } from "antd";
+import { DatePicker, message, Select, Upload } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 const CreateTournament = () => {
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-campaign";
-  const courtURL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/courtGroups";
+  const URL = "http://localhost:5000/api/tournament-campaign";
+  const courtURL = "http://localhost:5000/api/courtGroups";
+  const uploadURL = "http://localhost:5000/api/image/upload";
   const navigate = useNavigate();
 
   const [courts, setCourts] = useState([]);
@@ -24,7 +23,7 @@ const CreateTournament = () => {
     endDate: "",
     description: "",
   });
-  const [imageSrc, setImageSrc] = useState(defaultImg);
+  const [imageSrc, setImageSrc] = useState("string");
 
   dayjs.extend(customParseFormat);
 
@@ -44,6 +43,32 @@ const CreateTournament = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  const handleError = (error) => {
+    if (error.response && error.response.data) {
+      message.error(error.response.data.title || "An error occurred");
+    } else {
+      message.error("An error occurred");
+    }
+  };
+
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await axios.post(uploadURL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (res.status === 200) {
+        setImageSrc(res.data.url);
+        return res.data.url;
+      }
+    } catch (error) {
+      handleError(error);
+    }
+    return null;
+  };
 
   const courtOptions = courts.map((court) => ({
     label: court.courtGroupName,
@@ -73,9 +98,11 @@ const CreateTournament = () => {
       [name]: dateString,
     });
   };
-
+  console.log(imageSrc);
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Ensure dates are valid
     if (new Date(formData.startDate) < new Date()) {
       toast.error("Start date cannot be in the past");
       return;
@@ -84,44 +111,30 @@ const CreateTournament = () => {
       toast.error("End date cannot be earlier than start date");
       return;
     }
-    console.log(formData);
 
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.post(URL, formData, {
+      const params = {
+        ...formData,
+        imageUrl: imageSrc,
+      };
+
+      console.log("Submitting form with params:", params);
+
+      const res = await axios.post(URL, params, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
+
       if (res.status === 200 || res.status === 201) {
         toast.success("New tournament has been added successfully");
         navigate(`/findTournament`);
       }
     } catch (error) {
-      // Improved error handling
-      if (error.response && error.response.data) {
-        message.error(error.response.data);
-      } else {
-        message.error("An unexpected error occurred. Please try again later.");
-      }
-    }
-  };
-
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64String = event.target.result.split(",")[1];
-        setFormData({
-          ...formData,
-          image: base64String,
-        });
-        setImageSrc(event.target.result);
-      };
-      reader.readAsDataURL(e.target.files[0]);
-      console.log(formData);
+      handleError(error);
     }
   };
 
@@ -135,16 +148,19 @@ const CreateTournament = () => {
         <div className="form-content border-t-2 border-inherit justify-center pt-4">
           <div className="image-container relative">
             <p className="mb-4">Tournament Logo</p>
-            <img src={imageSrc} alt="Upload" />
-            <input
-              type="file"
+
+            <Upload
               accept="image/*"
-              id="image"
-              onChange={handleImageChange}
-            />
-            <label htmlFor="image">
-              <FaEdit className="text-black absolute top-7 right-2 cursor-pointer" />
-            </label>
+              id="imageUrl"
+              customRequest={({ file, onSuccess }) => {
+                uploadImage(file).then((url) => {
+                  onSuccess(url);
+                });
+              }}
+              listType="picture-card"
+            >
+              Upload
+            </Upload>
           </div>
 
           <div className="flex gap-8">

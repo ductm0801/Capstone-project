@@ -24,17 +24,22 @@ const errorInit = {
   secondTeam2Input_err: "",
 };
 
-const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
+const AddTeam = ({
+  match,
+  closePopup,
+  tournamentId,
+  bracketId,
+  onSave,
+  onSave2,
+}) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState(errorInit);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes/non-teams";
-  const URL2 =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match/assign-double-team";
+  const URL = "http://localhost:5000/api/athletes/non-teams";
+  const URL2 = "http://localhost:5000/api/pickleball-match/assign-double-team";
 
   const getParticipants = async () => {
     try {
@@ -64,6 +69,7 @@ const AddTeam = ({ match, closePopup, tournamentId, bracketId, onSave }) => {
       if (res.status === 200 || res.status === 201) {
         toast.success("Teams assigned successfully");
         onSave();
+        onSave2();
         closePopup();
       }
     } catch (error) {

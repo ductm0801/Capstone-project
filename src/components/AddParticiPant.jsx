@@ -22,16 +22,15 @@ const AddParticipant = ({
   tournamentId,
   onSave,
   bracketId,
+  onSave2,
 }) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState(errorInit);
   const { firstAthleteId, secondAthleteId } = state;
   const navigate = useNavigate();
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes/non-teams";
-  const URL2 =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/pickleball-match/assign-single-team";
+  const URL = "http://localhost:5000/api/athletes/non-teams";
+  const URL2 = "http://localhost:5000/api/pickleball-match/assign-single-team";
 
   console.log(participants);
   console.log(tournamentId);
@@ -68,6 +67,7 @@ const AddParticipant = ({
       if (res.status === 200 || res.status === 201) {
         toast.success("Participants assigned successfully");
         onSave();
+        onSave2();
         closePopup();
       }
     } catch (error) {

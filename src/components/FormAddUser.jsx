@@ -8,8 +8,7 @@ import { Button, Form, Input, message, Select } from "antd";
 const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   const [form] = Form.useForm();
   const { id } = useParams();
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/accounts/CreateAccount";
+  const URL = "http://localhost:5000/api/accounts/account";
 
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 

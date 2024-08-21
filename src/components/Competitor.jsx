@@ -5,64 +5,71 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { message } from "antd";
+import ListRegistration from "./ListRegistration";
 
 const Competitor = () => {
   const [competitors, setCompetitor] = useState([]);
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes";
-  const getUser =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes/user-athletes";
-  const getGuest =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/athletes/guest-athletes";
-  const { id } = useParams();
-  const [, forceUpdate] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const URL = "http://localhost:5000/api/athletes/campaign";
+  const jwtToken = localStorage.getItem("token");
 
+  const { id } = useParams();
+  const role = localStorage.getItem("role");
   const getListCompetitor = async (id) => {
     try {
-      const res = await axios.get(`${URL}?campaignId=${id}`);
+      const res = await axios.get(`${URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       if (res.status === 200) {
         setCompetitor(res.data);
       }
     } catch (error) {
-      message.error(error.response.data);
+      const errorMessage = error.response?.data?.message || "An error occurred";
+      message.error(errorMessage);
     }
-  };
-
-  const postListCompetitor = async (id) => {
-    try {
-      const res = await axios.post(`${getUser}?campaignId=${id}`);
-      if (res.status === 200 || res.status === 201) {
-        console.log("Successfully posted data:", res.data);
-      } else if (res.status === 400) {
-        toast.info("there no new athelete");
-      }
-    } catch (error) {
-      message.error(error.response.data);
-    }
-  };
-
-  const postListGuest = async (id) => {
-    try {
-      const res = await axios.post(`${getGuest}?campaignId=${id}`);
-      if (res.status === 200 || res.status === 201) {
-        console.log("Successfully posted data:", res.data);
-      } else if (res.status === 400) {
-        toast.info("there no new athelete");
-      }
-    } catch (error) {
-      message.error(error.response.data);
-    }
-  };
-
-  const getListParticipants = () => {
-    postListCompetitor(id);
-    postListGuest(id);
-    getListCompetitor(id);
   };
 
   useEffect(() => {
     getListCompetitor(id);
   }, []);
+
+  // const postListCompetitor = async (id) => {
+  //   try {
+  //     const res = await axios.post(`${getUser}?campaignId=${id}`);
+  //     if (res.status === 200 || res.status === 201) {
+  //       console.log("Successfully posted data:", res.data);
+  //     } else if (res.status === 400) {
+  //       toast.info("there no new athelete");
+  //     }
+  //   } catch (error) {
+  //     message.error(error.response.data);
+  //   }
+  // };
+
+  // const postListGuest = async (id) => {
+  //   try {
+  //     const res = await axios.post(`${getGuest}?campaignId=${id}`);
+  //     if (res.status === 200 || res.status === 201) {
+  //       console.log("Successfully posted data:", res.data);
+  //     } else if (res.status === 400) {
+  //       toast.info("there no new athelete");
+  //     }
+  //   } catch (error) {
+  //     message.error(error.response.data);
+  //   }
+  // };
+
+  // const getListParticipants = () => {
+  //   postListCompetitor(id);
+  //   postListGuest(id);
+  //   getListCompetitor(id);
+  // };
+
+  // useEffect(() => {
+  //   getListCompetitor(id);
+  // }, []);
   // useEffect(() => {
   //   postListCompetitor(id);
   //   postListGuest(id);
@@ -70,12 +77,14 @@ const Competitor = () => {
 
   return (
     <div>
-      <button
-        className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
-        onClick={getListParticipants}
-      >
-        Get List participant
-      </button>
+      {role === "Manager" && (
+        <button
+          className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
+          onClick={() => setOpenPopup(true)}
+        >
+          Get List participant
+        </button>
+      )}
       <div className="grid grid-cols-auto-fit sm:grid-cols-auto-fit md:grid-cols-auto-fit lg:grid-cols-auto-fit xl:grid-cols-auto-fit gap-8 justify-items-center justify-center pb-[120px]">
         {competitors &&
           competitors.map((competitor) => (
@@ -97,6 +106,13 @@ const Competitor = () => {
             </div>
           ))}
       </div>
+      {openPopup && (
+        <ListRegistration
+          openPopup={openPopup}
+          handleClose={() => setOpenPopup(false)}
+          competitors={competitors}
+        />
+      )}
     </div>
   );
 };

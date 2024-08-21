@@ -5,18 +5,14 @@ import axios from "axios";
 const CreateCourt = ({ handleClose, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const [form] = Form.useForm();
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/courtGroups";
+  const URL = "http://localhost:5000/api/courtGroups";
 
   const onFinish = async (values) => {
     try {
       const res = axios.post(URL, values);
-      if (res) {
-        handleClose();
-        onSave();
-      } else {
-        console.log("Error creating court group");
-      }
+
+      handleClose();
+      onSave();
     } catch (e) {
       console.log("Error creating court group", e);
     }
@@ -83,6 +79,12 @@ const CreateCourt = ({ handleClose, show, onSave }) => {
             ]}
           >
             <Input type="text" autoFocus />
+          </Form.Item>
+          <Form.Item label="latitude" name="latitude" labelCol={{ span: 24 }}>
+            <Input autoFocus />
+          </Form.Item>
+          <Form.Item label="longitude" name="longitude" labelCol={{ span: 24 }}>
+            <Input autoFocus />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" className="px-8">

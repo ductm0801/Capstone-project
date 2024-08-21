@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { formatDistanceToNow } from "date-fns";
 import { Button, Dropdown, message, Modal, Input } from "antd";
 import defaultImg from "../images/commentDefault.png";
+import MapComponent from "./Map";
 
 const items = (handleEditClick, handleDeleteClick) => [
   {
@@ -99,7 +100,7 @@ const About = () => {
 
     try {
       const response = await axios.post(
-        "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/comment",
+        "http://localhost:5000/api/comment",
         commentData,
         {
           headers: {
@@ -126,7 +127,7 @@ const About = () => {
 
     try {
       const response = await axios.put(
-        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/comment/${editCommentId}`,
+        `http://localhost:5000/api/comment/${editCommentId}`,
         { commentText: editCommentText },
         {
           headers: {
@@ -149,7 +150,7 @@ const About = () => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/comment/tournament/${id}`
+        `http://localhost:5000/api/comment/tournament/${id}`
       );
       setComments(response.data);
     } catch (error) {
@@ -160,7 +161,7 @@ const About = () => {
   const deleteComment = async (commentId) => {
     try {
       const response = await axios.delete(
-        `https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/comment/permanent/${commentId}`,
+        `http://localhost:5000/comment/permanent/${commentId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -205,6 +206,18 @@ const About = () => {
 
   return (
     <div>
+      <div className="flex flex-col items-end justify-center mr-[64px] mt-[32px]">
+        <h1 className="flex items-center gap-2 text-4xl text-[#C6C61A] mb-[24px]">
+          Address
+        </h1>
+        <div className="w-[500px] h-[300px] mb-12">
+          <MapComponent
+            lat={10.811953}
+            lng={106.627433}
+            address="130 Chế Lan Viên, Tây thạnh, Tân phú"
+          />
+        </div>
+      </div>
       <h1>
         <div className="flex flex-col mx-[112px] mt-[52px]">
           <h1 className="flex items-center gap-2 text-3xl text-[#C6C61A] mb-[24px]">

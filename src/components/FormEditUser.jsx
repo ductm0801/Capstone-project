@@ -6,8 +6,7 @@ import { Button, Input, message, Select, Form } from "antd";
 
 const FormEditUser = ({ show, handleClose, onSave, user }) => {
   const [form] = Form.useForm();
-  const URL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/users/update-manager";
+  const URL = "http://localhost:5000/api/users/update-manager";
   const options = Array.from({ length: 10 }, (_, i) => ({
     value: i + 1,
     label: `Rank ${i + 1}`,

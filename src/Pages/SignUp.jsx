@@ -10,8 +10,7 @@ import { Button, Form, Input, message, Select } from "antd";
 const SignUp = ({ closePopup, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const { id } = useParams();
-  const baseURL =
-    "https://pickleball-agdwcrbacmaea5fg.eastus-01.azurewebsites.net/api/tournament-registration";
+  const baseURL = "http://localhost:5000/api/tournament-registration";
 
   const handleSubmit = async (values) => {
     try {
