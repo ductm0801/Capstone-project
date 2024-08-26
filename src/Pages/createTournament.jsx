@@ -33,12 +33,16 @@ const CreateTournament = () => {
 
   const fetchData = async () => {
     const token = localStorage.getItem("token");
-    const res = await axios.get(courtURL, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    setCourts(res.data);
+    try {
+      const res = await axios.get(courtURL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCourts(res.data);
+    } catch (e) {
+      handleError(e);
+    }
   };
   useEffect(() => {
     fetchData();
@@ -98,7 +102,7 @@ const CreateTournament = () => {
       [name]: dateString,
     });
   };
-  console.log(imageSrc);
+  // console.log(imageSrc);
   const handleSubmit = async (e) => {
     e.preventDefault();
 

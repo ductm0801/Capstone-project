@@ -18,9 +18,9 @@ const RoundGroup = () => {
   const [participants, setParticipants] = useState([]);
   const role = localStorage.getItem("role");
 
-  const fetchParticipants = async () => {
+  const fetchParticipants = async (roundId) => {
     try {
-      const response = await axios.get(`${URL4}/${id}`);
+      const response = await axios.get(`${URL4}/${roundId}`);
       if (response.status === 200) {
         setParticipants(response.data);
       } else {
@@ -30,9 +30,13 @@ const RoundGroup = () => {
       console.error("Error fetching participants:", error);
     }
   };
+
   useEffect(() => {
-    fetchParticipants();
-  }, []);
+    if (roundIds.length > 0) {
+      const roundId = roundIds[0].roundId;
+      fetchParticipants(roundId);
+    }
+  }, [roundIds]);
 
   const handleSave = async (roundGroupId, athleteId) => {
     try {
@@ -55,9 +59,9 @@ const RoundGroup = () => {
     return participants[roundGroupId] || [];
   };
 
-  const fetchTable = async () => {
+  const fetchTable = async (roundId) => {
     try {
-      const response = await axios.get(`${URL2}/${id}`);
+      const response = await axios.get(`${URL2}/${roundId}`);
       if (response.status === 200) {
         setTables(response.data);
       } else {
@@ -68,7 +72,6 @@ const RoundGroup = () => {
     }
   };
   useEffect(() => {
-    fetchTable();
     fetchUser();
   }, []);
 
@@ -92,6 +95,8 @@ const RoundGroup = () => {
       const response = await axios.get(`${URL}/${id}`);
       if (response.status === 200) {
         setRoundIds(response.data.data);
+        // const roundId = roundIds[0].roundId;
+        // fetchTable(roundId);
       } else {
         console.error("Failed to fetch rounds");
       }
@@ -108,8 +113,20 @@ const RoundGroup = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (roundIds.length > 0) {
+      const roundId = roundIds[0].roundId;
+      fetchTable(roundId);
+    }
+  }, [roundIds]);
+
   const handleCreateTable = async () => {
-    const roundId = roundIds[0]?.roundId;
+    if (roundIds.length === 0) {
+      console.error("No round IDs available to create a new table.");
+      return;
+    }
+
+    const roundId = roundIds[0].roundId;
 
     if (!roundId) {
       console.error("No valid roundId found for the new table.");
@@ -133,7 +150,7 @@ const RoundGroup = () => {
 
       if (response.status === 200 || response.status === 201) {
         setTables([...tables, newTable]);
-        fetchTable();
+        fetchTable(roundId);
       } else {
         console.error(
           "Failed to create round group, response status:",
@@ -230,6 +247,9 @@ const RoundGroup = () => {
             <table className="w-[800px] border border-collapse border-[#C6C61A] bg-gradient-to-r from-[#1244A2] to-[#062764]">
               <thead className="text-white">
                 <tr className="border border-collapse border-[#C6C61A]">
+                  <th className="w-[30px] border border-collapse border-[#C6C61A]">
+                    Rank
+                  </th>
                   <th className="w-[372px] border border-collapse border-[#C6C61A]">
                     {table.roundGroupName}
                   </th>
@@ -247,6 +267,9 @@ const RoundGroup = () => {
                 {getParticipantsByRoundGroupId(table.roundGroupId).map(
                   (team, teamIndex) => (
                     <tr key={teamIndex}>
+                      <td className="border border-collapse border-[#C6C61A] py-4 text-white text-center">
+                        {teamIndex + 1}
+                      </td>
                       <td className="border border-collapse border-[#C6C61A] py-4 text-white text-center">
                         {team.teamName ? (
                           team.teamName
@@ -317,7 +340,7 @@ const RoundGroup = () => {
               {role === "Manager" && (
                 <tfoot>
                   <tr>
-                    <td colSpan="3">
+                    <td colSpan="5">
                       <div className="flex gap-4 my-[16px] justify-center w-full">
                         <Button
                           className="text-[#1244A2] font-semibold"

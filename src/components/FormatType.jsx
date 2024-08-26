@@ -117,6 +117,11 @@ const FormatType = ({ tournamentId }) => {
                   <h1 className="text-3xl font-bold ml-4 group-hover:text-[#C6C61A]">
                     {tournament.tournamentName}
                   </h1>
+                  <div className="font-semibold ml-6">
+                    {" "}
+                    Type : {tournament.formatType} ,{tournament.tournamentType}
+                  </div>
+
                   <div className="ml-4 pb-4">
                     {userRole === "Athlete" ? (
                       <Button
