@@ -7,10 +7,15 @@ const Court = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [court, setCourt] = useState([]);
   const URL = "http://localhost:5000/api/courtGroups";
+  const jwtToken = localStorage.getItem("token");
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(URL);
+      const res = await axios.get(URL, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       if (res.status === 200) {
         setCourt(res.data);
       }

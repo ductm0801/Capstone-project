@@ -6,17 +6,23 @@ const CreateCourt = ({ handleClose, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const [form] = Form.useForm();
   const URL = "http://localhost:5000/api/courtGroups";
+  const jwtToken = localStorage.getItem("token");
 
   const onFinish = async (values) => {
     try {
-      const res = axios.post(URL, values);
+      const res = await axios.post(URL, values, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
 
       handleClose();
       onSave();
     } catch (e) {
-      console.log("Error creating court group", e);
+      console.error("Error creating court group", e);
     }
   };
+
   return (
     <div className={showHideClassName}>
       <section className="popup-main">
