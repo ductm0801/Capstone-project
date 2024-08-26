@@ -26,8 +26,8 @@ const Competitor = () => {
         setCompetitor(res.data);
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      message.error(errorMessage);
+      // const errorMessage = error.response?.data?.message || "An error occurred";
+      // message.error(errorMessage);
     }
   };
 

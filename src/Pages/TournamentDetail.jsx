@@ -14,6 +14,7 @@ import { Button, message } from "antd";
 import Register from "../Pages/SignUp";
 import About from "../components/About";
 import Schedule from "../components/Schedule";
+import moment from "moment";
 
 const TournamentDetail = () => {
   const URL = "http://localhost:5000/api/tournament-campaign";
@@ -93,7 +94,9 @@ const TournamentDetail = () => {
               {tournament.tournamentName}
             </h1>
             <p className="text-white text-gray-400">
-              Rounded and KnockDown | PickleBall | {tournament.createdBy}
+              {moment(tournament.startDate).format("DD-MM-YYYY")} -{" "}
+              {moment(tournament.endDate).format("DD-MM-YYYY")} |{" "}
+              {tournament.location}
             </p>
             {!userRole && (
               <div>

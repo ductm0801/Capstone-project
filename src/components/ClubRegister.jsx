@@ -1,29 +1,82 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/manager.css";
+import axios from "axios";
+import { Button, message } from "antd";
+import moment from "moment";
 const ClubRegister = () => {
-  const initialRows = [
-    {
-      name: "TMD0801",
-      email: "TMD@gmail.com",
-      phone: "0123456789",
-      rank: "1.0",
-      action: null,
-    },
-    {
-      name: "TMD0801",
-      email: "TMD@gmail.com",
-      phone: "0123456789",
-      rank: "1.0",
-      action: null,
-    },
-  ];
+  const [data, setData] = useState([]);
+  const jwtToken = localStorage.getItem("token");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/user-registration/paging",
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      setData(response.data.items);
+      setTotalPages(response.data.totalPagesCount);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  console.log(data);
 
-  const [rows, setRows] = useState(initialRows);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const handleAction = (index, action) => {
-    const newRows = [...rows];
-    newRows[index].action = action;
-    setRows(newRows);
+  const handleAction = async (id, action) => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/user-registration/${id}`,
+        { status: action },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      fetchData();
+    } catch (error) {
+      console.error("Error updating action:", error);
+    }
+  };
+
+  const generateRandomPassword = () => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let password = "";
+    for (let i = 0; i < 8; i++) {
+      password += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return password;
+  };
+
+  const handleCreate = async (email, userId) => {
+    const randomPassword = generateRandomPassword();
+
+    try {
+      await axios.post(
+        `http://localhost:5000/api/accounts/account/${userId}`,
+        { userName: email, password: randomPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      fetchData();
+      message.success("User created successfully!");
+    } catch (error) {
+      console.error("Error creating new user:", error);
+    }
   };
 
   return (
@@ -50,45 +103,60 @@ const ClubRegister = () => {
                 Rank
               </th>
               <th className="border border-slate-400 pl-[20px] h-[56px]">
+                Address
+              </th>
+              <th className="border border-slate-400 pl-[20px] h-[56px]">
+                gender
+              </th>
+              <th className="border border-slate-400 pl-[20px] h-[56px]">
+                Status
+              </th>
+              <th className="border border-slate-400 pl-[20px] h-[56px]">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => (
+            {data.map((row, index) => (
               <tr key={index}>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
-                  {row.name}
+                  {row.fullName}
                 </td>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
                   {row.email}
                 </td>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
-                  {row.phone}
+                  {row.phoneNumber}
                 </td>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
-                  {row.rank}
+                  {moment(row.dateOfBirth).format("DD-MM-YYYY")}
                 </td>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
-                  {row.action === null && (
+                  {row.address}
+                </td>
+                <td className="border border-slate-300 pl-[20px] h-[48px]">
+                  {row.gender}
+                </td>
+                <td className="border border-slate-300 pl-[20px] h-[48px]">
+                  {row.status === "WaitingApprove" && (
                     <div className="flex gap-2">
                       <span
                         className="status-item  border  rounded-full px-2 bg-[#fecdca] text-red-500"
-                        onClick={() => handleAction(index, "deny")}
+                        onClick={() => handleAction(row.id, "dennied")}
                       >
                         <span className="status-dot dot-inactive"></span>
                         Deny
                       </span>
                       <span
                         className="status-item border  rounded-full px-2 bg-[#abefc6] text-green-500"
-                        onClick={() => handleAction(index, "approve")}
+                        onClick={() => handleAction(row.id, "Approved")}
                       >
                         <span className=" status-dot dot-active"></span>
                         Approve
                       </span>
                     </div>
                   )}
-                  {row.action === "deny" && (
+                  {row.status === "dennied" && (
                     <div className="flex">
                       <span className="status-item  border  rounded-full px-2 bg-[#fecdca] text-red-500">
                         <span className="status-dot dot-inactive"></span>
@@ -96,7 +164,7 @@ const ClubRegister = () => {
                       </span>
                     </div>
                   )}
-                  {row.action === "approve" && (
+                  {row.status === "Approved" && (
                     <div className="flex">
                       <span className="status-item border  rounded-full px-2 bg-[#abefc6] text-green-500">
                         <span className=" status-dot dot-active"></span>
@@ -105,6 +173,16 @@ const ClubRegister = () => {
                     </div>
                   )}
                 </td>
+                {row.status === "Approved" && (
+                  <td className="border border-slate-300 pl-[20px] h-[48px]">
+                    <Button
+                      className="bg-[#C6C61A] text-white border-[#C6C61A]"
+                      onClick={() => handleCreate(row.email, row.userId)}
+                    >
+                      Create Account
+                    </Button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

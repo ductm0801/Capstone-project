@@ -37,8 +37,8 @@ const FormatType = ({ tournamentId }) => {
         }
       );
 
-      // Handle response as needed
-      console.log("Response:", res.data);
+      message.success("Registration successful!");
+      // console.log("Response:", res.data);
     } catch (error) {
       console.error("Error:", error);
       message.error("Failed to register. Please try again.");

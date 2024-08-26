@@ -112,7 +112,7 @@ const About = () => {
       if (response.status === 200) {
         console.log(commentData);
         setComment("");
-        await fetchComments();
+        fetchComments();
       }
     } catch (error) {
       message.error(error.response?.data || "Failed to submit comment");
@@ -140,7 +140,7 @@ const About = () => {
         console.log("Comment updated successfully");
         setEditCommentId(null);
         setEditCommentText("");
-        await fetchComments();
+        fetchComments();
       }
     } catch (error) {
       message.error(error.response?.data || "Failed to update comment");
@@ -170,7 +170,7 @@ const About = () => {
       );
       if (response.status === 200) {
         console.log("Comment deleted successfully");
-        await fetchComments();
+        fetchComments();
       }
     } catch (error) {
       message.error(error.response?.data || "Failed to delete comment");

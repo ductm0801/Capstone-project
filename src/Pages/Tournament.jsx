@@ -11,6 +11,7 @@ import { Button, message, Pagination } from "antd";
 import "../styles/tournament.css";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import moment from "moment";
 dayjs.extend(customParseFormat);
 
 const Tournament = () => {
@@ -44,9 +45,7 @@ const Tournament = () => {
           },
         }
       );
-
-      // Handle response as needed
-      console.log("Response:", res.data);
+      message.success("Successfully registered");
     } catch (error) {
       console.error("Error:", error);
       message.error("Failed to register. Please try again.");
@@ -258,8 +257,8 @@ const Tournament = () => {
                             </Button>
                           )}
                           <p className="text-md mx-4">
-                            {dayjs(tournament.startDate).format("MMM D, YYYY")}{" "}
-                            - {dayjs(tournament.endDate).format("MMM D, YYYY")}{" "}
+                            {moment(tournament.startDate).format("DD-MM-YYYY")}{" "}
+                            - {moment(tournament.endDate).format("DD-MM-YYYY")}{" "}
                             {""}
                           </p>
                           <p>{tournament.location}</p>
@@ -299,15 +298,14 @@ const Tournament = () => {
                               </p>
 
                               <p className="text-md">
-                                {dayjs(tournament.startDate).format(
-                                  "MMM D, YYYY"
+                                {moment(tournament.startDate).format(
+                                  "DD-MM-YYYY"
                                 )}{" "}
                                 -{" "}
-                                {dayjs(tournament.endDate).format(
-                                  "MMM D, YYYY"
+                                {moment(tournament.endDate).format(
+                                  "DD-MM-YYYY"
                                 )}{" "}
-                                {""}
-                                at {tournament.location}
+                                {""}| {tournament.location}
                               </p>
                             </div>
                           </div>

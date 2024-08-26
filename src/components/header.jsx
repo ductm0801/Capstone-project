@@ -139,7 +139,7 @@ const Header = () => {
               </li>
               <li>
                 <Link
-                  to="/signup"
+                  to="/register"
                   className="text-white bg-[#C6C61A] mr-[112px] px-4 py-2 rounded-lg"
                 >
                   Sign Up
@@ -203,7 +203,7 @@ const Header = () => {
               </li>
               <li>
                 <Link
-                  to="/signup"
+                  to="/register"
                   className="text-white bg-blue-500 px-4 py-2 rounded-lg"
                 >
                   Sign Up

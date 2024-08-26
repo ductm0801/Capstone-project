@@ -28,6 +28,7 @@ import NewsDetail from "./Pages/NewsDetail";
 import ManagerLogin from "./Pages/ManagerLogin";
 import PrivateRoute from "./routes/PrivateRoute";
 import RoundGroup from "./components/RoundGroup";
+import Register from "./Pages/Register";
 
 const App = () => {
   return (
@@ -82,6 +83,7 @@ const ConditionalLayout = () => {
         <Route path="/news" element={<News />} />
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/managerlogin" element={<ManagerLogin />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       {showHeaderFooter && <Footer />}

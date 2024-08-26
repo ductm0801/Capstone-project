@@ -16,6 +16,7 @@ const RoundGroup = () => {
   const [roundIds, setRoundIds] = useState([]);
   const [user, setUser] = useState([]);
   const [participants, setParticipants] = useState([]);
+  const role = localStorage.getItem("role");
 
   const fetchParticipants = async () => {
     try {
@@ -40,6 +41,8 @@ const RoundGroup = () => {
       });
       if (response.status === 200) {
         toast.success("Round Group saved successfully");
+        fetchTable();
+        fetchParticipants();
       } else {
         toast.error("Failed to save Round Group");
       }
@@ -183,10 +186,15 @@ const RoundGroup = () => {
     }
   };
 
-  const handleTeamNameChange = (tableIndex, teamIndex, value) => {
-    const updatedTables = [...tables];
-    updatedTables[tableIndex].teams[teamIndex].name = value;
-    setTables(updatedTables);
+  const handleTeamNameChange = (roundGroupId, teamIndex, value) => {
+    const updatedParticipants = { ...participants };
+    if (updatedParticipants[roundGroupId]) {
+      updatedParticipants[roundGroupId][teamIndex].teamId = value;
+      setParticipants(updatedParticipants);
+      console.log("Updated participants:", updatedParticipants);
+    } else {
+      console.error(`Round group with ID ${roundGroupId} does not exist.`);
+    }
   };
 
   const handleDeleteTable = (tableIndex) => {
@@ -206,12 +214,14 @@ const RoundGroup = () => {
     >
       <div className="flex justify-between items-center text-3xl font-semibold text-white">
         PickleBall Round Group
-        <Button
-          className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
-          onClick={handleCreateTable}
-        >
-          Create Table
-        </Button>
+        {role === "Manager" && (
+          <Button
+            className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+            onClick={handleCreateTable}
+          >
+            Create Table
+          </Button>
+        )}
       </div>
 
       <div className="flex flex-wrap justify-center gap-8">
@@ -226,9 +236,11 @@ const RoundGroup = () => {
                   <th className="w-[80px] border border-collapse border-[#C6C61A]">
                     W - L
                   </th>
-                  <th className="w-[140px] border border-collapse border-[#C6C61A]">
-                    Action
-                  </th>
+                  {role === "Manager" && (
+                    <th className="w-[140px] border border-collapse border-[#C6C61A]">
+                      Action
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -239,72 +251,91 @@ const RoundGroup = () => {
                         {team.teamName ? (
                           team.teamName
                         ) : (
-                          <Select
-                            className="w-full text-white"
-                            placeholder={`Team ${teamIndex + 1}`}
-                            onChange={(value) =>
-                              handleTeamNameChange(tableIndex, teamIndex, value)
-                            }
-                            options={userOptions}
-                          />
+                          <div>
+                            {role === "Manager" && (
+                              <Select
+                                className="w-full text-white"
+                                placeholder={`Team ${teamIndex + 1}`}
+                                onChange={(value) =>
+                                  handleTeamNameChange(
+                                    table.roundGroupId,
+                                    teamIndex,
+                                    value
+                                  )
+                                }
+                                options={userOptions}
+                              />
+                            )}
+                          </div>
                         )}
                       </td>
 
                       <td className="border border-collapse border-[#C6C61A] text-white text-center">
                         {team.wins} - {team.losses}
                       </td>
-                      <td className="border border-collapse border-[#C6C61A]">
-                        {team.teamName ? (
-                          <div className="flex gap-2 justify-center">
-                            <button className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2">
-                              Update
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="flex gap-2 justify-center">
-                            <button
-                              className="bg-[#FECDCA] text-red-700 font-semibold  rounded-full px-2"
-                              onClick={() =>
-                                handleDeleteRow(table.roundGroupId, teamIndex)
-                              }
-                            >
-                              Delete
-                            </button>
-                            <button
-                              className="bg-[#ABEFC6] text-green-700 font-semibold rounded-full px-2"
-                              onClick={() =>
-                                handleSave(table.roundGroupId, team.teamId)
-                              }
-                            >
-                              Save
-                            </button>
-                          </div>
-                        )}
-                      </td>
+                      {role === "Manager" && (
+                        <td className="border border-collapse border-[#C6C61A]">
+                          {team.teamName ? (
+                            <div>
+                              <div className="flex gap-2 justify-center">
+                                <button className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2">
+                                  Update
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="flex gap-2 justify-center">
+                                <button
+                                  className="bg-[#FECDCA] text-red-700 font-semibold  rounded-full px-2"
+                                  onClick={() =>
+                                    handleDeleteRow(
+                                      table.roundGroupId,
+                                      teamIndex
+                                    )
+                                  }
+                                >
+                                  Delete
+                                </button>
+                                <button
+                                  className="bg-[#ABEFC6] text-green-700 font-semibold rounded-full px-2"
+                                  onClick={() =>
+                                    handleSave(table.roundGroupId, team.teamId)
+                                  }
+                                >
+                                  Save
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </td>
+                      )}
                     </tr>
                   )
                 )}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan="3">
-                    <div className="flex gap-4 my-[16px] justify-center w-full">
-                      <Button
-                        className="text-[#1244A2] font-semibold"
-                        onClick={() => handleDeleteTable(tableIndex)}
-                      >
-                        Delete Table
-                      </Button>
-                      <Button
-                        className="bg-[#C6C61A] text-[#1244A2] font-semibold border-[#C6C61A]"
-                        onClick={() => handleAddRow(table.roundGroupId)}
-                      >
-                        Add Team
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              </tfoot>
+              {role === "Manager" && (
+                <tfoot>
+                  <tr>
+                    <td colSpan="3">
+                      <div className="flex gap-4 my-[16px] justify-center w-full">
+                        <Button
+                          className="text-[#1244A2] font-semibold"
+                          onClick={() => handleDeleteTable(tableIndex)}
+                        >
+                          Delete Table
+                        </Button>
+                        <Button
+                          className="bg-[#C6C61A] text-[#1244A2] font-semibold border-[#C6C61A]"
+                          onClick={() => handleAddRow(table.roundGroupId)}
+                        >
+                          Add Team
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                </tfoot>
+              )}
             </table>
           </div>
         ))}

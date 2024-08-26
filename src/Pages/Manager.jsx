@@ -83,14 +83,15 @@ const Manager = () => {
     switch (activeComponent) {
       case "ManageUser":
         return <ManageUser />;
-      case "ClubRegister":
-        return <ClubRegister />;
       case "Court":
         return <Court />;
       case "winCondition":
         return <WinCondition />;
       case "News":
         return <News />;
+      case "clubRegister":
+        return <ClubRegister />;
+
       default:
         return <h1>Welcome to the Manager Dashboard</h1>;
     }
@@ -164,8 +165,11 @@ const Manager = () => {
                     clubDropdown ? "active" : ""
                   }`}
                 >
-                  <div className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer">
-                    <AiOutlineUserAdd /> Club Members
+                  <div
+                    className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
+                    onClick={() => setActiveComponent("clubRegister")}
+                  >
+                    <AiOutlineUserAdd /> Club Register
                     <div />
                   </div>
                 </div>
@@ -207,12 +211,6 @@ const Manager = () => {
                 >
                   <GiTennisCourt />
                   Court
-                </div>
-                <div
-                  className="flex items-center gap-2 border-b border-white h-[60px] pl-4 cursor-pointer"
-                  onClick={() => setActiveComponent("ClubRegister")}
-                >
-                  <GoChecklist /> List Tournament Register
                 </div>
               </div>
             )}

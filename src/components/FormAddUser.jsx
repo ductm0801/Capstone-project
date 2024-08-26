@@ -8,13 +8,22 @@ import { Button, Form, Input, message, Select } from "antd";
 const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   const [form] = Form.useForm();
   const { id } = useParams();
-  const URL = "http://localhost:5000/api/accounts/account";
+  const URL = "http://localhost:5000/api/users/register";
+  const jwtToken = localStorage.getItem("token");
 
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 
   const onFinish = async (data) => {
     try {
-      const res = await axios.post(`${URL}`, data);
+      const res = await axios.post(
+        `${URL}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+        data
+      );
       if (res.status === 200 || res.status === 201) {
         toast.success("New User has been added successfully");
         onSave();

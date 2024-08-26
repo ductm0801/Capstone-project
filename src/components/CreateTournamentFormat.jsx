@@ -16,10 +16,11 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const [rank, setRank] = useState("1");
   const [selectedType, setSelectedType] = useState("Men's Single");
   const [name, setName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [campaignStartDate, setCampaignStartDate] = useState("");
+  // const [startDate, setStartDate] = useState("");
+  // const [endDate, setEndDate] = useState("");
+  // const [campaignStartDate, setCampaignStartDate] = useState("");
   const [tournamentType, setTournamentType] = useState("Elimination");
+  const [sets, setSets] = useState("1");
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -38,7 +39,7 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
       });
       if (res.status === 200) {
         setName(res.data.name);
-        setCampaignStartDate(res.data.startDate);
+        // setCampaignStartDate(res.data.startDate);
       }
     } catch (error) {
       message.error("Error fetching campaign details.");
@@ -104,32 +105,32 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
 
   const handleChangeValue = (value) => setValue(value);
   const handleChangeRank = (value) => setRank(value);
+  const handleChangeSet = (value) => setSets(value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const start = new Date(startDate);
-    const campaignStart = new Date(campaignStartDate);
+    // const start = new Date(startDate);
+    // const campaignStart = new Date(campaignStartDate);
 
-    if (start < campaignStart) {
-      message.error("Tournament start date must be within the campaign dates.");
-      return;
-    }
+    // if (start < campaignStart) {
+    //   message.error("Tournament start date must be within the campaign dates.");
+    //   return;
+    // }
 
     const data = {
       tournamentName: name,
       formatType: selectedType,
-      startDate,
-      endDate,
       numberOfTeams: value,
       rank,
       tournamentCampaignId: id,
       tournamentType,
+      numberOfSets: sets,
       imageUrl: imageSrc,
     };
 
     addNewTournamentFormat(data);
-    console.log(data);
+    // console.log(data);
   };
 
   return (
@@ -172,7 +173,7 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
               name="name"
               onChange={(e) => setName(e.target.value)}
             />
-            <div className="w-[320px] flex flex-col mb-4">
+            {/* <div className="w-[320px] flex flex-col mb-4">
               <label htmlFor="startDate" className="text-left mb-2">
                 Start Date <span className="text-red-500 font-bold">*</span>
               </label>
@@ -199,7 +200,7 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
                 required
                 className="border-2 border-inherit rounded-lg p-2 mb-4 focus:outline-none"
               />
-            </div>
+            </div> */}
             <div className="w-[320px] flex flex-col mb-4">
               <label htmlFor="tournamentType" className="text-left mb-2">
                 Tournament Type{" "}
@@ -250,6 +251,23 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
                     <Option value="16">16 Teams</Option>
                     <Option value="32">32 Teams</Option>
                     <Option value="64">64 Teams</Option>
+                  </Select>
+                </div>
+                <div>
+                  <p className="text-left">
+                    Number of sets{" "}
+                    <span className="text-red-500 font-bold">*</span>
+                  </p>
+                  <Select
+                    className="border border-inherit w-[200px] text-left rounded-lg"
+                    onChange={handleChangeSet}
+                    value={sets}
+                  >
+                    <Option value="1">1 set</Option>
+                    <Option value="3">3 sets</Option>
+                    <Option value="5">5 sets</Option>
+                    <Option value="7">7 sets</Option>
+                    <Option value="9">9 sets</Option>
                   </Select>
                 </div>
                 <div>
