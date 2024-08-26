@@ -45,8 +45,8 @@ const RoundGroup = () => {
       });
       if (response.status === 200) {
         toast.success("Round Group saved successfully");
-        fetchTable();
-        fetchParticipants();
+
+        getParticipantsByRoundGroupId(roundGroupId);
       } else {
         toast.error("Failed to save Round Group");
       }

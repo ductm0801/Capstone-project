@@ -15,15 +15,11 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
 
   const onFinish = async (data) => {
     try {
-      const res = await axios.post(
-        `${URL}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
+      const res = await axios.post(`${URL}`, data, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
         },
-        data
-      );
+      });
       if (res.status === 200 || res.status === 201) {
         toast.success("New User has been added successfully");
         onSave();
