@@ -18,7 +18,7 @@ const Register = () => {
       message.success("Form submitted successfully");
       form.resetFields();
     } catch (err) {
-      console.error("Failed to register user", err);
+      message.error(err.response.data);
     }
   };
   return (

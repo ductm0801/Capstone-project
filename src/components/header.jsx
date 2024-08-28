@@ -59,7 +59,9 @@ const Header = () => {
       } transition-all duration-300`}
     >
       <div className="flex justify-between items-center p-4">
-        <img className="h-12 ml-[112px]" src={logo} alt="Logo" />
+        <Link to="/">
+          <img className="h-12 ml-[112px]" src={logo} alt="Logo" />
+        </Link>
         <div className="block lg:hidden">
           <button
             onClick={toggleDrawer}

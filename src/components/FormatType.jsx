@@ -12,6 +12,7 @@ const FormatType = ({ tournamentId }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -45,38 +46,32 @@ const FormatType = ({ tournamentId }) => {
     }
   };
 
-  const handleTournamentClick = (tournament) => {
-    console.log(tournament.formatType);
+  const URL3 = `http://localhost:5000/api/pickleball-match`;
+  const handleTournamentClick = async (tournament) => {
     setSelectedTournament(tournament);
-    // if (userRole === "Manager") {
-    //   navigate(`/addParticipants/${tournament.tournamentId}`, {
-    //     state: {
-    //       formatType: tournament.formatType,
-    //       tournamentId: id,
-    //     },
-    //   });
-    // } else if (userRole === "Athlete" || !userRole) {
-    //   navigate(`/bracket/${tournament.tournamentId}`, {
-    //     state: {
-    //       formatType: tournament.formatType,
-    //       tournamentId: id,
-    //     },
-    //   });
-    // }
-    if (tournament.tournamentType === "Elimination") {
-      navigate(`/bracket/${tournament.tournamentId}`, {
-        state: {
-          formatType: tournament.formatType,
-          tournamentId: id,
-        },
-      });
-    } else if (tournament.tournamentType === "GroupStage") {
-      navigate(`/roundGroup/${tournament.tournamentId}`, {
-        state: {
-          formatType: tournament.formatType,
-          tournamentId: id,
-        },
-      });
+    try {
+      const res = await axios.get(`${URL3}/${tournament.tournamentId}`);
+      if (res.status === 200) {
+        setData(res.data);
+        if (tournament.tournamentType === "Elimination") {
+          navigate(`/bracket/${tournament.tournamentId}`, {
+            state: {
+              formatType: tournament.formatType,
+              tournamentId: id,
+              data: res.data,
+            },
+          });
+        } else if (tournament.tournamentType === "GroupStage") {
+          navigate(`/roundGroup/${tournament.tournamentId}`, {
+            state: {
+              formatType: tournament.formatType,
+              tournamentId: id,
+            },
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching tournament data:", error);
     }
   };
   const getAllTournament = async () => {

@@ -12,7 +12,7 @@ import UpdateLastRound from "../components/UpdateLastRound";
 import Schedule from "../components/Schedule";
 
 const Bracket = () => {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const { bracketId } = useParams();
   const [match, setMatch] = useState([]);
@@ -20,11 +20,13 @@ const Bracket = () => {
   const [userRole, setUserRole] = useState(null);
   const [lastRound, setLastRound] = useState(false);
   const URL = `http://localhost:5000/api/pickleball-match`;
-  const URL2 = "http://localhost:5000/api/pickleball-match";
 
   const location = useLocation();
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
+  const { data } = location.state || [];
+
+  console.log(location.state);
 
   useEffect(() => {
     const jwtToken = localStorage.getItem("token");
@@ -38,28 +40,18 @@ const Bracket = () => {
     try {
       const res = await axios.get(`${URL}/${bracketId}`);
       if (res.status === 200) {
-        setData(res.data);
+        // setData(res.data);
+        setMatch(res.data);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const fetchDataSchedule = async () => {
-    const res = await fetch(`${URL2}/${bracketId}`);
-    const data = await res.json();
-    setMatch(data);
-  };
-
-  useEffect(() => {
-    fetchDataSchedule();
-  }, [bracketId]);
-
   useEffect(() => {
     fetchData();
   }, []);
   const onLastRound = () => {
-    message.info("lastRoundMessage");
     setLastRound(true);
   };
   const closeLastRound = () => {
@@ -189,7 +181,6 @@ const Bracket = () => {
               tournamentId={tournamentId}
               bracketId={bracketId}
               onSave={fetchData}
-              onSave2={fetchDataSchedule}
               loading={loading}
             />
           )}
@@ -206,7 +197,6 @@ const Bracket = () => {
               tournamentId={tournamentId}
               bracketId={bracketId}
               onSave={fetchData}
-              onSave2={fetchDataSchedule}
               loading={loading}
             />
           )}
@@ -220,7 +210,6 @@ const Bracket = () => {
               tournamentId={tournamentId}
               bracketId={bracketId}
               onSave={fetchData}
-              onSave2={fetchDataSchedule}
               loading={loading}
             />
           )}
@@ -231,7 +220,6 @@ const Bracket = () => {
             tournamentId={tournamentId}
             bracketId={bracketId}
             onSave={fetchData}
-            onSave2={fetchDataSchedule}
             loading={loading}
           />
         )}

@@ -1,11 +1,14 @@
-import { Button, Input, Select } from "antd";
+import { Button, Form, Input, message, Popover, Select } from "antd";
 import React, { useEffect, useState } from "react";
 import roundGroupbg from "../images/roundGroupbg.png";
 
 import "../App.css";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Schedule from "./Schedule";
+import MatchResult from "./MachResult";
+import { useForm } from "antd/es/form/Form";
 const RoundGroup = () => {
   const [tables, setTables] = useState([]);
   const URL = "http://localhost:5000/api/round";
@@ -17,6 +20,44 @@ const RoundGroup = () => {
   const [user, setUser] = useState([]);
   const [participants, setParticipants] = useState([]);
   const role = localStorage.getItem("role");
+  const [matches, setMatches] = useState([]);
+  const [roundId, setRoundId] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [form] = useForm();
+  const navigate = useNavigate();
+  const hide = () => {
+    setOpen(false);
+  };
+  const handleOpenChange = (newOpen) => {
+    setOpen(newOpen);
+  };
+  const isCompleted = () => {
+    const completed = matches.every((m) => m.matchStatus === "complete");
+    if (completed) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const fetchMatch = async (roundId) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/pickleball-match/round/${roundId}`
+      );
+      setMatches(res.data);
+    } catch (e) {
+      console.error("Error fetching match:", e);
+    }
+  };
+
+  useEffect(() => {
+    if (roundIds.length > 0) {
+      const roundId = roundIds[0].roundId;
+      setRoundId(roundId);
+      fetchMatch(roundId);
+    }
+  }, [roundIds]);
 
   const fetchParticipants = async (roundId) => {
     try {
@@ -110,6 +151,47 @@ const RoundGroup = () => {
     return acc;
   }, {});
 
+  const nextRound = async (values) => {
+    const params = {
+      ...values,
+      tournamentId: id,
+    };
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/round/next-rounds",
+        params,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        navigate(`/bracket/${id}`, {
+          state: {
+            data: res.data,
+          },
+        });
+      }
+    } catch (error) {
+      message.error(error.data.message);
+    }
+  };
+  const [numberOfTeams, setNumberOfTeams] = useState([]);
+  const fetchPariticipantNextRound = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/team-group/advanced-team/${roundId}`
+      );
+      if (res.status === 200) {
+        setNumberOfTeams(res.data);
+      } else {
+      }
+    } catch (e) {
+      message.error(e.data.message);
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -126,8 +208,6 @@ const RoundGroup = () => {
       console.error("No round IDs available to create a new table.");
       return;
     }
-
-    const roundId = roundIds[0].roundId;
 
     if (!roundId) {
       console.error("No valid roundId found for the new table.");
@@ -222,92 +302,129 @@ const RoundGroup = () => {
   };
 
   return (
-    <div
-      className="py-[100px] px-[64px] h-full"
-      style={{
-        backgroundImage: `url(${roundGroupbg})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      }}
-    >
-      <div className="flex justify-between items-center text-3xl font-semibold text-white">
-        PickleBall Round Group
-        {role === "Manager" && (
-          <Button
-            className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
-            onClick={handleCreateTable}
-          >
-            Create Table
-          </Button>
-        )}
-      </div>
+    <>
+      <div
+        className="py-[100px] px-[64px] h-full"
+        style={{
+          backgroundImage: `url(${roundGroupbg})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+      >
+        <div className="flex justify-between items-center text-3xl font-semibold text-white">
+          PickleBall Round Group
+          {role === "Manager" && !isCompleted ? (
+            <Button
+              className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+              onClick={handleCreateTable}
+            >
+              Create Table
+            </Button>
+          ) : (
+            <>
+              <Popover
+                content={
+                  <>
+                    <Form form={form} onFinish={nextRound}>
+                      <Form.Item
+                        name="numberOfTeams"
+                        label="Number of eam to next round"
+                        labelCol={{ span: 24 }}
+                      >
+                        <Select
+                          options={numberOfTeams.map((num) => ({
+                            label: `${num} team`,
+                            value: num,
+                          }))}
+                        />
+                      </Form.Item>
+                      <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                          Submit
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  </>
+                }
+                title="Choose number eam to next round"
+                trigger="click"
+                placement="bottomRight"
+                open={open}
+                onOpenChange={handleOpenChange}
+              >
+                <Button
+                  className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+                  onClick={() => fetchPariticipantNextRound()}
+                >
+                  Next Round
+                </Button>
+              </Popover>
+            </>
+          )}
+        </div>
 
-      <div className="flex flex-wrap justify-center gap-8">
-        {tables.map((table, tableIndex) => (
-          <div key={tableIndex} className="mt-[32px]">
-            <table className="w-[800px] border border-collapse border-[#C6C61A] bg-gradient-to-r from-[#1244A2] to-[#062764]">
-              <thead className="text-white">
-                <tr className="border border-collapse border-[#C6C61A]">
-                  <th className="w-[30px] border border-collapse border-[#C6C61A]">
-                    Rank
-                  </th>
-                  <th className="w-[372px] border border-collapse border-[#C6C61A]">
-                    {table.roundGroupName}
-                  </th>
-                  <th className="w-[80px] border border-collapse border-[#C6C61A]">
-                    W - L
-                  </th>
-                  {role === "Manager" && (
-                    <th className="w-[140px] border border-collapse border-[#C6C61A]">
-                      Action
+        <div className="flex flex-wrap justify-center gap-8">
+          {tables.map((table, tableIndex) => (
+            <div key={tableIndex} className="mt-[32px]">
+              <table className="w-[800px] border border-collapse border-[#C6C61A] bg-gradient-to-r from-[#1244A2] to-[#062764]">
+                <thead className="text-white">
+                  <tr className="border border-collapse border-[#C6C61A]">
+                    <th className="w-[30px] border border-collapse border-[#C6C61A]">
+                      Rank
                     </th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {getParticipantsByRoundGroupId(table.roundGroupId).map(
-                  (team, teamIndex) => (
-                    <tr key={teamIndex}>
-                      <td className="border border-collapse border-[#C6C61A] py-4 text-white text-center">
-                        {teamIndex + 1}
-                      </td>
-                      <td className="border border-collapse border-[#C6C61A] py-4 text-white text-center">
-                        {team.teamName ? (
-                          team.teamName
-                        ) : (
-                          <div>
-                            {role === "Manager" && (
-                              <Select
-                                className="w-full text-white"
-                                placeholder={`Team ${teamIndex + 1}`}
-                                onChange={(value) =>
-                                  handleTeamNameChange(
-                                    table.roundGroupId,
-                                    teamIndex,
-                                    value
-                                  )
-                                }
-                                options={userOptions}
-                              />
-                            )}
-                          </div>
-                        )}
-                      </td>
+                    <th className="w-[372px] border border-collapse border-[#C6C61A]">
+                      {table.roundGroupName}
+                    </th>
+                    <th className="w-[80px] border border-collapse border-[#C6C61A]">
+                      W - L
+                    </th>
 
-                      <td className="border border-collapse border-[#C6C61A] text-white text-center">
-                        {team.wins} - {team.losses}
-                      </td>
-                      {role === "Manager" && (
-                        <td className="border border-collapse border-[#C6C61A]">
+                    {role === "Manager" &&
+                      Object.values(participants).some((group) =>
+                        group.some((team) => !team.teamName)
+                      ) && (
+                        <th className="w-[140px] border border-collapse border-[#C6C61A]">
+                          Action
+                        </th>
+                      )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {getParticipantsByRoundGroupId(table.roundGroupId).map(
+                    (team, teamIndex) => (
+                      <tr key={teamIndex}>
+                        <td className="border border-collapse border-[#C6C61A] py-4 text-white text-center">
+                          {teamIndex + 1}
+                        </td>
+                        <td className="border border-collapse border-[#C6C61A] py-4 text-white text-center">
                           {team.teamName ? (
-                            <div>
-                              <div className="flex gap-2 justify-center">
-                                <button className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2">
-                                  Update
-                                </button>
-                              </div>
-                            </div>
+                            team.teamName
                           ) : (
+                            <div>
+                              {role === "Manager" && (
+                                <Select
+                                  className="w-full text-white"
+                                  placeholder={`Team ${teamIndex + 1}`}
+                                  onChange={(value) =>
+                                    handleTeamNameChange(
+                                      table.roundGroupId,
+                                      teamIndex,
+                                      value
+                                    )
+                                  }
+                                  options={userOptions}
+                                />
+                              )}
+                            </div>
+                          )}
+                        </td>
+
+                        <td className="border border-collapse border-[#C6C61A] text-white text-center">
+                          {team.wins} - {team.losses}
+                        </td>
+                        {/* Only show the "Action" cell if the team does not have a teamName */}
+                        {role === "Manager" && !team.teamName && (
+                          <td className="border border-collapse border-[#C6C61A]">
                             <div>
                               <div className="flex gap-2 justify-center">
                                 <button
@@ -331,40 +448,50 @@ const RoundGroup = () => {
                                 </button>
                               </div>
                             </div>
-                          )}
-                        </td>
-                      )}
+                          </td>
+                        )}
+                      </tr>
+                    )
+                  )}
+                </tbody>
+
+                {role === "Manager" && (
+                  <tfoot>
+                    <tr>
+                      <td colSpan="5">
+                        <div className="flex gap-4 my-[16px] justify-center w-full">
+                          <Button
+                            className="text-[#1244A2] font-semibold"
+                            onClick={() => handleDeleteTable(tableIndex)}
+                          >
+                            Delete Table
+                          </Button>
+                          <Button
+                            className="bg-[#C6C61A] text-[#1244A2] font-semibold border-[#C6C61A]"
+                            onClick={() => handleAddRow(table.roundGroupId)}
+                          >
+                            Add Team
+                          </Button>
+                        </div>
+                      </td>
                     </tr>
-                  )
+                  </tfoot>
                 )}
-              </tbody>
-              {role === "Manager" && (
-                <tfoot>
-                  <tr>
-                    <td colSpan="5">
-                      <div className="flex gap-4 my-[16px] justify-center w-full">
-                        <Button
-                          className="text-[#1244A2] font-semibold"
-                          onClick={() => handleDeleteTable(tableIndex)}
-                        >
-                          Delete Table
-                        </Button>
-                        <Button
-                          className="bg-[#C6C61A] text-[#1244A2] font-semibold border-[#C6C61A]"
-                          onClick={() => handleAddRow(table.roundGroupId)}
-                        >
-                          Add Team
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                </tfoot>
-              )}
-            </table>
-          </div>
-        ))}
+              </table>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+      <div>
+        <Schedule
+          match={matches}
+          onSave={() => fetchParticipants(roundId)}
+          onSave2={() => fetchMatch(roundId)}
+          roundId={roundId}
+          isCompleted={isCompleted}
+        />
+      </div>
+    </>
   );
 };
 

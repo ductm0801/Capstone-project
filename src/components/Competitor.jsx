@@ -35,46 +35,6 @@ const Competitor = () => {
     getListCompetitor(id);
   }, []);
 
-  // const postListCompetitor = async (id) => {
-  //   try {
-  //     const res = await axios.post(`${getUser}?campaignId=${id}`);
-  //     if (res.status === 200 || res.status === 201) {
-  //       console.log("Successfully posted data:", res.data);
-  //     } else if (res.status === 400) {
-  //       toast.info("there no new athelete");
-  //     }
-  //   } catch (error) {
-  //     message.error(error.response.data);
-  //   }
-  // };
-
-  // const postListGuest = async (id) => {
-  //   try {
-  //     const res = await axios.post(`${getGuest}?campaignId=${id}`);
-  //     if (res.status === 200 || res.status === 201) {
-  //       console.log("Successfully posted data:", res.data);
-  //     } else if (res.status === 400) {
-  //       toast.info("there no new athelete");
-  //     }
-  //   } catch (error) {
-  //     message.error(error.response.data);
-  //   }
-  // };
-
-  // const getListParticipants = () => {
-  //   postListCompetitor(id);
-  //   postListGuest(id);
-  //   getListCompetitor(id);
-  // };
-
-  // useEffect(() => {
-  //   getListCompetitor(id);
-  // }, []);
-  // useEffect(() => {
-  //   postListCompetitor(id);
-  //   postListGuest(id);
-  // }, [id]);
-
   return (
     <div>
       {role === "Manager" && (

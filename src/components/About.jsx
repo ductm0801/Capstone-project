@@ -45,6 +45,7 @@ const About = () => {
   const [editCommentText, setEditCommentText] = useState("");
   const jwtToken = localStorage.getItem("token");
   const { id } = useParams();
+  const [address, setAddress] = useState([]);
 
   function getRelativeTime(dateString) {
     const date = new Date(dateString);
@@ -80,6 +81,19 @@ const About = () => {
       );
     }
   }, [jwtToken]);
+
+  // const fetchAddress = async () => {
+  //   try {
+  //     const response = await axios.get(`http://localhost:5000/api/courtGroups`);
+  //     setAddress(response.data);
+  //   } catch (error) {
+  //     message.error(error.response?.data || "Failed to fetch address");
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchAddress();
+  // }, []);
+  // console.log(address);
 
   const handleCommentSubmit = async () => {
     if (comment.trim() === "") {
