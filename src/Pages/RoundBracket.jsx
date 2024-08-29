@@ -10,8 +10,9 @@ import { jwtDecode } from "jwt-decode";
 import { message } from "antd";
 import UpdateLastRound from "../components/UpdateLastRound";
 import Schedule from "../components/Schedule";
+import AddParticipantGroup from "../components/AddParticipantGroup";
 
-const Bracket = () => {
+const RoundBracket = () => {
   // const [data, setData] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const { bracketId } = useParams();
@@ -19,21 +20,20 @@ const Bracket = () => {
   const [loading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [lastRound, setLastRound] = useState(false);
-  const URL = `http://localhost:5000/api/pickleball-match`;
+  const URL = `http://localhost:5000/api/pickleball-match/next-rounds-match`;
 
   const location = useLocation();
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
   const { data } = location.state || [];
+  const { roundId } = location.state || [];
 
-  console.log(formatType);
+  console.log(roundId);
 
   useEffect(() => {
-    const jwtToken = localStorage.getItem("token");
-    if (jwtToken) {
-      const decodedToken = jwtDecode(jwtToken);
-      setUserRole(decodedToken.Role);
-    }
+    const role = localStorage.getItem("role");
+
+    setUserRole(role);
   }, []);
 
   const fetchData = async () => {
@@ -76,9 +76,9 @@ const Bracket = () => {
     if (userRole !== "Manager") return;
 
     const previousRoundMatches = matchesByRound[match.roundOrder - 1] || [];
-    if (match.roundOrder === 1) {
+    if (match.roundOrder === 2) {
       setSelectedMatch(match);
-    } else if (match.roundOrder !== 1) {
+    } else if (match.roundOrder !== 2) {
       const PreviousMatchesHaveFirstTeamId = previousRoundMatches.find(
         (m) => m.firstTeamId
       );
@@ -174,11 +174,11 @@ const Bracket = () => {
         {selectedMatch &&
           lastRound === false &&
           (formatType === "MenSingles" || formatType === "WomenSingles") &&
-          selectedMatch.roundOrder === 1 && (
-            <AddParticiPant
+          selectedMatch.roundOrder === 2 && (
+            <AddParticipantGroup
               match={selectedMatch}
               closePopup={closePopup}
-              tournamentId={tournamentId}
+              roundId={roundId}
               bracketId={bracketId}
               onSave={fetchData}
               loading={loading}
@@ -190,11 +190,11 @@ const Bracket = () => {
           (formatType === "MenDual" ||
             formatType === "WomenDual" ||
             formatType === "DualMixed") &&
-          selectedMatch.roundOrder === 1 && (
+          selectedMatch.roundOrder === 2 && (
             <AddTeam
               match={selectedMatch}
               closePopup={closePopup}
-              tournamentId={tournamentId}
+              roundId={roundId}
               bracketId={bracketId}
               onSave={fetchData}
               loading={loading}
@@ -202,7 +202,7 @@ const Bracket = () => {
           )}
 
         {/* {selectedMatch &&
-          selectedMatch.roundOrder !== 1 &&
+          selectedMatch.roundOrder !== 2 &&
           lastRound === false && (
             <UpdateWinningTeam
               match={selectedMatch}
@@ -213,7 +213,7 @@ const Bracket = () => {
               loading={loading}
             />
           )} */}
-        {/* {selectedMatch && selectedMatch.roundOrder !== 1 && lastRound && (
+        {/* {selectedMatch && selectedMatch.roundOrder !== 2 && lastRound && (
           <UpdateLastRound
             match={selectedMatch}
             closePopup={closeLastRound}
@@ -231,4 +231,4 @@ const Bracket = () => {
   );
 };
 
-export default Bracket;
+export default RoundBracket;

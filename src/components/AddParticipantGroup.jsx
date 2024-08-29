@@ -16,10 +16,10 @@ const errorInit = {
   secondAthleteId_err: "",
 };
 
-const AddParticipant = ({
+const AddParticipantGroup = ({
   match,
   closePopup,
-  tournamentId,
+  roundId,
   onSave,
   bracketId,
   onSave2,
@@ -29,12 +29,12 @@ const AddParticipant = ({
   const [errors, setErrors] = useState(errorInit);
   const { firstAthleteId, secondAthleteId } = state;
   const navigate = useNavigate();
-  const URL = "http://localhost:5000/api/athletes/non-teams";
-  const URL2 = "http://localhost:5000/api/pickleball-match/assign-single-team";
+  const URL = "http://localhost:5000/non-match-teams";
+  const URL2 = "http://localhost:5000/api/pickleball-match/assign-teams";
 
   const getParticipants = async () => {
     try {
-      const res = await axios.get(`${URL}/${bracketId}`);
+      const res = await axios.get(`${URL}/${roundId}`);
       const { success, message } = res.data;
       if (res.status === 200) {
         setParticipants(res.data);
@@ -89,7 +89,7 @@ const AddParticipant = ({
             background: `url(${popImg})`,
           }}
         >
-          Single
+          Round Group
         </div>
         <p>Round: {match.roundOrder}</p>
         <p>Match Order: {match.matchOrder}</p>
@@ -98,15 +98,15 @@ const AddParticipant = ({
 
         <div className="flex flex-col w-full items-center mt-6">
           <div className="form-group mb-2 flex flex-col text-left">
-            <label className="mb-1" htmlFor="firstAthleteId">
+            <label className="mb-1" htmlFor="firstTeamId">
               First Team Participant <span className="text-red-500">*</span>
             </label>
             <Select
               showSearch
-              placeholder="First Participant"
+              placeholder="First Team"
               optionFilterProp="label"
               options={options}
-              onChange={(value) => handleInputChange(value, "firstAthleteId")}
+              onChange={(value) => handleInputChange(value, "firstTeamId")}
               className="w-[180px]"
             />
             {errors.firstAthleteId_err && (
@@ -114,15 +114,15 @@ const AddParticipant = ({
             )}
           </div>
           <div className="form-group mb-2 flex flex-col text-left">
-            <label className="mb-1" htmlFor="secondAthleteId">
+            <label className="mb-1" htmlFor="secondTeamId">
               Second Team Participant <span className="text-red-500">*</span>
             </label>
             <Select
               showSearch
-              placeholder="Second Participant"
+              placeholder="Second Team"
               optionFilterProp="label"
               options={options}
-              onChange={(value) => handleInputChange(value, "secondAthleteId")}
+              onChange={(value) => handleInputChange(value, "secondTeamId")}
               className="w-[180px]"
             />
             {errors.secondAthleteId_err && (
@@ -150,4 +150,4 @@ const AddParticipant = ({
   );
 };
 
-export default AddParticipant;
+export default AddParticipantGroup;

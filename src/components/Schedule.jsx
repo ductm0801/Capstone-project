@@ -49,13 +49,13 @@ const Schedule = ({ match, onSave, roundId, onSave2, isCompleted }) => {
                   </span>
                 </div>
               </div>
-              <div className="border relative h-[134px] bg-white w-[750px] flex gap-4 items-center justify-start">
+              <div className="border relative h-[134px] bg-white w-[750px] flex gap-4 items-center justify-between p-4">
                 <div>
                   <div className="flex flex-col mx-[32px]">
                     <div className="text-[48px] font-bold text-[#C6C61A]">
                       {moment(item.matchDate).format("HH")}
                     </div>
-                    <span className="text-[#1244A2] text-[16px] absolute top-8 left-[91px] font-bold">
+                    <span className="text-[#1244A2] text-[16px] absolute top-8 left-[105px] font-bold">
                       {moment(item.matchDate).format("mm")}
                     </span>
                     <div>

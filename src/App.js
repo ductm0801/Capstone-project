@@ -29,6 +29,7 @@ import ManagerLogin from "./Pages/ManagerLogin";
 import PrivateRoute from "./routes/PrivateRoute";
 import RoundGroup from "./components/RoundGroup";
 import Register from "./Pages/Register";
+import RoundBracket from "./Pages/RoundBracket";
 
 const App = () => {
   return (
@@ -57,6 +58,7 @@ const ConditionalLayout = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
         <Route path="/bracket/:bracketId" element={<Bracket />} />
+        <Route path="/roundBracket/:bracketId" element={<RoundBracket />} />
         <Route path="/findTournament" element={<Tournament />} />
         <Route
           path="/createTournament"

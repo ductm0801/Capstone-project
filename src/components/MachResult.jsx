@@ -66,7 +66,7 @@ const MatchResult = ({ openPopup, handleClose, set, onSave, onSave2 }) => {
                 <div className="text-lg text-[#C6C61A] font-semibold my-[16px]">
                   Set {index + 1}
                 </div>
-                <div className="flex gap-8">
+                <div className="flex gap-8 justify-center">
                   <Form.Item
                     name={`firstTeamScore_${s.setId}`}
                     label={<b>{s.firstTeamName}</b>}

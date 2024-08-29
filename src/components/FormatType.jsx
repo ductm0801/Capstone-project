@@ -23,7 +23,6 @@ const FormatType = ({ tournamentId }) => {
   const URL = "http://localhost:5000/campaign";
   const URL2 = "http://localhost:5000/api/tournament-registration/user";
   const navigate = useNavigate();
-  console.log(tournamentId);
 
   const handleRegister = async (id) => {
     try {
@@ -39,7 +38,6 @@ const FormatType = ({ tournamentId }) => {
       );
 
       message.success("Registration successful!");
-      // console.log("Response:", res.data);
     } catch (error) {
       console.error("Error:", error);
       message.error("Failed to register. Please try again.");

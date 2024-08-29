@@ -1,14 +1,13 @@
 import { Button, Form, Input, message, Popover, Select } from "antd";
 import React, { useEffect, useState } from "react";
 import roundGroupbg from "../images/roundGroupbg.png";
-
 import "../App.css";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Schedule from "./Schedule";
-import MatchResult from "./MachResult";
 import { useForm } from "antd/es/form/Form";
+
 const RoundGroup = () => {
   const [tables, setTables] = useState([]);
   const URL = "http://localhost:5000/api/round";
@@ -24,20 +23,51 @@ const RoundGroup = () => {
   const [roundId, setRoundId] = useState(null);
   const [open, setOpen] = useState(false);
   const [form] = useForm();
+  const [brackets, setBrackets] = useState([]);
+  const location = useLocation();
+  const { formatType } = location.state || {};
+  const { tournamentId } = location.state || {};
   const navigate = useNavigate();
+
   const hide = () => {
     setOpen(false);
   };
+  console.log(roundId);
+
+  const isRound2 = () =>
+    Array.isArray(roundIds) &&
+    roundIds.some((round) => round.roundName === "Round 2");
+
+  const isProgress = () =>
+    Array.isArray(matches) &&
+    matches.some((m) => m.matchStatus === "Completed");
+
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
-  const isCompleted = () => {
-    const completed = matches.every((m) => m.matchStatus === "complete");
-    if (completed) {
-      return true;
-    } else {
-      return false;
+
+  const handleCreateMatch = async () => {
+    try {
+      const res = await axios.post(
+        `http://localhost:5000/api/pickleball-match/${roundId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (res.status === 200 || res.status === 201) {
+        fetchMatch(roundId);
+        message.success("Match was successfully created");
+      }
+    } catch (e) {
+      message.error(e.response?.data?.message || "Failed to create match");
     }
+  };
+
+  const isCompleted = () => {
+    return matches.every((m) => m.matchStatus === "Completed");
   };
 
   const fetchMatch = async (roundId) => {
@@ -86,9 +116,7 @@ const RoundGroup = () => {
       });
       if (response.status === 200) {
         toast.success("Round Group saved successfully");
-        const roundId = roundIds[0].roundId;
         fetchParticipants(roundId);
-        getParticipantsByRoundGroupId(roundGroupId);
       } else {
         toast.error("Failed to save Round Group");
       }
@@ -113,6 +141,7 @@ const RoundGroup = () => {
       console.error("Error fetching tables:", error);
     }
   };
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -137,8 +166,6 @@ const RoundGroup = () => {
       const response = await axios.get(`${URL}/${id}`);
       if (response.status === 200) {
         setRoundIds(response.data.data);
-        // const roundId = roundIds[0].roundId;
-        // fetchTable(roundId);
       } else {
         console.error("Failed to fetch rounds");
       }
@@ -146,10 +173,6 @@ const RoundGroup = () => {
       console.error("Error fetching rounds:", error);
     }
   };
-  const roundIdObject = roundIds.reduce((acc, item) => {
-    acc[item.roundId] = item;
-    return acc;
-  }, {});
 
   const nextRound = async (values) => {
     const params = {
@@ -167,17 +190,24 @@ const RoundGroup = () => {
         }
       );
       if (res.status === 200) {
-        navigate(`/bracket/${id}`, {
+        setBrackets(res.data);
+        navigate(`/roundBracket/${id}`, {
           state: {
             data: res.data,
+            formatType: formatType,
+            roundId: roundId,
           },
         });
       }
     } catch (error) {
-      message.error(error.data.message);
+      message.error(
+        error.response?.data?.message || "Failed to start next round"
+      );
     }
   };
+
   const [numberOfTeams, setNumberOfTeams] = useState([]);
+
   const fetchPariticipantNextRound = async () => {
     try {
       const res = await axios.get(
@@ -186,9 +216,10 @@ const RoundGroup = () => {
       if (res.status === 200) {
         setNumberOfTeams(res.data);
       } else {
+        message.error("Failed to fetch participants for the next round.");
       }
     } catch (e) {
-      message.error(e.data.message);
+      message.error(e.message);
     }
   };
 
@@ -198,19 +229,13 @@ const RoundGroup = () => {
 
   useEffect(() => {
     if (roundIds.length > 0) {
-      const roundId = roundIds[0].roundId;
-      fetchTable(roundId);
+      fetchTable(roundIds[0].roundId);
     }
   }, [roundIds]);
 
   const handleCreateTable = async () => {
-    if (roundIds.length === 0) {
-      console.error("No round IDs available to create a new table.");
-      return;
-    }
-
-    if (!roundId) {
-      console.error("No valid roundId found for the new table.");
+    if (roundIds.length === 0 || !roundId) {
+      console.error("No valid round ID available to create a new table.");
       return;
     }
 
@@ -289,7 +314,6 @@ const RoundGroup = () => {
     if (updatedParticipants[roundGroupId]) {
       updatedParticipants[roundGroupId][teamIndex].teamId = value;
       setParticipants(updatedParticipants);
-      console.log("Updated participants:", updatedParticipants);
     } else {
       console.error(`Round group with ID ${roundGroupId} does not exist.`);
     }
@@ -299,6 +323,28 @@ const RoundGroup = () => {
     const updatedTables = [...tables];
     updatedTables.splice(tableIndex, 1);
     setTables(updatedTables);
+  };
+
+  const handleClick = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/pickleball-match/next-rounds-match/${id}`
+      );
+      if (res.status === 200) {
+        navigate(`/roundBracket/${id}`, {
+          state: {
+            data: res.data,
+            formatType: formatType,
+            tournamentId: tournamentId,
+            roundId: roundId,
+          },
+        });
+      }
+    } catch (e) {
+      message.error(
+        e.response?.message || "Failed to proceed to the next round."
+      );
+    }
   };
 
   return (
@@ -313,54 +359,71 @@ const RoundGroup = () => {
       >
         <div className="flex justify-between items-center text-3xl font-semibold text-white">
           PickleBall Round Group
-          {role === "Manager" && !isCompleted ? (
-            <Button
-              className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
-              onClick={handleCreateTable}
-            >
-              Create Table
-            </Button>
-          ) : (
-            <>
-              <Popover
-                content={
-                  <>
-                    <Form form={form} onFinish={nextRound}>
-                      <Form.Item
-                        name="numberOfTeams"
-                        label="Number of eam to next round"
-                        labelCol={{ span: 24 }}
-                      >
-                        <Select
-                          options={numberOfTeams.map((num) => ({
-                            label: `${num} team`,
-                            value: num,
-                          }))}
-                        />
-                      </Form.Item>
-                      <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                          Submit
-                        </Button>
-                      </Form.Item>
-                    </Form>
-                  </>
-                }
-                title="Choose number eam to next round"
-                trigger="click"
-                placement="bottomRight"
-                open={open}
-                onOpenChange={handleOpenChange}
+          <div className="flex justify-end gap-4">
+            {role === "Manager" && matches.length === 0 && (
+              <Button
+                className="bg-green-200 text-lg mt-4 py-[23px] px-6 text-black"
+                onClick={handleCreateMatch}
               >
-                <Button
-                  className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
-                  onClick={() => fetchPariticipantNextRound()}
-                >
-                  Next Round
-                </Button>
-              </Popover>
-            </>
-          )}
+                Create Match
+              </Button>
+            )}
+            {role === "Manager" && matches.length === 0 ? (
+              <Button
+                className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+                onClick={handleCreateTable}
+              >
+                Create Table
+              </Button>
+            ) : (
+              <>
+                {isRound2() ? (
+                  <Button
+                    className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+                    onClick={() => handleClick()}
+                  >
+                    Next Round
+                  </Button>
+                ) : (
+                  <Popover
+                    content={
+                      <Form form={form} onFinish={nextRound}>
+                        <Form.Item
+                          name="numberOfTeams"
+                          label="Number of teams to next round"
+                          labelCol={{ span: 24 }}
+                        >
+                          <Select
+                            options={numberOfTeams.map((num) => ({
+                              label: `${num} team`,
+                              value: num,
+                            }))}
+                          />
+                        </Form.Item>
+                        <Form.Item>
+                          <Button type="primary" htmlType="submit">
+                            Submit
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    }
+                    title="Choose number of teams to next round"
+                    trigger="click"
+                    placement="bottomRight"
+                    open={open}
+                    onOpenChange={handleOpenChange}
+                  >
+                    <Button
+                      className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+                      onClick={() => fetchPariticipantNextRound()}
+                    >
+                      Next Round
+                    </Button>
+                  </Popover>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap justify-center gap-8">
@@ -422,7 +485,7 @@ const RoundGroup = () => {
                         <td className="border border-collapse border-[#C6C61A] text-white text-center">
                           {team.wins} - {team.losses}
                         </td>
-                        {/* Only show the "Action" cell if the team does not have a teamName */}
+
                         {role === "Manager" && !team.teamName && (
                           <td className="border border-collapse border-[#C6C61A]">
                             <div>
@@ -455,7 +518,7 @@ const RoundGroup = () => {
                   )}
                 </tbody>
 
-                {role === "Manager" && (
+                {role === "Manager" && matches.length === 0 && (
                   <tfoot>
                     <tr>
                       <td colSpan="5">
