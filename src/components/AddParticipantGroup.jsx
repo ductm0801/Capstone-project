@@ -7,13 +7,13 @@ import { message, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
-  firstAthleteId: 0,
-  secondAthleteId: 0,
+  firstTeamId: 0,
+  secondTeamId: 0,
 };
 
 const errorInit = {
-  firstAthleteId_err: "",
-  secondAthleteId_err: "",
+  firstTeam_err: "",
+  secondTeam_err: "",
 };
 
 const AddParticipantGroup = ({
@@ -23,24 +23,26 @@ const AddParticipantGroup = ({
   onSave,
   bracketId,
   onSave2,
+  round2Id,
 }) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState(errorInit);
-  const { firstAthleteId, secondAthleteId } = state;
+  const { firstTeamId, secondTeamId } = state;
   const navigate = useNavigate();
   const URL = "http://localhost:5000/non-match-teams";
   const URL2 = "http://localhost:5000/api/pickleball-match/assign-teams";
 
   const getParticipants = async () => {
     try {
-      const res = await axios.get(`${URL}/${roundId}`);
+      const res = await axios.get(`${URL}/${round2Id}`);
       const { success, message } = res.data;
       if (res.status === 200) {
         setParticipants(res.data);
       }
     } catch (error) {
       message.error(error.response.data);
+      console.log("aaa");
     }
   };
 
@@ -49,8 +51,8 @@ const AddParticipantGroup = ({
   }, []);
 
   const options = participants.map((participant) => ({
-    label: `${participant.athleteName} (${participant.athleteType})`,
-    value: participant.id,
+    label: `${participant.teamName}`,
+    value: participant.teamId,
   }));
 
   const handleSave = async (e) => {
@@ -61,15 +63,19 @@ const AddParticipantGroup = ({
 
   const assignParticipants = async (data) => {
     try {
-      const res = await axios.put(`${URL2}/${match.matchId}`, data);
+      const res = await axios.put(`${URL2}/${match.matchId}`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       if (res.status === 200 || res.status === 201) {
         toast.success("Participants assigned successfully");
         onSave();
-        onSave2();
+        // onSave2();
         closePopup();
       }
     } catch (error) {
-      message.error(error.response.data);
+      // message.error(error.response?.data);
     }
   };
 
@@ -109,8 +115,8 @@ const AddParticipantGroup = ({
               onChange={(value) => handleInputChange(value, "firstTeamId")}
               className="w-[180px]"
             />
-            {errors.firstAthleteId_err && (
-              <span className="error">{errors.firstAthleteId_err}</span>
+            {errors.firstTeam_err && (
+              <span className="error">{errors.firstTeam_err}</span>
             )}
           </div>
           <div className="form-group mb-2 flex flex-col text-left">
@@ -125,8 +131,8 @@ const AddParticipantGroup = ({
               onChange={(value) => handleInputChange(value, "secondTeamId")}
               className="w-[180px]"
             />
-            {errors.secondAthleteId_err && (
-              <span className="error">{errors.secondAthleteId_err}</span>
+            {errors.secondTeam_err && (
+              <span className="error">{errors.secondTeam_err}</span>
             )}
           </div>
         </div>

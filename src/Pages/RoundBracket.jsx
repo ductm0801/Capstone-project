@@ -1,19 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "../styles/Bracket.css";
 import AddParticiPant from "../components/AddParticiPant";
 import AddTeam from "../components/AddTeam";
 import UpdateWinningTeam from "../components/UpdateWinningTeam";
 import tourbg from "../images/tournament-bg.png";
 import { jwtDecode } from "jwt-decode";
-import { message } from "antd";
+import { Button, message } from "antd";
 import UpdateLastRound from "../components/UpdateLastRound";
 import Schedule from "../components/Schedule";
 import AddParticipantGroup from "../components/AddParticipantGroup";
+import ScheduleRound from "../components/ScheduleRound";
 
 const RoundBracket = () => {
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const { bracketId } = useParams();
   const [match, setMatch] = useState([]);
@@ -25,10 +26,9 @@ const RoundBracket = () => {
   const location = useLocation();
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
-  const { data } = location.state || [];
+  // const { data } = location.state || [];
   const { roundId } = location.state || [];
-
-  console.log(roundId);
+  const { round2Id } = location.state || [];
 
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -36,21 +36,39 @@ const RoundBracket = () => {
     setUserRole(role);
   }, []);
 
-  const fetchData = async () => {
+  const fetchMatches = async () => {
     try {
-      const res = await axios.get(`${URL}/${bracketId}`);
+      const res = await axios.get(
+        `http://localhost:5000/api/pickleball-match/next-rounds-match/${bracketId}`
+      );
       if (res.status === 200) {
-        // setData(res.data);
+        setData(res.data);
         setMatch(res.data);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    fetchMatches();
   }, []);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const res = await axios.get(`${URL}/${bracketId}`);
+  //     if (res.status === 200) {
+  //       setData(res.data);
+  //       setMatch(res.data);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
   const onLastRound = () => {
     setLastRound(true);
   };
@@ -93,6 +111,10 @@ const RoundBracket = () => {
   const closePopup = () => {
     setSelectedMatch(null);
   };
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(`/roundGroup/${bracketId}`);
+  };
 
   const paddingLeft = data.length === 63 ? "350px" : "0";
   return (
@@ -112,6 +134,14 @@ const RoundBracket = () => {
             backgroundSize: "cover",
           }}
         >
+          <div className="absolute top-[100px] left-10">
+            <Button
+              className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+              onClick={() => handleBack()}
+            >
+              Back
+            </Button>
+          </div>
           {rounds.map((round, index) => {
             let matches = matchesByRound[round];
             const position = index < rounds.length / 2 ? "left" : "right";
@@ -173,19 +203,19 @@ const RoundBracket = () => {
 
         {selectedMatch &&
           lastRound === false &&
-          (formatType === "MenSingles" || formatType === "WomenSingles") &&
           selectedMatch.roundOrder === 2 && (
             <AddParticipantGroup
               match={selectedMatch}
               closePopup={closePopup}
               roundId={roundId}
+              round2Id={round2Id}
               bracketId={bracketId}
-              onSave={fetchData}
+              onSave={fetchMatches}
               loading={loading}
             />
           )}
 
-        {selectedMatch &&
+        {/* {selectedMatch &&
           lastRound === false &&
           (formatType === "MenDual" ||
             formatType === "WomenDual" ||
@@ -199,7 +229,7 @@ const RoundBracket = () => {
               onSave={fetchData}
               loading={loading}
             />
-          )}
+          )} */}
 
         {/* {selectedMatch &&
           selectedMatch.roundOrder !== 2 &&
@@ -225,7 +255,7 @@ const RoundBracket = () => {
         )} */}
       </div>
       <div>
-        <Schedule match={match} />
+        <ScheduleRound match={match} onSave3={fetchMatches} />
       </div>
     </div>
   );

@@ -7,15 +7,9 @@ import tourch from "../images/torch.png";
 import axios from "axios";
 import MatchResult from "./MachResult";
 import { renderBgColorStatus } from "../utils";
+import MatchResultRound from "./MatchResultRound";
 
-const Schedule = ({
-  match,
-  onSave,
-  roundId,
-  onSave2,
-  onSave3,
-  isCompleted,
-}) => {
+const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [set, setSet] = useState([]);
   const handleOpenPopup = async (matchId) => {
@@ -87,7 +81,7 @@ const Schedule = ({
                   {item.matchStatus}
                 </div>
                 <div>
-                  {isCompleted ? (
+                  {item.matchStatus === "Completed" ? (
                     ""
                   ) : (
                     <button
@@ -103,12 +97,10 @@ const Schedule = ({
           ))}
       </div>
       {openPopup && (
-        <MatchResult
+        <MatchResultRound
           openPopup={openPopup}
           handleClose={() => setOpenPopup(false)}
           set={set}
-          onSave={onSave}
-          onSave2={onSave2}
           onSave3={onSave3}
         />
       )}
@@ -116,4 +108,4 @@ const Schedule = ({
   );
 };
 
-export default Schedule;
+export default ScheduleRound;

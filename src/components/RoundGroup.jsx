@@ -21,8 +21,10 @@ const RoundGroup = () => {
   const role = localStorage.getItem("role");
   const [matches, setMatches] = useState([]);
   const [roundId, setRoundId] = useState(null);
+  const [round2Id, setRound2Id] = useState(null);
   const [open, setOpen] = useState(false);
   const [form] = useForm();
+  const [groupId, setGroupId] = useState(null);
   const [brackets, setBrackets] = useState([]);
   const location = useLocation();
   const { formatType } = location.state || {};
@@ -46,10 +48,10 @@ const RoundGroup = () => {
     setOpen(newOpen);
   };
 
-  const handleCreateMatch = async () => {
+  const handleCreateMatch = async (groupId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/pickleball-match/${roundId}`,
+        `http://localhost:5000/api/pickleball-match/${groupId}`,
         {},
         {
           headers: {
@@ -85,6 +87,10 @@ const RoundGroup = () => {
     if (roundIds.length > 0) {
       const roundId = roundIds[0].roundId;
       setRoundId(roundId);
+      if (roundIds.length > 1) {
+        const round2Id = roundIds[1].roundId;
+        setRound2Id(round2Id);
+      }
       fetchMatch(roundId);
     }
   }, [roundIds]);
@@ -196,6 +202,7 @@ const RoundGroup = () => {
             data: res.data,
             formatType: formatType,
             roundId: roundId,
+            round2Id: round2Id,
           },
         });
       }
@@ -337,6 +344,7 @@ const RoundGroup = () => {
             formatType: formatType,
             tournamentId: tournamentId,
             roundId: roundId,
+            round2Id: round2Id,
           },
         });
       }
@@ -360,14 +368,6 @@ const RoundGroup = () => {
         <div className="flex justify-between items-center text-3xl font-semibold text-white">
           PickleBall Round Group
           <div className="flex justify-end gap-4">
-            {role === "Manager" && matches.length === 0 && (
-              <Button
-                className="bg-green-200 text-lg mt-4 py-[23px] px-6 text-black"
-                onClick={handleCreateMatch}
-              >
-                Create Match
-              </Button>
-            )}
             {role === "Manager" && matches.length === 0 ? (
               <Button
                 className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
@@ -377,49 +377,60 @@ const RoundGroup = () => {
               </Button>
             ) : (
               <>
-                {isRound2() ? (
+                {role === "Manager" ? (
+                  <>
+                    {isRound2() ? (
+                      <Button
+                        className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+                        onClick={() => handleClick()}
+                      >
+                        Next Round
+                      </Button>
+                    ) : (
+                      <Popover
+                        content={
+                          <Form form={form} onFinish={nextRound}>
+                            <Form.Item
+                              name="numberOfTeams"
+                              label="Number of teams to next round"
+                              labelCol={{ span: 24 }}
+                            >
+                              <Select
+                                options={numberOfTeams.map((num) => ({
+                                  label: `${num} team`,
+                                  value: num,
+                                }))}
+                              />
+                            </Form.Item>
+                            <Form.Item>
+                              <Button type="primary" htmlType="submit">
+                                Submit
+                              </Button>
+                            </Form.Item>
+                          </Form>
+                        }
+                        title="Choose number of teams to next round"
+                        trigger="click"
+                        placement="bottomRight"
+                        open={open}
+                        onOpenChange={handleOpenChange}
+                      >
+                        <Button
+                          className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
+                          onClick={() => fetchPariticipantNextRound()}
+                        >
+                          Next Round
+                        </Button>
+                      </Popover>
+                    )}
+                  </>
+                ) : (
                   <Button
                     className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
                     onClick={() => handleClick()}
                   >
                     Next Round
                   </Button>
-                ) : (
-                  <Popover
-                    content={
-                      <Form form={form} onFinish={nextRound}>
-                        <Form.Item
-                          name="numberOfTeams"
-                          label="Number of teams to next round"
-                          labelCol={{ span: 24 }}
-                        >
-                          <Select
-                            options={numberOfTeams.map((num) => ({
-                              label: `${num} team`,
-                              value: num,
-                            }))}
-                          />
-                        </Form.Item>
-                        <Form.Item>
-                          <Button type="primary" htmlType="submit">
-                            Submit
-                          </Button>
-                        </Form.Item>
-                      </Form>
-                    }
-                    title="Choose number of teams to next round"
-                    trigger="click"
-                    placement="bottomRight"
-                    open={open}
-                    onOpenChange={handleOpenChange}
-                  >
-                    <Button
-                      className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
-                      onClick={() => fetchPariticipantNextRound()}
-                    >
-                      Next Round
-                    </Button>
-                  </Popover>
                 )}
               </>
             )}
@@ -535,6 +546,14 @@ const RoundGroup = () => {
                           >
                             Add Team
                           </Button>
+                          <Button
+                            className="bg-green-200 text-lg mt-4 py-[23px] px-6 text-black"
+                            onClick={() =>
+                              handleCreateMatch(table.roundGroupId)
+                            }
+                          >
+                            Create Match
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -551,7 +570,7 @@ const RoundGroup = () => {
           onSave={() => fetchParticipants(roundId)}
           onSave2={() => fetchMatch(roundId)}
           roundId={roundId}
-          isCompleted={isCompleted}
+          isCompleted={isCompleted()}
         />
       </div>
     </>

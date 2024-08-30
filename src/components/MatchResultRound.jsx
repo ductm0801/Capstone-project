@@ -2,7 +2,7 @@ import { Button, Form, Input, message } from "antd";
 import { useForm } from "antd/es/form/Form";
 import axios from "axios";
 
-const MatchResult = ({
+const MatchResultRound = ({
   openPopup,
   handleClose,
   set,
@@ -32,8 +32,7 @@ const MatchResult = ({
         }
       );
       message.success("Match result updated successfully!");
-      onSave();
-      onSave2();
+      onSave3();
       handleClose();
       console.log(`Set ${setId} updated successfully`, res.data);
     } catch (error) {
@@ -106,4 +105,4 @@ const MatchResult = ({
   );
 };
 
-export default MatchResult;
+export default MatchResultRound;
