@@ -10,10 +10,10 @@ import { useForm } from "antd/es/form/Form";
 
 const RoundGroup = () => {
   const [tables, setTables] = useState([]);
-  const URL = "http://localhost:5000/api/round";
-  const URL2 = "http://localhost:5000/api/round-group";
-  const URL3 = "http://localhost:5000/single-team";
-  const URL4 = "http://localhost:5000/api/team-group/ranked-team";
+  const URL = "https://apis-pickleball.somee.com/api/round";
+  const URL2 = "https://apis-pickleball.somee.com/api/round-group";
+  const URL3 = "https://apis-pickleball.somee.com/single-team";
+  const URL4 = "https://apis-pickleball.somee.com/api/team-group/ranked-team";
   const { id } = useParams();
   const [roundIds, setRoundIds] = useState([]);
   const [user, setUser] = useState([]);
@@ -34,7 +34,6 @@ const RoundGroup = () => {
   const hide = () => {
     setOpen(false);
   };
-  console.log(roundId);
 
   const isRound2 = () =>
     Array.isArray(roundIds) &&
@@ -51,7 +50,7 @@ const RoundGroup = () => {
   const handleCreateMatch = async (groupId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/pickleball-match/${groupId}`,
+        `https://apis-pickleball.somee.com/api/pickleball-match/${groupId}`,
         {},
         {
           headers: {
@@ -75,7 +74,7 @@ const RoundGroup = () => {
   const fetchMatch = async (roundId) => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/pickleball-match/round/${roundId}`
+        `https://apis-pickleball.somee.com/api/pickleball-match/round/${roundId}`
       );
       setMatches(res.data);
     } catch (e) {
@@ -123,6 +122,7 @@ const RoundGroup = () => {
       if (response.status === 200) {
         toast.success("Round Group saved successfully");
         fetchParticipants(roundId);
+        fetchUser();
       } else {
         toast.error("Failed to save Round Group");
       }
@@ -155,7 +155,7 @@ const RoundGroup = () => {
   const fetchUser = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/athletes/non-teams/${id}`
+        `https://apis-pickleball.somee.com/api/athletes/non-teams/${id}`
       );
       if (response.status === 200) {
         setUser(response.data);
@@ -187,7 +187,7 @@ const RoundGroup = () => {
     };
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/round/next-rounds",
+        "https://apis-pickleball.somee.com/api/round/next-rounds",
         params,
         {
           headers: {
@@ -197,14 +197,7 @@ const RoundGroup = () => {
       );
       if (res.status === 200) {
         setBrackets(res.data);
-        navigate(`/roundBracket/${id}`, {
-          state: {
-            data: res.data,
-            formatType: formatType,
-            roundId: roundId,
-            round2Id: round2Id,
-          },
-        });
+        fetchData();
       }
     } catch (error) {
       message.error(
@@ -218,7 +211,7 @@ const RoundGroup = () => {
   const fetchPariticipantNextRound = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/team-group/advanced-team/${roundId}`
+        `https://apis-pickleball.somee.com/api/team-group/advanced-team/${roundId}`
       );
       if (res.status === 200) {
         setNumberOfTeams(res.data);
@@ -257,7 +250,7 @@ const RoundGroup = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/round-group/${roundId}`,
+        `https://apis-pickleball.somee.com/api/round-group/${roundId}`,
         queryParams
       );
 
@@ -306,6 +299,29 @@ const RoundGroup = () => {
     setParticipants(updatedParticipants);
   };
 
+  const handleAddRowForDual = (roundGroupId) => {
+    const updatedParticipants = { ...participants };
+
+    const newDualTeam = {
+      teamId: null,
+      teamName: "",
+      roundGroupId: roundGroupId,
+      roundGroupName: "",
+      teamRoundGroupId: null,
+      matchWin: 0,
+      matchDraw: 0,
+      matchLose: 0,
+      point: 0,
+    };
+
+    if (!updatedParticipants[roundGroupId]) {
+      updatedParticipants[roundGroupId] = [];
+    }
+
+    updatedParticipants[roundGroupId].push(newDualTeam);
+    setParticipants(updatedParticipants);
+  };
+
   const handleDeleteRow = (roundGroupId, teamIndex) => {
     const updatedParticipants = { ...participants };
     if (updatedParticipants[roundGroupId]) {
@@ -326,6 +342,52 @@ const RoundGroup = () => {
     }
   };
 
+  const handleDualChange = (roundGroupId, teamIndex, athleteType, value) => {
+    const updatedParticipants = { ...participants };
+
+    if (updatedParticipants[roundGroupId]) {
+      if (athleteType === "first") {
+        updatedParticipants[roundGroupId][teamIndex].firstAthleteId = value;
+      } else if (athleteType === "second") {
+        updatedParticipants[roundGroupId][teamIndex].secondAthleteId = value;
+      }
+      setParticipants(updatedParticipants);
+    } else {
+      console.error(`Round group with ID ${roundGroupId} does not exist.`);
+    }
+  };
+
+  const saveTeamAssignments = async (roundGroupId, teamIndex) => {
+    const data = {
+      firstAthleteId: participants[roundGroupId]?.[teamIndex]?.firstAthleteId,
+      secondAthleteId: participants[roundGroupId]?.[teamIndex]?.secondAthleteId,
+    };
+
+    try {
+      const response = await axios.post(
+        `https://apis-pickleball.somee.com/double-team/${roundGroupId}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        fetchParticipants(roundId);
+        fetchUser();
+      } else {
+        console.error("Failed to assign teams", response.statusText);
+      }
+    } catch (error) {
+      console.error(
+        "Error occurred while assigning teams:",
+        error.response || error.message
+      );
+    }
+  };
+
   const handleDeleteTable = (tableIndex) => {
     const updatedTables = [...tables];
     updatedTables.splice(tableIndex, 1);
@@ -335,7 +397,7 @@ const RoundGroup = () => {
   const handleClick = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/pickleball-match/next-rounds-match/${id}`
+        `https://apis-pickleball.somee.com/api/pickleball-match/next-rounds-match/${id}`
       );
       if (res.status === 200) {
         navigate(`/roundBracket/${id}`, {
@@ -419,7 +481,7 @@ const RoundGroup = () => {
                           className="bg-blue-700 text-lg mt-4 py-[23px] px-6 text-white"
                           onClick={() => fetchPariticipantNextRound()}
                         >
-                          Next Round
+                          Create Next round
                         </Button>
                       </Popover>
                     )}
@@ -475,20 +537,55 @@ const RoundGroup = () => {
                             team.teamName
                           ) : (
                             <div>
-                              {role === "Manager" && (
-                                <Select
-                                  className="w-full text-white"
-                                  placeholder={`Team ${teamIndex + 1}`}
-                                  onChange={(value) =>
-                                    handleTeamNameChange(
-                                      table.roundGroupId,
-                                      teamIndex,
-                                      value
-                                    )
-                                  }
-                                  options={userOptions}
-                                />
-                              )}
+                              {role === "Manager" &&
+                                (formatType === "MenSingles" ||
+                                formatType === "WomenSingles" ? (
+                                  <Select
+                                    className="w-full text-white"
+                                    placeholder={`Team ${teamIndex + 1}`}
+                                    onChange={(value) =>
+                                      handleTeamNameChange(
+                                        table.roundGroupId,
+                                        teamIndex,
+                                        value
+                                      )
+                                    }
+                                    options={userOptions}
+                                  />
+                                ) : (
+                                  <div className="flex gap-4">
+                                    <Select
+                                      className="w-full text-white"
+                                      placeholder={`First Athlete ${
+                                        teamIndex + 1
+                                      }`}
+                                      onChange={(value) =>
+                                        handleDualChange(
+                                          table.roundGroupId,
+                                          teamIndex,
+                                          "first",
+                                          value
+                                        )
+                                      }
+                                      options={userOptions}
+                                    />
+                                    <Select
+                                      className="w-full text-white"
+                                      placeholder={`Second Athlete ${
+                                        teamIndex + 1
+                                      }`}
+                                      onChange={(value) =>
+                                        handleDualChange(
+                                          table.roundGroupId,
+                                          teamIndex,
+                                          "second",
+                                          value
+                                        )
+                                      }
+                                      options={userOptions}
+                                    />
+                                  </div>
+                                ))}
                             </div>
                           )}
                         </td>
@@ -512,14 +609,32 @@ const RoundGroup = () => {
                                 >
                                   Delete
                                 </button>
-                                <button
-                                  className="bg-[#ABEFC6] text-green-700 font-semibold rounded-full px-2"
-                                  onClick={() =>
-                                    handleSave(table.roundGroupId, team.teamId)
-                                  }
-                                >
-                                  Save
-                                </button>
+                                {formatType === "MenSingles" ||
+                                formatType === "WomenSingles" ? (
+                                  <button
+                                    className="bg-[#ABEFC6] text-green-700 font-semibold rounded-full px-2"
+                                    onClick={() =>
+                                      handleSave(
+                                        table.roundGroupId,
+                                        team.teamId
+                                      )
+                                    }
+                                  >
+                                    Save
+                                  </button>
+                                ) : (
+                                  <button
+                                    className="bg-[#ABEFC6] text-green-700 font-semibold rounded-full px-2"
+                                    onClick={() =>
+                                      saveTeamAssignments(
+                                        table.roundGroupId,
+                                        teamIndex
+                                      )
+                                    }
+                                  >
+                                    Save
+                                  </button>
+                                )}
                               </div>
                             </div>
                           </td>
@@ -528,37 +643,52 @@ const RoundGroup = () => {
                     )
                   )}
                 </tbody>
+                {role === "Manager" &&
+                  matches.filter(
+                    (match) => match.roundGroupId === table.roundGroupId
+                  ).length === 0 && (
+                    <tfoot>
+                      <tr>
+                        <td colSpan="5">
+                          <div className="flex gap-4 my-[16px] justify-center w-full">
+                            <Button
+                              className="text-[#1244A2] font-semibold"
+                              onClick={() => handleDeleteTable(tableIndex)}
+                            >
+                              Delete Table
+                            </Button>
+                            {formatType === "MenSingles" ||
+                            formatType === "WomenSingles" ? (
+                              <Button
+                                className="bg-[#C6C61A] text-[#1244A2] font-semibold border-[#C6C61A]"
+                                onClick={() => handleAddRow(table.roundGroupId)}
+                              >
+                                Add Team
+                              </Button>
+                            ) : (
+                              <Button
+                                className="bg-[#C6C61A] text-[#1244A2] font-semibold border-[#C6C61A]"
+                                onClick={() =>
+                                  handleAddRowForDual(table.roundGroupId)
+                                }
+                              >
+                                Add Team
+                              </Button>
+                            )}
 
-                {role === "Manager" && matches.length === 0 && (
-                  <tfoot>
-                    <tr>
-                      <td colSpan="5">
-                        <div className="flex gap-4 my-[16px] justify-center w-full">
-                          <Button
-                            className="text-[#1244A2] font-semibold"
-                            onClick={() => handleDeleteTable(tableIndex)}
-                          >
-                            Delete Table
-                          </Button>
-                          <Button
-                            className="bg-[#C6C61A] text-[#1244A2] font-semibold border-[#C6C61A]"
-                            onClick={() => handleAddRow(table.roundGroupId)}
-                          >
-                            Add Team
-                          </Button>
-                          <Button
-                            className="bg-green-200 text-lg mt-4 py-[23px] px-6 text-black"
-                            onClick={() =>
-                              handleCreateMatch(table.roundGroupId)
-                            }
-                          >
-                            Create Match
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tfoot>
-                )}
+                            <Button
+                              className="bg-green-200 text-[#1244A2] font-semibold border-green-200"
+                              onClick={() =>
+                                handleCreateMatch(table.roundGroupId)
+                              }
+                            >
+                              Create Match
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  )}
               </table>
             </div>
           ))}

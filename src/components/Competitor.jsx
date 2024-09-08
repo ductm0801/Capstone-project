@@ -10,7 +10,7 @@ import ListRegistration from "./ListRegistration";
 const Competitor = () => {
   const [competitors, setCompetitor] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
-  const URL = "http://localhost:5000/api/athletes/campaign";
+  const URL = "https://apis-pickleball.somee.com/api/athletes/campaign";
   const jwtToken = localStorage.getItem("token");
 
   const { id } = useParams();

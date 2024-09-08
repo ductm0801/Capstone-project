@@ -11,7 +11,7 @@ const ClubRegister = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/user-registration/paging",
+        "https://apis-pickleball.somee.com/api/user-registration/paging",
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -33,7 +33,7 @@ const ClubRegister = () => {
   const handleAction = async (id, action) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/user-registration/${id}`,
+        `https://apis-pickleball.somee.com/api/user-registration/${id}`,
         { status: action },
         {
           headers: {
@@ -64,7 +64,7 @@ const ClubRegister = () => {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/accounts/account/${userId}`,
+        `https://apis-pickleball.somee.com/api/accounts/account/${userId}`,
         { userName: email, password: randomPassword },
         {
           headers: {

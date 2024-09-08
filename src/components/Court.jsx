@@ -6,7 +6,7 @@ import axios from "axios";
 const Court = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [court, setCourt] = useState([]);
-  const URL = "http://localhost:5000/api/courtGroups";
+  const URL = "https://apis-pickleball.somee.com/api/courtGroups";
   const jwtToken = localStorage.getItem("token");
 
   const fetchData = async () => {

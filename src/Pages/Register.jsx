@@ -6,7 +6,7 @@ import axios from "axios";
 
 const Register = () => {
   const [form] = Form.useForm();
-  const URL = "http://localhost:5000/api/user-registration";
+  const URL = "https://apis-pickleball.somee.com/api/user-registration";
 
   const onFinish = async (values) => {
     const params = {

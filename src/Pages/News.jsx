@@ -7,7 +7,7 @@ const News = () => {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [filter, setFilter] = useState("All");
-  const URL = "http://localhost:5000/api/newarticle";
+  const URL = "https://apis-pickleball.somee.com/api/newarticle";
   const navigate = useNavigate();
 
   const fetchData = async () => {

@@ -17,7 +17,7 @@ import Schedule from "../components/Schedule";
 import moment from "moment";
 
 const TournamentDetail = () => {
-  const URL = "http://localhost:5000/api/tournament-campaign";
+  const URL = "https://apis-pickleball.somee.com/api/tournament-campaign";
   const [tournament, setTournament] = useState("");
   const [activeTab, setActiveTab] = useState("Format");
   const [refreshFormatType, setRefreshFormatType] = useState(false);

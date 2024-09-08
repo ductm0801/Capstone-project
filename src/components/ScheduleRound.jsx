@@ -20,7 +20,7 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
   const fetchSet = async (matchId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/accounts/${matchId}`
+        `https://apis-pickleball.somee.com/api/accounts/${matchId}`
       );
       if (response.status === 200) {
         setSet(response.data);
@@ -81,9 +81,7 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
                   {item.matchStatus}
                 </div>
                 <div>
-                  {item.matchStatus === "Completed" ? (
-                    ""
-                  ) : (
+                  {item.matchStatus === "Scheduling" && (
                     <button
                       className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2"
                       onClick={() => handleOpenPopup(item.matchId)}
@@ -102,6 +100,7 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
           handleClose={() => setOpenPopup(false)}
           set={set}
           onSave3={onSave3}
+          onSave4={() => fetchSet()}
         />
       )}
     </div>

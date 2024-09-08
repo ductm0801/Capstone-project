@@ -26,8 +26,10 @@ const Tournament = () => {
   const [totalItemsCount, setTotalItemsCount] = useState(0);
   const [open, setOpen] = useState(false);
 
-  const URL = "http://localhost:5000/api/tournament-campaign/paging";
-  const URL2 = "http://localhost:5000/api/campaign-registration/user";
+  const URL =
+    "https://apis-pickleball.somee.com/api/tournament-campaign/paging";
+  const URL2 =
+    "https://apis-pickleball.somee.com/api/campaign-registration/user";
   const pageSize = 3;
 
   const userRole = localStorage.getItem("role");

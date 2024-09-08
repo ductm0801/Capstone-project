@@ -20,8 +20,9 @@ const FormatType = ({ tournamentId }) => {
     setUserRole(role);
   }, []);
   const { id } = useParams();
-  const URL = "http://localhost:5000/campaign";
-  const URL2 = "http://localhost:5000/api/tournament-registration/user";
+  const URL = "https://apis-pickleball.somee.com/campaign";
+  const URL2 =
+    "https://apis-pickleball.somee.com/api/tournament-registration/user";
   const navigate = useNavigate();
 
   const handleRegister = async (id) => {
@@ -36,15 +37,17 @@ const FormatType = ({ tournamentId }) => {
           },
         }
       );
-
-      message.success("Registration successful!");
+      if (res.status === 200) {
+        message.success("Registration successful!");
+      }
     } catch (error) {
-      console.error("Error:", error);
-      message.error("Failed to register. Please try again.");
+      message.error(
+        error.response?.data || "Failed to register. Please try again."
+      );
     }
   };
 
-  const URL3 = `http://localhost:5000/api/pickleball-match`;
+  const URL3 = `https://apis-pickleball.somee.com/api/pickleball-match`;
   const handleTournamentClick = async (tournament) => {
     setSelectedTournament(tournament);
     try {

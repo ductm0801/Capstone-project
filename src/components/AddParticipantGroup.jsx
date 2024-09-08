@@ -30,8 +30,9 @@ const AddParticipantGroup = ({
   const [errors, setErrors] = useState(errorInit);
   const { firstTeamId, secondTeamId } = state;
   const navigate = useNavigate();
-  const URL = "http://localhost:5000/non-match-teams";
-  const URL2 = "http://localhost:5000/api/pickleball-match/assign-teams";
+  const URL = "https://apis-pickleball.somee.com/non-match-teams";
+  const URL2 =
+    "https://apis-pickleball.somee.com/api/pickleball-match/assign-teams";
 
   const getParticipants = async () => {
     try {

@@ -18,6 +18,7 @@ const Schedule = ({
 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [set, setSet] = useState([]);
+  const [matchId, setMatchId] = useState(null);
   const handleOpenPopup = async (matchId) => {
     setOpenPopup(true);
     fetchSet(matchId);
@@ -25,8 +26,9 @@ const Schedule = ({
 
   const fetchSet = async (matchId) => {
     try {
+      setMatchId(matchId);
       const response = await axios.get(
-        `http://localhost:5000/api/accounts/${matchId}`
+        `https://apis-pickleball.somee.com/api/accounts/${matchId}`
       );
       if (response.status === 200) {
         setSet(response.data);
@@ -38,6 +40,7 @@ const Schedule = ({
       console.error("Error fetching set:", error);
     }
   };
+
   return (
     <div className="bg-[#EFEFEF] pt-[48px] pb-[48px]">
       <h1 className="text-3xl font-semibold ml-[112px] mb-[48px]">
@@ -87,9 +90,7 @@ const Schedule = ({
                   {item.matchStatus}
                 </div>
                 <div>
-                  {isCompleted ? (
-                    ""
-                  ) : (
+                  {item.matchStatus === "Scheduling" && (
                     <button
                       className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2"
                       onClick={() => handleOpenPopup(item.matchId)}
@@ -110,6 +111,7 @@ const Schedule = ({
           onSave={onSave}
           onSave2={onSave2}
           onSave3={onSave3}
+          onSave4={() => fetchSet(matchId)}
         />
       )}
     </div>

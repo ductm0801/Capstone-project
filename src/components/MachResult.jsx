@@ -9,6 +9,7 @@ const MatchResult = ({
   onSave,
   onSave2,
   onSave3,
+  onSave4,
 }) => {
   const showHideClassName = openPopup
     ? "popup display-block"
@@ -23,7 +24,7 @@ const MatchResult = ({
       };
 
       const res = await axios.put(
-        `http://localhost:5000/api/accounts/${setId}`,
+        `https://apis-pickleball.somee.com/api/accounts/${setId}`,
         payload,
         {
           headers: {
@@ -34,6 +35,7 @@ const MatchResult = ({
       message.success("Match result updated successfully!");
       onSave();
       onSave2();
+      onSave4();
       handleClose();
       console.log(`Set ${setId} updated successfully`, res.data);
     } catch (error) {
@@ -65,42 +67,44 @@ const MatchResult = ({
           &times;
         </button>
         <h1 className="text-3xl font-semibold">Match Result</h1>
-        <Form form={form} initialValues={initialValues}>
-          {set &&
-            set.length > 0 &&
-            set.map((s, index) => (
-              <div key={index}>
-                <div className="text-lg text-[#C6C61A] font-semibold my-[16px]">
-                  Set {index + 1}
-                </div>
-                <div className="flex gap-8 justify-center">
-                  <Form.Item
-                    name={`firstTeamScore_${s.setId}`}
-                    label={<b>{s.firstTeamName}</b>}
-                    labelCol={{ span: 24 }}
-                  >
-                    <Input type="number" placeholder="Score" />
+        <div className="h-[500px] overflow-y-auto">
+          <Form form={form} initialValues={initialValues}>
+            {set &&
+              set.length > 0 &&
+              set.map((s, index) => (
+                <div key={index}>
+                  <div className="text-lg text-[#C6C61A] font-semibold my-[16px]">
+                    Set {index + 1}
+                  </div>
+                  <div className="flex gap-8 justify-center">
+                    <Form.Item
+                      name={`firstTeamScore_${s.setId}`}
+                      label={<b>{s.firstTeamName}</b>}
+                      labelCol={{ span: 24 }}
+                    >
+                      <Input type="number" placeholder="Score" />
+                    </Form.Item>
+                    <Form.Item
+                      name={`secondTeamScore_${s.setId}`}
+                      label={<b>{s.secondTeamName}</b>}
+                      labelCol={{ span: 24 }}
+                    >
+                      <Input type="number" placeholder="Score" />
+                    </Form.Item>
+                  </div>
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      className="bg-[#C6C61A] px-8"
+                      onClick={() => handleSave(s.setId)}
+                    >
+                      Save
+                    </Button>
                   </Form.Item>
-                  <Form.Item
-                    name={`secondTeamScore_${s.setId}`}
-                    label={<b>{s.secondTeamName}</b>}
-                    labelCol={{ span: 24 }}
-                  >
-                    <Input type="number" placeholder="Score" />
-                  </Form.Item>
                 </div>
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    className="bg-[#C6C61A] px-8"
-                    onClick={() => handleSave(s.setId)}
-                  >
-                    Save
-                  </Button>
-                </Form.Item>
-              </div>
-            ))}
-        </Form>
+              ))}
+          </Form>
+        </div>
       </section>
     </div>
   );

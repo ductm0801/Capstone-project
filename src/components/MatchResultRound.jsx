@@ -9,6 +9,7 @@ const MatchResultRound = ({
   onSave,
   onSave2,
   onSave3,
+  onSave4,
 }) => {
   const showHideClassName = openPopup
     ? "popup display-block"
@@ -23,7 +24,7 @@ const MatchResultRound = ({
       };
 
       const res = await axios.put(
-        `http://localhost:5000/api/accounts/${setId}`,
+        `https://apis-pickleball.somee.com/api/accounts/${setId}`,
         payload,
         {
           headers: {
@@ -33,6 +34,7 @@ const MatchResultRound = ({
       );
       message.success("Match result updated successfully!");
       onSave3();
+      onSave4();
       handleClose();
       console.log(`Set ${setId} updated successfully`, res.data);
     } catch (error) {

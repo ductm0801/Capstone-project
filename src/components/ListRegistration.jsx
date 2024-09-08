@@ -1,5 +1,8 @@
-const ListRegistration = ({ openPopup, handleClose, competitors }) => {
-  console.log(competitors);
+import { Empty } from "antd";
+import { useState } from "react";
+
+const ListRegistration = ({ openPopup, handleClose }) => {
+  const [competitors, setCompetitors] = useState([]);
   const showHideClassName = openPopup
     ? "popup display-block"
     : "popup display-none";
@@ -13,11 +16,17 @@ const ListRegistration = ({ openPopup, handleClose, competitors }) => {
         >
           &times;
         </button>
-        <ul>
-          {competitors.map((competitor) => (
-            <li key={competitor.id}>{competitor.fullName}</li>
-          ))}
-        </ul>
+        {competitors.length > 0 ? (
+          <ul>
+            {competitors.map((competitor) => (
+              <li key={competitor.id}>{competitor.fullName}</li>
+            ))}
+          </ul>
+        ) : (
+          <div className="mt-8">
+            <Empty />
+          </div>
+        )}
       </section>
     </div>
   );

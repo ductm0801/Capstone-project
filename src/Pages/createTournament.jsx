@@ -10,9 +10,9 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 const CreateTournament = () => {
-  const URL = "http://localhost:5000/api/tournament-campaign";
-  const courtURL = "http://localhost:5000/api/courtGroups";
-  const uploadURL = "http://localhost:5000/api/image/upload";
+  const URL = "https://apis-pickleball.somee.com/api/tournament-campaign";
+  const courtURL = "https://apis-pickleball.somee.com/api/courtGroups";
+  const uploadURL = "https://apis-pickleball.somee.com/api/image/upload";
   const navigate = useNavigate();
 
   const [courts, setCourts] = useState([]);

@@ -12,7 +12,7 @@ const ManageUser = () => {
   const [showUpdate, setShowUpdate] = useState(false);
   const [user, setUser] = useState({});
 
-  const URL = "http://localhost:5000/api/users";
+  const URL = "https://apis-pickleball.somee.com/api/users";
 
   const getUsers = async () => {
     try {
@@ -121,11 +121,11 @@ const ManageUser = () => {
                   {user.phoneNumber}
                 </td>
                 <td className="border border-slate-300 text-center pl-[20px] h-[48px]">
-                {user.rank}
+                  {user.rank}
                 </td>
-                
+
                 <td className="border border-slate-300 text-center pl-[20px] h-[48px]">
-                {user.gender}
+                  {user.gender}
                 </td>
 
                 <td className="border border-slate-300 pl-[20px] h-[48px]">

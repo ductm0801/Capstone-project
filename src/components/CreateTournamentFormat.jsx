@@ -24,9 +24,9 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const URL = "http://localhost:5000/api/tournament";
-  const URL2 = "http://localhost:5000/api/tournament-campaign";
-  const uploadURL = "http://localhost:5000/api/image/upload";
+  const URL = "https://apis-pickleball.somee.com/api/tournament";
+  const URL2 = "https://apis-pickleball.somee.com/api/tournament-campaign";
+  const uploadURL = "https://apis-pickleball.somee.com/api/image/upload";
   const token = localStorage.getItem("token");
 
   const getTournamentCampaign = async () => {

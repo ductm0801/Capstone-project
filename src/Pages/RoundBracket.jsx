@@ -21,7 +21,7 @@ const RoundBracket = () => {
   const [loading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [lastRound, setLastRound] = useState(false);
-  const URL = `http://localhost:5000/api/pickleball-match/next-rounds-match`;
+  const URL = `https://apis-pickleball.somee.com/api/pickleball-match/next-rounds-match`;
 
   const location = useLocation();
   const { formatType } = location.state || {};
@@ -29,6 +29,8 @@ const RoundBracket = () => {
   // const { data } = location.state || [];
   const { roundId } = location.state || [];
   const { round2Id } = location.state || [];
+
+  console.log(round2Id);
 
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -39,7 +41,7 @@ const RoundBracket = () => {
   const fetchMatches = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/pickleball-match/next-rounds-match/${bracketId}`
+        `https://apis-pickleball.somee.com/api/pickleball-match/next-rounds-match/${bracketId}`
       );
       if (res.status === 200) {
         setData(res.data);
