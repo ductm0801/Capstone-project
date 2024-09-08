@@ -5,7 +5,7 @@ import "../styles/Login.css";
 import logo from "../images/Logo.png";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Input, message } from "antd";
+import { Button, Input, message } from "antd";
 import { jwtDecode } from "jwt-decode";
 const baseURL = "https://apis-pickleball.somee.com/api/accounts/user-login";
 const Login = () => {
@@ -35,50 +35,55 @@ const Login = () => {
       message.error(error.response.data);
     }
   };
-  useEffect(() => {}, []);
-  return (
-    <div className="flex justify-between">
-      <div className="login-content flex gap-48">
-        <div className="loginImage">
-          <img
-            className="bg-cover bg-center relative "
-            src={loginImage}
-            alt="logo"
-          ></img>
-        </div>
-        <div className="flex justify-center">
-          <div className="inputForm items-center justify-center">
-            <div className="loginLogo">
-              <img src={logo} alt="logo"></img>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <p className="w-[320px]">Username</p>
-              <input
-                className="loginInput focus:outline-none"
-                id="username"
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUserName(e.target.value)}
-              ></input>
-              <div className="w-[320px]">Password</div>
-              <Input.Password
-                className="loginInput focus:outline-none"
-                id="password"
-                type="password"
-                placeholder="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
 
-              <div>
-                <button
-                  className="login-btn"
-                  type="submit"
-                  onClick={() => handleSubmit()}
-                >
-                  Login
-                </button>
+  return (
+    <div className="relative">
+      <Link to="/">
+        <Button className="absolute top-2 right-3">Back to Home Page</Button>
+      </Link>
+      <div className="flex justify-between">
+        <div className="login-content flex gap-48">
+          <div className="loginImage">
+            <img
+              className="bg-cover bg-center relative "
+              src={loginImage}
+              alt="logo"
+            ></img>
+          </div>
+          <div className="flex justify-center">
+            <div className="inputForm items-center justify-center">
+              <div className="loginLogo">
+                <img src={logo} alt="logo"></img>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <p className="w-[320px]">Username</p>
+                <input
+                  className="loginInput focus:outline-none"
+                  id="username"
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUserName(e.target.value)}
+                ></input>
+                <div className="w-[320px]">Password</div>
+                <Input.Password
+                  className="loginInput focus:outline-none"
+                  id="password"
+                  type="password"
+                  placeholder="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <div>
+                  <button
+                    className="login-btn"
+                    type="submit"
+                    onClick={() => handleSubmit()}
+                  >
+                    Login
+                  </button>
+                </div>
               </div>
             </div>
           </div>

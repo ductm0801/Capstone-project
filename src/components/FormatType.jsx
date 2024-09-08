@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import defaultImg from "../images/defaultImg.png";
 import CreateTournamentFormat from "./CreateTournamentFormat";
 import { jwtDecode } from "jwt-decode";
-import { Button, message } from "antd";
+import { Button, Empty, message } from "antd";
 
 const FormatType = ({ tournamentId }) => {
   const [tournaments, setTournaments] = useState([]);
@@ -142,7 +142,9 @@ const FormatType = ({ tournamentId }) => {
             </div>
           ))
         ) : (
-          <div>Loading...</div>
+          <div className="flex justify-center w-[80vw]">
+            <Empty />
+          </div>
         )}
       </div>
       {userRole === "Manager" && (

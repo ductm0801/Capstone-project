@@ -7,6 +7,7 @@ import tourch from "../images/torch.png";
 import axios from "axios";
 import MatchResult from "./MachResult";
 import { renderBgColorStatus } from "../utils";
+import { Empty, Pagination } from "antd";
 
 const Schedule = ({
   match,
@@ -15,10 +16,15 @@ const Schedule = ({
   onSave2,
   onSave3,
   isCompleted,
+  pageSize,
+  pageIndex,
+  totalItemsCount,
+  handlePageChange,
 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [set, setSet] = useState([]);
   const [matchId, setMatchId] = useState(null);
+
   const handleOpenPopup = async (matchId) => {
     setOpenPopup(true);
     fetchSet(matchId);
@@ -42,13 +48,12 @@ const Schedule = ({
   };
 
   return (
-    <div className="bg-[#EFEFEF] pt-[48px] pb-[48px]">
+    <div className="pt-[48px] pb-[48px]">
       <h1 className="text-3xl font-semibold ml-[112px] mb-[48px]">
         Match Schedule
       </h1>
       <div className="flex flex-col gap-8">
-        {match &&
-          match.length > 0 &&
+        {match && match.length > 0 ? (
           match.map((item, index) => (
             <div key={index} className="flex flex-col items-center">
               <div className="flex justify-center items-center flex-col">
@@ -101,7 +106,20 @@ const Schedule = ({
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <Empty />
+        )}
+      </div>
+      <div className="flex w-full justify-center">
+        <Pagination
+          current={pageIndex}
+          pageSize={pageSize}
+          total={totalItemsCount}
+          showSizeChanger
+          onChange={handlePageChange}
+          pageSizeOptions={[5, 10, 20, 50]}
+        />
       </div>
       {openPopup && (
         <MatchResult

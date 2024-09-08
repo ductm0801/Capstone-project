@@ -7,11 +7,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import popImg from "../images/signup.png";
 import { Button, Form, Input, message, Select } from "antd";
 
-const SignUp = ({ closePopup, show, onSave }) => {
+const SignUp = ({ closePopup, show, onSave, campaignId }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const { id } = useParams();
-  const baseURL =
-    "https://apis-pickleball.somee.com/api/tournament-registration";
+  const baseURL = `https://apis-pickleball.somee.com/api/campaign-registration/guest/${campaignId}`;
 
   const handleSubmit = async (values) => {
     try {

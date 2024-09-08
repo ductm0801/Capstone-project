@@ -160,7 +160,7 @@ const TournamentDetail = () => {
         <About />
       </div>
 
-      <Register show={register} closePopup={handleClosePopup} />
+      <Register show={register} closePopup={handleClosePopup} campaignId={id} />
     </div>
   );
 };

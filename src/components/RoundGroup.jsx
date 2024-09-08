@@ -1,4 +1,4 @@
-import { Button, Form, Input, message, Popover, Select } from "antd";
+import { Button, Form, Input, message, Popover, Select, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import roundGroupbg from "../images/roundGroupbg.png";
 import "../App.css";
@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Schedule from "./Schedule";
 import { useForm } from "antd/es/form/Form";
+import TournamentCompetitor from "./TournamentCompetitors";
 
 const RoundGroup = () => {
   const [tables, setTables] = useState([]);
@@ -694,14 +695,21 @@ const RoundGroup = () => {
           ))}
         </div>
       </div>
-      <div>
-        <Schedule
-          match={matches}
-          onSave={() => fetchParticipants(roundId)}
-          onSave2={() => fetchMatch(roundId)}
-          roundId={roundId}
-          isCompleted={isCompleted()}
-        />
+      <div className="container mx-auto mt-8">
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="Schedule" key="1">
+            <Schedule
+              match={matches}
+              onSave={() => fetchParticipants(roundId)}
+              onSave2={() => fetchMatch(roundId)}
+              roundId={roundId}
+              isCompleted={isCompleted()}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Competitors" key="2">
+            <TournamentCompetitor />
+          </Tabs.TabPane>
+        </Tabs>
       </div>
     </>
   );

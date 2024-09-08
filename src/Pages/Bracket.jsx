@@ -12,21 +12,26 @@ import UpdateLastRound from "../components/UpdateLastRound";
 import Schedule from "../components/Schedule";
 
 const Bracket = () => {
-  // const [data, setData] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const { bracketId } = useParams();
   const [match, setMatch] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [lastRound, setLastRound] = useState(false);
-  const URL = `https://apis-pickleball.somee.com/api/pickleball-match`;
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
+  const URL = `https://apis-pickleball.somee.com/api/pickleball-match/paging`;
 
   const location = useLocation();
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
   const { data } = location.state || [];
 
-  console.log(formatType);
+  const handlePageChange = (page, pageSize) => {
+    setPageIndex(page);
+    setPageSize(pageSize);
+  };
 
   useEffect(() => {
     const jwtToken = localStorage.getItem("token");
@@ -38,10 +43,16 @@ const Bracket = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${URL}/${bracketId}`);
+      const res = await axios.get(`${URL}/${bracketId}`, {
+        params: {
+          pageIndex: pageIndex - 1,
+          pageSize,
+        },
+      });
       if (res.status === 200) {
         // setData(res.data);
-        setMatch(res.data);
+        setMatch(res.data.items);
+        setTotalItemsCount(res.data.totalItemsCount);
       }
     } catch (error) {
       console.error(error);
@@ -49,8 +60,8 @@ const Bracket = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(pageSize, pageIndex);
+  }, [[pageIndex, pageSize]]);
   const onLastRound = () => {
     setLastRound(true);
   };
@@ -225,7 +236,13 @@ const Bracket = () => {
         )} */}
       </div>
       <div>
-        <Schedule match={match} />
+        <Schedule
+          match={match}
+          handlePageChange={handlePageChange}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          totalItemsCount={totalItemsCount}
+        />
       </div>
     </div>
   );

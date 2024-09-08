@@ -5,18 +5,24 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Empty, Pagination } from "antd";
 import ListRegistration from "./ListRegistration";
-
-const Competitor = () => {
+import ListTournamentRegis from "./ListTournamentRegist";
+const TournamentCompetitor = () => {
   const [competitors, setCompetitor] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
-  const URL = "https://apis-pickleball.somee.com/api/athletes/campaign/paging";
   const jwtToken = localStorage.getItem("token");
 
   const { id } = useParams();
   const role = localStorage.getItem("role");
+  const handlePageChange = (page, pageSize) => {
+    setPageIndex(page);
+    setPageSize(pageSize);
+  };
+
+  const URL =
+    "https://apis-pickleball.somee.com/api/athletes/tournament/paging";
 
   const getListCompetitor = async (id, pageIndex, pageSize) => {
     try {
@@ -40,12 +46,6 @@ const Competitor = () => {
   useEffect(() => {
     getListCompetitor(id, pageIndex, pageSize);
   }, [pageIndex, pageSize]);
-
-  // Handler for page change
-  const handlePageChange = (page, pageSize) => {
-    setPageIndex(page);
-    setPageSize(pageSize);
-  };
 
   return (
     <div>
@@ -94,15 +94,14 @@ const Competitor = () => {
       </div>
 
       {openPopup && (
-        <ListRegistration
+        <ListTournamentRegis
           openPopup={openPopup}
           handleClose={() => setOpenPopup(false)}
           competitors={competitors}
-          campaignId={id}
+          tournamentId={id}
         />
       )}
     </div>
   );
 };
-
-export default Competitor;
+export default TournamentCompetitor;

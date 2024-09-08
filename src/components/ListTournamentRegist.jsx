@@ -2,13 +2,13 @@ import { Empty } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const ListRegistration = ({ openPopup, handleClose, campaignId }) => {
+const ListTournamentRegis = ({ openPopup, handleClose, tournamentId }) => {
   const [competitors, setCompetitors] = useState([]);
   const jwtToken = localStorage.getItem("token");
 
   const fetchData = async () => {
     const res = await axios.get(
-      `https://apis-pickleball.somee.com/api/campaign-registration/campaign/${campaignId}`
+      `https://apis-pickleball.somee.com/api/campaign-registration/campaign/${tournamentId}`
     );
     if (res.status === 200) {
       setCompetitors(res.data.data);
@@ -148,4 +148,4 @@ const ListRegistration = ({ openPopup, handleClose, campaignId }) => {
     </div>
   );
 };
-export default ListRegistration;
+export default ListTournamentRegis;
