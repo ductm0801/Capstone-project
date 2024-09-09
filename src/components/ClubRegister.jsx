@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "../styles/manager.css";
 import axios from "axios";
-import { Button, message } from "antd";
+import { Button, message, Pagination } from "antd";
 import moment from "moment";
 const ClubRegister = () => {
   const [data, setData] = useState([]);
   const jwtToken = localStorage.getItem("token");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -16,10 +18,14 @@ const ClubRegister = () => {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
+          params: {
+            pageIndex: page - 1,
+            pageSize,
+          },
         }
       );
       setData(response.data.items);
-      setTotalPages(response.data.totalPagesCount);
+      setTotalItemsCount(response.data.totalItemsCount);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -28,7 +34,11 @@ const ClubRegister = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page, pageSize]);
+  const handlePageChange = (page, pageSize) => {
+    setPage(page);
+    setPageSize(pageSize);
+  };
 
   const handleAction = async (id, action) => {
     try {
@@ -187,6 +197,16 @@ const ClubRegister = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex w-full justify-end mt-4">
+        <Pagination
+          current={page}
+          pageSize={pageSize}
+          total={totalItemsCount}
+          showSizeChanger
+          onChange={handlePageChange}
+          pageSizeOptions={[5, 10, 20, 50]}
+        />
       </div>
     </div>
   );
