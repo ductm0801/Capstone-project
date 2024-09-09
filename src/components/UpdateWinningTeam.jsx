@@ -27,10 +27,10 @@ const UpdateWinningTeam = ({ match, closePopup, onSave, onSave2 }) => {
     firstMatchWinConditionId,
     secondMatchWinConditionId,
   } = state;
-  const URL3 = "https://apis-pickleball.somee.com/api/win-condition";
+  const URL3 = "http://apis-pickleball.runasp.net/api/win-condition";
   const URL2 =
-    "https://apis-pickleball.somee.com/api/pickleball-match/next-match";
-  const URL = `https://apis-pickleball.somee.com/api/pickleball-match/advanced-match/${match.matchId}`;
+    "http://apis-pickleball.runasp.net/api/pickleball-match/next-match";
+  const URL = `http://apis-pickleball.runasp.net/api/pickleball-match/advanced-match/${match.matchId}`;
 
   const getOptions = (participants) =>
     participants.map((participant) => ({

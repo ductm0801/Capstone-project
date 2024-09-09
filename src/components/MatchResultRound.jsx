@@ -24,7 +24,7 @@ const MatchResultRound = ({
       };
 
       const res = await axios.put(
-        `https://apis-pickleball.somee.com/api/accounts/${setId}`,
+        `http://apis-pickleball.runasp.net/api/accounts/${setId}`,
         payload,
         {
           headers: {

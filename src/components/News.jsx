@@ -14,8 +14,8 @@ const News = () => {
   const [form] = Form.useForm();
   const detail = useRef({});
   const [imageUrl, setImageUrl] = useState("");
-  const URL = "https://apis-pickleball.somee.com/api/newarticle";
-  const uploadURL = "https://apis-pickleball.somee.com/api/image/upload";
+  const URL = "http://apis-pickleball.runasp.net/api/newarticle";
+  const uploadURL = "http://apis-pickleball.runasp.net/api/image/upload";
 
   const fetchData = async () => {
     try {

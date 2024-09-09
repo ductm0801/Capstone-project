@@ -19,9 +19,9 @@ const UpdateLastRound = ({ match, closePopup, onSave, onSave2 }) => {
   });
 
   const { winningTeamId, winConditionId } = state;
-  const URL3 = "https://apis-pickleball.somee.com/api/win-condition";
+  const URL3 = "http://apis-pickleball.runasp.net/api/win-condition";
   const URL2 =
-    "https://apis-pickleball.somee.com/api/pickleball-match/match-result";
+    "http://apis-pickleball.runasp.net/api/pickleball-match/match-result";
 
   const handleSave = async (e) => {
     e.preventDefault();

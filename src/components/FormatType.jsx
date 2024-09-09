@@ -20,9 +20,9 @@ const FormatType = ({ tournamentId }) => {
     setUserRole(role);
   }, []);
   const { id } = useParams();
-  const URL = "https://apis-pickleball.somee.com/campaign";
+  const URL = "http://apis-pickleball.runasp.net/campaign";
   const URL2 =
-    "https://apis-pickleball.somee.com/api/tournament-registration/user";
+    "http://apis-pickleball.runasp.net/api/tournament-registration/user";
   const navigate = useNavigate();
 
   const handleRegister = async (id) => {
@@ -47,7 +47,7 @@ const FormatType = ({ tournamentId }) => {
     }
   };
 
-  const URL3 = `https://apis-pickleball.somee.com/api/pickleball-match`;
+  const URL3 = `http://apis-pickleball.runasp.net/api/pickleball-match`;
   const handleTournamentClick = async (tournament) => {
     setSelectedTournament(tournament);
     try {

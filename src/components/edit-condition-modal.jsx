@@ -3,7 +3,7 @@ import axios from "axios";
 
 const EditModal = ({ handleClose, show, onSave, data }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
-  const URL = "https://apis-pickleball.somee.com/api/win-condition";
+  const URL = "http://apis-pickleball.runasp.net/api/win-condition";
   const { TextArea } = Input;
   const [form] = Form.useForm();
 

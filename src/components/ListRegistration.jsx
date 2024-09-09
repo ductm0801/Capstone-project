@@ -8,7 +8,7 @@ const ListRegistration = ({ openPopup, handleClose, campaignId }) => {
 
   const fetchData = async () => {
     const res = await axios.get(
-      `https://apis-pickleball.somee.com/api/campaign-registration/campaign/${campaignId}`
+      `http://apis-pickleball.runasp.net/api/campaign-registration/campaign/${campaignId}`
     );
     if (res.status === 200) {
       setCompetitors(res.data.data);
@@ -20,7 +20,7 @@ const ListRegistration = ({ openPopup, handleClose, campaignId }) => {
   const handleAction = async (registId, action) => {
     try {
       await axios.put(
-        `https://apis-pickleball.somee.com/api/tournament-registration/${registId}`,
+        `http://apis-pickleball.runasp.net/api/tournament-registration/${registId}`,
         { status: action },
         {
           headers: {

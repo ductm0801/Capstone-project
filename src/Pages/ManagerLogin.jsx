@@ -18,7 +18,7 @@ export default function ManagerLogin() {
     }
     try {
       const response = await axios.post(
-        "https://apis-pickleball.somee.com/api/accounts/manager-login",
+        "http://apis-pickleball.runasp.net/api/accounts/manager-login",
         {
           username,
           password,

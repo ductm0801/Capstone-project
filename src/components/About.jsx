@@ -84,7 +84,7 @@ const About = () => {
 
   // const fetchAddress = async () => {
   //   try {
-  //     const response = await axios.get(`https://apis-pickleball.somee.com/api/courtGroups`);
+  //     const response = await axios.get(`http://apis-pickleball.runasp.net/api/courtGroups`);
   //     setAddress(response.data);
   //   } catch (error) {
   //     message.error(error.response?.data || "Failed to fetch address");
@@ -114,7 +114,7 @@ const About = () => {
 
     try {
       const response = await axios.post(
-        "https://apis-pickleball.somee.com/api/comment",
+        "http://apis-pickleball.runasp.net/api/comment",
         commentData,
         {
           headers: {
@@ -141,7 +141,7 @@ const About = () => {
 
     try {
       const response = await axios.put(
-        `https://apis-pickleball.somee.com/api/comment/${editCommentId}`,
+        `http://apis-pickleball.runasp.net/api/comment/${editCommentId}`,
         { commentText: editCommentText },
         {
           headers: {
@@ -164,7 +164,7 @@ const About = () => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `https://apis-pickleball.somee.com/api/comment/tournament/${id}`
+        `http://apis-pickleball.runasp.net/api/comment/tournament/${id}`
       );
       setComments(response.data);
     } catch (error) {
@@ -175,7 +175,7 @@ const About = () => {
   const deleteComment = async (commentId) => {
     try {
       const response = await axios.delete(
-        `https://apis-pickleball.somee.com/comment/permanent/${commentId}`,
+        `http://apis-pickleball.runasp.net/comment/permanent/${commentId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,

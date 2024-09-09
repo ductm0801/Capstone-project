@@ -12,7 +12,7 @@ const Competitor = () => {
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
-  const URL = "https://apis-pickleball.somee.com/api/athletes/campaign/paging";
+  const URL = "http://apis-pickleball.runasp.net/api/athletes/campaign/paging";
   const jwtToken = localStorage.getItem("token");
 
   const { id } = useParams();

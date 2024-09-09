@@ -22,7 +22,7 @@ const TournamentCompetitor = () => {
   };
 
   const URL =
-    "https://apis-pickleball.somee.com/api/athletes/tournament/paging";
+    "http://apis-pickleball.runasp.net/api/athletes/tournament/paging";
 
   const getListCompetitor = async (id, pageIndex, pageSize) => {
     try {

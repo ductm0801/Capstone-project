@@ -29,9 +29,9 @@ const AddParticipant = ({
   const [errors, setErrors] = useState(errorInit);
   const { firstAthleteId, secondAthleteId } = state;
   const navigate = useNavigate();
-  const URL = "https://apis-pickleball.somee.com/api/athletes/non-teams";
+  const URL = "http://apis-pickleball.runasp.net/api/athletes/non-teams";
   const URL2 =
-    "https://apis-pickleball.somee.com/api/pickleball-match/assign-single-team";
+    "http://apis-pickleball.runasp.net/api/pickleball-match/assign-single-team";
 
   const getParticipants = async () => {
     try {

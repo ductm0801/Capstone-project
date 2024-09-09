@@ -38,9 +38,9 @@ const AddTeam = ({
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const URL = "https://apis-pickleball.somee.com/api/athletes/non-teams";
+  const URL = "http://apis-pickleball.runasp.net/api/athletes/non-teams";
   const URL2 =
-    "https://apis-pickleball.somee.com/api/pickleball-match/assign-double-team";
+    "http://apis-pickleball.runasp.net/api/pickleball-match/assign-double-team";
 
   const getParticipants = async () => {
     try {

@@ -12,7 +12,7 @@ const ManageUser = () => {
   const [showUpdate, setShowUpdate] = useState(false);
   const [user, setUser] = useState({});
 
-  const URL = "https://apis-pickleball.somee.com/api/users";
+  const URL = "http://apis-pickleball.runasp.net/api/users";
 
   const getUsers = async () => {
     try {

@@ -21,7 +21,7 @@ const Bracket = () => {
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
-  const URL = `https://apis-pickleball.somee.com/api/pickleball-match/paging`;
+  const URL = `http://apis-pickleball.runasp.net/api/pickleball-match/paging`;
 
   const location = useLocation();
   const { formatType } = location.state || {};
