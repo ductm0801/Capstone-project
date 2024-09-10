@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import CreateCourt from "./CreateCourt";
 import axios from "axios";
+import CourtCreate from "./CourtCreateModal";
 
 const Court = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [court, setCourt] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [courtId, setCourtId] = useState(null);
   const URL = "http://apis-pickleball.runasp.net/api/courtGroups";
   const jwtToken = localStorage.getItem("token");
 
@@ -22,6 +25,11 @@ const Court = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleClick = (index) => {
+    setCourtId(court[index].id);
+    setOpen(true);
   };
 
   useEffect(() => {
@@ -76,10 +84,7 @@ const Court = () => {
             </thead>
             <tbody>
               {court.map((user, index) => (
-                <tr
-                  key={index}
-                  //   onClick={() => handleUpdateButtonClick(user)}
-                >
+                <tr key={index} onClick={() => handleClick(index)}>
                   <td className="border border-slate-300 pl-[20px] h-[48px]">
                     {user.courtGroupName}
                   </td>
@@ -118,6 +123,13 @@ const Court = () => {
           </table>
         </div>
       </div>
+      {open && (
+        <CourtCreate
+          open={open}
+          handleClose={() => setOpen(false)}
+          courtId={courtId}
+        />
+      )}
     </div>
   );
 };

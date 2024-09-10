@@ -61,7 +61,7 @@ const Bracket = () => {
 
   useEffect(() => {
     fetchData(pageSize, pageIndex);
-  }, [[pageIndex, pageSize]]);
+  }, [pageIndex, pageSize]);
   const onLastRound = () => {
     setLastRound(true);
   };
