@@ -12,7 +12,7 @@ const ManageUser = () => {
   const [showUpdate, setShowUpdate] = useState(false);
   const [user, setUser] = useState({});
 
-  const URL = "http://apis-pickleball.runasp.net/api/users";
+  const URL = "https://nhub.site/api/users";
 
   const getUsers = async () => {
     try {

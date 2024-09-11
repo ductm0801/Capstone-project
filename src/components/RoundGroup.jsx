@@ -11,10 +11,10 @@ import TournamentCompetitor from "./TournamentCompetitors";
 
 const RoundGroup = () => {
   const [tables, setTables] = useState([]);
-  const URL = "http://apis-pickleball.runasp.net/api/round";
-  const URL2 = "http://apis-pickleball.runasp.net/api/round-group";
-  const URL3 = "http://apis-pickleball.runasp.net/single-team";
-  const URL4 = "http://apis-pickleball.runasp.net/api/team-group/ranked-team";
+  const URL = "https://nhub.site/api/round";
+  const URL2 = "https://nhub.site/api/round-group";
+  const URL3 = "https://nhub.site/single-team";
+  const URL4 = "https://nhub.site/api/team-group/ranked-team";
   const { id } = useParams();
   const [roundIds, setRoundIds] = useState([]);
   const [user, setUser] = useState([]);
@@ -51,7 +51,7 @@ const RoundGroup = () => {
   const handleCreateMatch = async (groupId) => {
     try {
       const res = await axios.post(
-        `http://apis-pickleball.runasp.net/api/pickleball-match/${groupId}`,
+        `https://nhub.site/api/pickleball-match/${groupId}`,
         {},
         {
           headers: {
@@ -75,7 +75,7 @@ const RoundGroup = () => {
   const fetchMatch = async (roundId) => {
     try {
       const res = await axios.get(
-        `http://apis-pickleball.runasp.net/api/pickleball-match/round/${roundId}`
+        `https://nhub.site/api/pickleball-match/round/${roundId}`
       );
       setMatches(res.data);
     } catch (e) {
@@ -156,7 +156,7 @@ const RoundGroup = () => {
   const fetchUser = async () => {
     try {
       const response = await axios.get(
-        `http://apis-pickleball.runasp.net/api/athletes/non-teams/${id}`
+        `https://nhub.site/api/athletes/non-teams/${id}`
       );
       if (response.status === 200) {
         setUser(response.data);
@@ -188,7 +188,7 @@ const RoundGroup = () => {
     };
     try {
       const res = await axios.post(
-        "http://apis-pickleball.runasp.net/api/round/next-rounds",
+        "https://nhub.site/api/round/next-rounds",
         params,
         {
           headers: {
@@ -212,7 +212,7 @@ const RoundGroup = () => {
   const fetchPariticipantNextRound = async () => {
     try {
       const res = await axios.get(
-        `http://apis-pickleball.runasp.net/api/team-group/advanced-team/${roundId}`
+        `https://nhub.site/api/team-group/advanced-team/${roundId}`
       );
       if (res.status === 200) {
         setNumberOfTeams(res.data);
@@ -251,7 +251,7 @@ const RoundGroup = () => {
 
     try {
       const response = await axios.post(
-        `http://apis-pickleball.runasp.net/api/round-group/${roundId}`,
+        `https://nhub.site/api/round-group/${roundId}`,
         queryParams
       );
 
@@ -366,7 +366,7 @@ const RoundGroup = () => {
 
     try {
       const response = await axios.post(
-        `http://apis-pickleball.runasp.net/double-team/${roundGroupId}`,
+        `https://nhub.site/double-team/${roundGroupId}`,
         data,
         {
           headers: {
@@ -398,7 +398,7 @@ const RoundGroup = () => {
   const handleClick = async () => {
     try {
       const res = await axios.get(
-        `http://apis-pickleball.runasp.net/api/pickleball-match/next-rounds-match/${id}`
+        `https://nhub.site/api/pickleball-match/next-rounds-match/${id}`
       );
       if (res.status === 200) {
         navigate(`/roundBracket/${id}`, {

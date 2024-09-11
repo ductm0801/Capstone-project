@@ -8,7 +8,7 @@ import { Button, Form, Input, message, Select } from "antd";
 const FormAddUser = ({ handleClose, show, onSave, loading }) => {
   const [form] = Form.useForm();
   const { id } = useParams();
-  const URL = "http://apis-pickleball.runasp.net/api/users";
+  const URL = "https://nhub.site/api/users";
   const jwtToken = localStorage.getItem("token");
 
   const showHideClassName = show ? "popup display-block" : "popup display-none";

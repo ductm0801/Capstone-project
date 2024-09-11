@@ -5,7 +5,7 @@ import axios from "axios";
 const CreateCourt = ({ handleClose, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
   const [form] = Form.useForm();
-  const URL = "http://apis-pickleball.runasp.net/api/courtGroups";
+  const URL = "https://nhub.site/api/courtGroups";
   const jwtToken = localStorage.getItem("token");
 
   const onFinish = async (values) => {

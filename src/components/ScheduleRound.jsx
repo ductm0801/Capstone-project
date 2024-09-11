@@ -20,7 +20,7 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
   const fetchSet = async (matchId) => {
     try {
       const response = await axios.get(
-        `http://apis-pickleball.runasp.net/api/accounts/${matchId}`
+        `https://nhub.site/api/accounts/${matchId}`
       );
       if (response.status === 200) {
         setSet(response.data);

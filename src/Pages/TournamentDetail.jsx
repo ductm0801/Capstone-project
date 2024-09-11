@@ -17,7 +17,7 @@ import Schedule from "../components/Schedule";
 import moment from "moment";
 
 const TournamentDetail = () => {
-  const URL = "http://apis-pickleball.runasp.net/api/tournament-campaign";
+  const URL = "https://nhub.site/api/tournament-campaign";
   const [tournament, setTournament] = useState("");
   const [activeTab, setActiveTab] = useState("Format");
   const [refreshFormatType, setRefreshFormatType] = useState(false);

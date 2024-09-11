@@ -7,7 +7,7 @@ const News = () => {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [filter, setFilter] = useState("All");
-  const URL = "http://apis-pickleball.runasp.net/api/newarticle";
+  const URL = "https://nhub.site/api/newarticle";
   const navigate = useNavigate();
 
   const fetchData = async () => {
