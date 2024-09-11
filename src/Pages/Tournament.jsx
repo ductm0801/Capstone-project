@@ -26,10 +26,8 @@ const Tournament = () => {
   const [totalItemsCount, setTotalItemsCount] = useState(0);
   const [open, setOpen] = useState(false);
 
-  const URL =
-    "http://apis-pickleball.runasp.net/api/tournament-campaign/paging";
-  const URL2 =
-    "http://apis-pickleball.runasp.net/api/campaign-registration/user";
+  const URL = "https://nhub.site/api/tournament-campaign/paging";
+  const URL2 = "https://nhub.site/api/campaign-registration/user";
   const pageSize = 3;
 
   const userRole = localStorage.getItem("role");

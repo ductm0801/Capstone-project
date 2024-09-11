@@ -3,7 +3,7 @@ import axios from "axios";
 
 const CreateModal = ({ handleClose, show, onSave }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
-  const URL = "http://apis-pickleball.runasp.net/api/win-condition";
+  const URL = "https://nhub.site/api/win-condition";
   const { TextArea } = Input;
   const [form] = Form.useForm();
 

@@ -21,8 +21,7 @@ const TournamentCompetitor = () => {
     setPageSize(pageSize);
   };
 
-  const URL =
-    "http://apis-pickleball.runasp.net/api/athletes/tournament/paging";
+  const URL = "https://nhub.site/api/athletes/tournament/paging";
 
   const getListCompetitor = async (id, pageIndex, pageSize) => {
     try {

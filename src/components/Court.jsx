@@ -9,7 +9,7 @@ const Court = () => {
   const [court, setCourt] = useState([]);
   const [open, setOpen] = useState(false);
   const [courtId, setCourtId] = useState(null);
-  const URL = "http://apis-pickleball.runasp.net/api/courtGroups";
+  const URL = "https://nhub.site/api/courtGroups";
   const jwtToken = localStorage.getItem("token");
 
   const fetchData = async () => {

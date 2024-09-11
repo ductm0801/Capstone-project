@@ -8,7 +8,7 @@ const ListTournamentRegis = ({ openPopup, handleClose, tournamentId }) => {
 
   const fetchData = async () => {
     const res = await axios.get(
-      `http://apis-pickleball.runasp.net/api/campaign-registration/campaign/${tournamentId}`
+      `https://nhub.site/api/campaign-registration/campaign/${tournamentId}`
     );
     if (res.status === 200) {
       setCompetitors(res.data.data);
@@ -20,7 +20,7 @@ const ListTournamentRegis = ({ openPopup, handleClose, tournamentId }) => {
   const handleAction = async (registId, action) => {
     try {
       await axios.put(
-        `http://apis-pickleball.runasp.net/api/tournament-registration/${registId}`,
+        `https://nhub.site/api/tournament-registration/${registId}`,
         { status: action },
         {
           headers: {
