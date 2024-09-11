@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 
 const CourtCreate = ({ open, handleClose, courtId }) => {
@@ -6,10 +6,9 @@ const CourtCreate = ({ open, handleClose, courtId }) => {
   const token = localStorage.getItem("token");
 
   const onFinish = async (values) => {
-    // The values.courts is already in the format [{ courtName: "abc" }, { courtName: "cab" }]
     const courts = values.courts.filter(
       (court) => court.courtName && court.courtName.trim() !== ""
-    ); // Filter out any empty court names
+    );
 
     if (courts.length === 0) {
       console.log("No valid court names to submit.");
@@ -18,17 +17,20 @@ const CourtCreate = ({ open, handleClose, courtId }) => {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/courts/court/${courtId}`,
-        courts, // Send only the valid court names array
+        `http://apis-pickleball.runasp.net/api/courts/court/${courtId}`,
+        courts,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("Response:", res.data); // Handle success
+      if (res.status === 200 || res.status === 201) {
+        handleClose();
+        message.success("Courts created successfully!");
+      }
     } catch (error) {
-      console.error("Error posting data:", error); // Handle error
+      console.error("Error posting data:", error);
     }
   };
 

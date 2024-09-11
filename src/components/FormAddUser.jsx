@@ -124,6 +124,20 @@ const FormAddUser = ({ handleClose, show, onSave, loading }) => {
               ]}
             />
           </Form.Item>
+          <Form.Item
+            name="gender"
+            label={<b>Gender</b>}
+            labelCol={{ span: 24 }}
+            rules={[{ required: true, message: "Please select gender" }]}
+          >
+            <Select
+              placeholder="Please select rank"
+              options={[
+                { value: "Male", label: "Male" },
+                { value: "FeMale", label: "FeMale" },
+              ]}
+            />
+          </Form.Item>
           <Form.Item>
             <Button
               type="primary"
