@@ -261,7 +261,12 @@ const Tournament = () => {
                             - {moment(tournament.endDate).format("DD-MM-YYYY")}{" "}
                             {""}
                           </p>
-                          <p>{tournament.location}</p>
+                          <p>
+                            Registration deadline{" "}
+                            {moment(tournament.registrationExpiredDate).format(
+                              "DD-MM-YYYY"
+                            )}
+                          </p>
                         </div>
                       </Link>
                     </div>
@@ -305,7 +310,12 @@ const Tournament = () => {
                                 {moment(tournament.endDate).format(
                                   "DD-MM-YYYY"
                                 )}{" "}
-                                {""}| {tournament.location}
+                                <p>
+                                  Registration deadline:{" "}
+                                  {moment(
+                                    tournament.registrationExpiredDate
+                                  ).format("DD-MM-YYYY")}
+                                </p>
                               </p>
                             </div>
                           </div>

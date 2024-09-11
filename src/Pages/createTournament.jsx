@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { DatePicker, message, Select, Upload } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import moment from "moment";
 
 const CreateTournament = () => {
   const URL = "https://nhub.site/api/tournament-campaign";
@@ -19,7 +20,7 @@ const CreateTournament = () => {
   const [formData, setFormData] = useState({
     tournamentName: "",
     startDate: "",
-    location: "",
+    courtGroups: "",
     endDate: "",
     description: "",
   });
@@ -76,7 +77,7 @@ const CreateTournament = () => {
 
   const courtOptions = courts.map((court) => ({
     label: court.courtGroupName,
-    value: court.courtGroupName,
+    value: court.id,
   }));
 
   const handleChange = (e) => {
@@ -92,7 +93,7 @@ const CreateTournament = () => {
   const handleSelectChange = (value) => {
     setFormData({
       ...formData,
-      location: value,
+      courtGroups: value,
     });
   };
 
@@ -102,11 +103,10 @@ const CreateTournament = () => {
       [name]: dateString,
     });
   };
-  // console.log(imageSrc);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Ensure dates are valid
     if (new Date(formData.startDate) < new Date()) {
       toast.error("Start date cannot be in the past");
       return;
@@ -119,14 +119,23 @@ const CreateTournament = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const params = {
-        ...formData,
+      const courtGroupsPayload = formData.courtGroups.map((courtGroupId) => ({
+        courtGroupId,
+      }));
+
+      const payload = {
+        tournamentName: formData.tournamentName,
+        startDate: moment(formData.startDate).format("DD-MM-YYYY"),
+        endDate: moment(formData.endDate).format("DD-MM-YYYY"),
+        description: formData.description,
         imageUrl: imageSrc,
+        courtGroups: courtGroupsPayload,
+        registrationExpiredDate: moment(
+          formData.registrationExpiredDate
+        ).format("DD-MM-YYYY"),
       };
 
-      console.log("Submitting form with params:", params);
-
-      const res = await axios.post(URL, params, {
+      const res = await axios.post(URL, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -185,23 +194,24 @@ const CreateTournament = () => {
                 />
               </div>
               <div className="form-group flex flex-col">
-                <label htmlFor="location">
+                <label htmlFor="courtGroups">
                   Location <span className="text-red-500 font-bold">*</span>
                 </label>
                 <Select
-                  id="location"
+                  mode="multiple"
+                  id="courtGroups"
                   name="location"
                   size="large"
                   options={courtOptions}
                   placeholder="Location"
-                  value={formData.location}
+                  value={formData.courtGroups}
                   onChange={handleSelectChange}
                   required
                   className="border border-inherit rounded-lg focus:outline-none"
                 />
               </div>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-3">
               <div>
                 <div className="form-group flex flex-col">
                   <label htmlFor="startDate">
@@ -240,6 +250,33 @@ const CreateTournament = () => {
                     className="border-2 border-inherit rounded-lg p-2 focus:outline-none"
                   />
                 </div>
+              </div>
+              <div className="form-group flex flex-col">
+                <label htmlFor="registrationExpiredDate">
+                  Resgistration Expired Date{" "}
+                  <span className="text-red-500 font-bold">*</span>
+                </label>
+                <DatePicker
+                  format="YYYY-MM-DD"
+                  id="registrationExpiredDate"
+                  name="registrationExpiredDate"
+                  disabledDate={disabledDate}
+                  placeholder="dd/mm/yyyy"
+                  value={
+                    formData.registrationExpiredDate
+                      ? dayjs(formData.registrationExpiredDate)
+                      : null
+                  }
+                  onChange={(date, dateString) =>
+                    handleDateChange(
+                      date,
+                      dateString,
+                      "registrationExpiredDate"
+                    )
+                  }
+                  required
+                  className="border-2 border-inherit rounded-lg p-2 focus:outline-none"
+                />
               </div>
             </div>
           </div>
