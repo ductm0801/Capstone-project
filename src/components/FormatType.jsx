@@ -5,6 +5,7 @@ import defaultImg from "../images/defaultImg.png";
 import CreateTournamentFormat from "./CreateTournamentFormat";
 import { jwtDecode } from "jwt-decode";
 import { Button, Empty, message } from "antd";
+import { FaUser } from "react-icons/fa";
 
 const FormatType = ({ tournamentId }) => {
   const [tournaments, setTournaments] = useState([]);
@@ -108,13 +109,19 @@ const FormatType = ({ tournamentId }) => {
                   className="max-w-[488px] min-h-[366px]"
                   onClick={() => handleTournamentClick(tournament)}
                 />
+
                 <div>
-                  <h1 className="text-3xl font-bold ml-4 group-hover:text-[#C6C61A]">
-                    {tournament.tournamentName}
+                  <h1 className="text-3xl font-bold ml-4 group-hover:text-[#C6C61A] flex items-center gap-2">
+                    {tournament.tournamentName} -{" "}
+                    {tournament.currentParticipants}/
+                    {tournament.requiredAthletesNumber}
+                    <FaUser />
                   </h1>
                   <div className="font-semibold ml-6">
                     {" "}
-                    Type : {tournament.formatType} ,{tournament.tournamentType}
+                    Type : {tournament.formatType} ,{tournament.tournamentType}{" "}
+                    <br />
+                    Number of Sets: {tournament.numberOfSets}
                   </div>
 
                   <div className="ml-4 pb-4">

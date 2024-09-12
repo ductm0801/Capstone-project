@@ -95,9 +95,9 @@ const TournamentDetail = () => {
             </h1>
             <p className="text-white text-gray-400">
               {moment(tournament.startDate).format("DD-MM-YYYY")} -{" "}
-              {moment(tournament.endDate).format("DD-MM-YYYY")} |{" "}
-              {tournament.location}
+              {moment(tournament.endDate).format("DD-MM-YYYY")}
             </p>
+
             {!userRole && (
               <div>
                 <button
