@@ -31,7 +31,9 @@ const CreateTournament = () => {
   const disabledDate = (current) => {
     return current && current < dayjs().endOf("day");
   };
-
+  const disabledDate2 = (current) => {
+    return current && current > dayjs(formData.startDate).endOf("day");
+  };
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -260,8 +262,9 @@ const CreateTournament = () => {
                   format="YYYY-MM-DD"
                   id="registrationExpiredDate"
                   name="registrationExpiredDate"
-                  disabledDate={disabledDate}
+                  disabledDate={disabledDate2}
                   placeholder="dd/mm/yyyy"
+                  disabled={!formData.startDate}
                   value={
                     formData.registrationExpiredDate
                       ? dayjs(formData.registrationExpiredDate)
