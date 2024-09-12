@@ -206,7 +206,6 @@ const CreateTournament = () => {
                   size="large"
                   options={courtOptions}
                   placeholder="Location"
-                  value={formData.courtGroups}
                   onChange={handleSelectChange}
                   required
                   className="border border-inherit rounded-lg focus:outline-none"
