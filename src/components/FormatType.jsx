@@ -21,7 +21,7 @@ const FormatType = ({ tournamentId }) => {
     setUserRole(role);
   }, []);
   const { id } = useParams();
-  const URL = "https://nhub.site/campaign";
+  const URL = "https://nhub.site/api/tournament/campaign";
   const URL2 = "https://nhub.site/api/tournament-registration/user";
   const navigate = useNavigate();
 

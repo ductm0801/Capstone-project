@@ -7,9 +7,10 @@ import AddTeam from "../components/AddTeam";
 import UpdateWinningTeam from "../components/UpdateWinningTeam";
 import tourbg from "../images/tournament-bg.png";
 import { jwtDecode } from "jwt-decode";
-import { message } from "antd";
+import { message, Tabs } from "antd";
 import UpdateLastRound from "../components/UpdateLastRound";
 import Schedule from "../components/Schedule";
+import TournamentCompetitor from "../components/TournamentCompetitors";
 
 const Bracket = () => {
   const [selectedMatch, setSelectedMatch] = useState(null);
@@ -235,7 +236,7 @@ const Bracket = () => {
           />
         )} */}
       </div>
-      <div>
+      {/* <div>
         <Schedule
           match={match}
           handlePageChange={handlePageChange}
@@ -243,6 +244,22 @@ const Bracket = () => {
           pageSize={pageSize}
           totalItemsCount={totalItemsCount}
         />
+      </div> */}
+      <div className="container mx-auto mt-8">
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="Schedule" key="1">
+            <Schedule
+              match={match}
+              handlePageChange={handlePageChange}
+              pageIndex={pageIndex}
+              pageSize={pageSize}
+              totalItemsCount={totalItemsCount}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Competitors" key="2">
+            <TournamentCompetitor tournamentId={bracketId} />
+          </Tabs.TabPane>
+        </Tabs>
       </div>
     </div>
   );

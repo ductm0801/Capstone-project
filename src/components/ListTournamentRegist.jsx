@@ -2,13 +2,23 @@ import { Empty } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const ListTournamentRegis = ({ openPopup, handleClose, tournamentId }) => {
+const ListTournamentRegis = ({
+  openPopup,
+  handleClose,
+  tournamentId,
+  onSave,
+}) => {
   const [competitors, setCompetitors] = useState([]);
   const jwtToken = localStorage.getItem("token");
 
   const fetchData = async () => {
     const res = await axios.get(
-      `https://nhub.site/api/campaign-registration/campaign/${tournamentId}`
+      `https://nhub.site/api/campaign-registration/campaign/${tournamentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      }
     );
     if (res.status === 200) {
       setCompetitors(res.data.data);
@@ -28,7 +38,8 @@ const ListTournamentRegis = ({ openPopup, handleClose, tournamentId }) => {
           },
         }
       );
-      fetchData();
+      onSave();
+      handleClose();
     } catch (error) {
       console.error("Error updating action:", error);
     }

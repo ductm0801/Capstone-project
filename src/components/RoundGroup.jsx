@@ -707,7 +707,7 @@ const RoundGroup = () => {
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Competitors" key="2">
-            <TournamentCompetitor />
+            <TournamentCompetitor tournamentId={id} />
           </Tabs.TabPane>
         </Tabs>
       </div>

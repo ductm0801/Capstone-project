@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Empty, Pagination } from "antd";
 import ListRegistration from "./ListRegistration";
+import ListAthlete from "./ListAthlete";
 
 const Competitor = () => {
   const [competitors, setCompetitor] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
+  const [openPopup2, setOpenPopup2] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
@@ -25,7 +27,7 @@ const Competitor = () => {
           Authorization: `Bearer ${jwtToken}`,
         },
         params: {
-          pageIndex: pageIndex - 1,
+          pageIndex: pageIndex - 1 || 0,
           pageSize,
         },
       });
@@ -50,12 +52,20 @@ const Competitor = () => {
   return (
     <div>
       {role === "Manager" && (
-        <button
-          className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
-          onClick={() => setOpenPopup(true)}
-        >
-          Get List Guest Regist
-        </button>
+        <div className="flex gap-4">
+          <button
+            className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
+            onClick={() => setOpenPopup(true)}
+          >
+            Get List Guest Regist
+          </button>
+          <button
+            className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
+            onClick={() => setOpenPopup2(true)}
+          >
+            Get List Athlete
+          </button>
+        </div>
       )}
       <div className="grid grid-cols-auto-fit sm:grid-cols-auto-fit md:grid-cols-auto-fit lg:grid-cols-auto-fit xl:grid-cols-auto-fit gap-8 justify-items-center justify-center pb-[120px]">
         {competitors && competitors.length > 0 ? (
@@ -97,8 +107,16 @@ const Competitor = () => {
         <ListRegistration
           openPopup={openPopup}
           handleClose={() => setOpenPopup(false)}
-          competitors={competitors}
           campaignId={id}
+          onSave={getListCompetitor}
+        />
+      )}
+      {openPopup2 && (
+        <ListAthlete
+          openPopup={openPopup2}
+          handleClose={() => setOpenPopup2(false)}
+          campaignId={id}
+          onSave={getListCompetitor}
         />
       )}
     </div>

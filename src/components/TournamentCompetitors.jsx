@@ -6,15 +6,17 @@ import { useParams } from "react-router-dom";
 import { Empty, Pagination } from "antd";
 import ListRegistration from "./ListRegistration";
 import ListTournamentRegis from "./ListTournamentRegist";
-const TournamentCompetitor = () => {
+import ListAthlete from "./ListAthlete";
+import ListAthleteTournament from "./ListAltheteTournament";
+const TournamentCompetitor = ({ tournamentId }) => {
   const [competitors, setCompetitor] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
+  const [openPopup2, setOpenPopup2] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
   const jwtToken = localStorage.getItem("token");
 
-  const { id } = useParams();
   const role = localStorage.getItem("role");
   const handlePageChange = (page, pageSize) => {
     setPageIndex(page);
@@ -23,14 +25,14 @@ const TournamentCompetitor = () => {
 
   const URL = "https://nhub.site/api/athletes/tournament/paging";
 
-  const getListCompetitor = async (id, pageIndex, pageSize) => {
+  const getListCompetitor = async (pageIndex, pageSize) => {
     try {
-      const res = await axios.get(`${URL}/${id}`, {
+      const res = await axios.get(`${URL}/${tournamentId}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
         params: {
-          pageIndex: pageIndex - 1,
+          pageIndex: pageIndex - 1 || 0,
           pageSize,
         },
       });
@@ -43,18 +45,26 @@ const TournamentCompetitor = () => {
   };
 
   useEffect(() => {
-    getListCompetitor(id, pageIndex, pageSize);
+    getListCompetitor(pageIndex, pageSize);
   }, [pageIndex, pageSize]);
 
   return (
     <div>
       {role === "Manager" && (
-        <button
-          className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
-          onClick={() => setOpenPopup(true)}
-        >
-          Get List Guest Regist
-        </button>
+        <div>
+          <button
+            className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
+            onClick={() => setOpenPopup(true)}
+          >
+            Get List Guest Regist
+          </button>
+          <button
+            className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
+            onClick={() => setOpenPopup2(true)}
+          >
+            Get List Athlete
+          </button>
+        </div>
       )}
       <div className="grid grid-cols-auto-fit sm:grid-cols-auto-fit md:grid-cols-auto-fit lg:grid-cols-auto-fit xl:grid-cols-auto-fit gap-8 justify-items-center justify-center pb-[120px]">
         {competitors && competitors.length > 0 ? (
@@ -68,7 +78,9 @@ const TournamentCompetitor = () => {
               <div className="card-bg">
                 <div className="name">{competitor.athleteName}</div>
                 <div className="textAndSupportingText">
-                  <div className="text">{competitor.rank || "unknown"}</div>
+                  <div className="text">
+                    Rank {competitor.rank || "unknown"}
+                  </div>
                   <div className="supportingText">
                     {competitor.gender || "unknown"}
                   </div>
@@ -97,7 +109,17 @@ const TournamentCompetitor = () => {
           openPopup={openPopup}
           handleClose={() => setOpenPopup(false)}
           competitors={competitors}
-          tournamentId={id}
+          tournamentId={tournamentId}
+          onSave={getListCompetitor}
+        />
+      )}
+      {openPopup2 && (
+        <ListAthleteTournament
+          openPopup={openPopup2}
+          handleClose={() => setOpenPopup2(false)}
+          competitors={competitors}
+          tournamentId={tournamentId}
+          onSave={getListCompetitor}
         />
       )}
     </div>
