@@ -25,7 +25,12 @@ const DropdownProfile = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `https://nhub.site/api/users/${user.UserId}`
+          `https://nhub.site/api/users/${user.UserId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
         setUserName(response.data.fullName);
       } catch (error) {

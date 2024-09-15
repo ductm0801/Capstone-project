@@ -6,10 +6,12 @@ import CreateTournamentFormat from "./CreateTournamentFormat";
 import { jwtDecode } from "jwt-decode";
 import { Button, Empty, message } from "antd";
 import { FaUser } from "react-icons/fa";
+import TournamentRegist from "./TournamentRegist";
 
 const FormatType = ({ tournamentId }) => {
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournament, setSelectedTournament] = useState(null);
+  const [selectedTournamentId, setSelectedTournamentId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [open, setOpen] = useState(false);
@@ -45,6 +47,11 @@ const FormatType = ({ tournamentId }) => {
         error.response?.data || "Failed to register. Please try again."
       );
     }
+  };
+
+  const handleGuestRegistration = (tournamentId) => {
+    setOpen(true);
+    setSelectedTournamentId(tournamentId);
   };
 
   const URL3 = `https://nhub.site/api/pickleball-match`;
@@ -123,26 +130,29 @@ const FormatType = ({ tournamentId }) => {
                     <br />
                     Number of Sets: {tournament.numberOfSets}
                   </div>
-
-                  <div className="ml-4 pb-4">
-                    {userRole === "Athlete" ? (
-                      <Button
-                        className="bg-violet-500 text-white  mr-4"
-                        onClick={() => handleRegister(tournament.tournamentId)}
-                      >
-                        Register
-                      </Button>
-                    ) : (
-                      !userRole && (
+                  {userRole !== "Manager" && (
+                    <div className="ml-4 pb-4">
+                      {userRole === "Athlete" ? (
                         <Button
                           className="bg-violet-500 text-white  mr-4"
-                          onClick={() => setOpen(true)}
+                          onClick={() =>
+                            handleRegister(tournament.tournamentId)
+                          }
                         >
                           Register
                         </Button>
-                      )
-                    )}
-                  </div>
+                      ) : (
+                        <Button
+                          className="bg-violet-500 text-white  mr-4"
+                          onClick={() =>
+                            handleGuestRegistration(tournament.tournamentId)
+                          }
+                        >
+                          Register
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -163,6 +173,13 @@ const FormatType = ({ tournamentId }) => {
         handleClose={handleClosePopup}
         onSave={getAllTournament}
       ></CreateTournamentFormat>
+      {open && (
+        <TournamentRegist
+          show={open}
+          handleClose={() => setOpen(false)}
+          tournamentId={selectedTournamentId}
+        />
+      )}
     </div>
   );
 };

@@ -31,7 +31,12 @@ const Profile = ({ show, handleClose }) => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `https://nhub.site/api/users/${user.UserId}`
+          `https://nhub.site/api/users/${user.UserId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
         const data = response.data;
         setFormData({
@@ -91,7 +96,12 @@ const Profile = ({ show, handleClose }) => {
     try {
       const res = await axios.put(
         `https://nhub.site/api/users/${user.UserId}`,
-        updatedFormData
+        { updatedFormData },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       if (res.status === 200) {
         toast.success("Profile updated successfully!");
