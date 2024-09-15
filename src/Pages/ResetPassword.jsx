@@ -2,21 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Input } from "antd";
 import { toast } from "react-toastify";
 import { MailOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 const ResetPassword = () => {
   const [form] = Form.useForm();
-  const [countdown, setCountdown] = useState(0); // Countdown state
+  const [countdown, setCountdown] = useState(0);
 
-  const onFinish = (values) => {
-    console.log(values);
-    toast.success("Password reset link sent to your email!");
+  const onFinish = async (values) => {
+    try {
+      const res = await axios.post(
+        "https://nhub.site/api/users/reset-password",
+        {
+          email: values.mail,
+        }
+      );
 
-    // Start 60-second countdown after a successful API response
-    setCountdown(60);
-    form.resetFields();
+      if (res.status === 200) {
+        toast.success(
+          res.data?.message || "Password reset link sent to your email!"
+        );
+        setCountdown(60);
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to send password reset email."
+      );
+      console.error(error);
+    }
   };
 
-  // Countdown effect
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => {
