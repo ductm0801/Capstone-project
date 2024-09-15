@@ -30,6 +30,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import RoundGroup from "./components/RoundGroup";
 import Register from "./Pages/Register";
 import RoundBracket from "./Pages/RoundBracket";
+import ResetPassword from "./Pages/ResetPassword";
 
 const App = () => {
   return (
@@ -49,7 +50,8 @@ const ConditionalLayout = () => {
   const showHeaderFooter =
     location.pathname !== "/login" &&
     location.pathname !== "/manager" &&
-    location.pathname !== "/managerlogin";
+    location.pathname !== "/managerlogin" &&
+    location.pathname !== "/resetPassword";
 
   return (
     <>
@@ -86,6 +88,7 @@ const ConditionalLayout = () => {
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/managerlogin" element={<ManagerLogin />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       {showHeaderFooter && <Footer />}
