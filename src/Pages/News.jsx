@@ -80,10 +80,10 @@ const News = () => {
               <div className="border bg-[#EFF8FF] text-blue-500 mx-2 text-center rounded-lg w-[80px] font-semibold">
                 {newz.newsType === 1 ? "News" : "Game Play"}
               </div>
-              <h1 className="font-bold text-gray-600 text-[36px] mt-4 max-w-[800px]">
+              <h1 className="font-bold text-gray-600 text-[36px] mt-4 max-w-[900px]">
                 {newz.newsTitle}
               </h1>
-              <div className="text-[20px] text-[#344054] mt-4 max-w-[800px]">
+              <div className="text-[20px] text-[#344054] mt-2 max-w-[800px]">
                 {newz.subTitle}
               </div>
             </div>
