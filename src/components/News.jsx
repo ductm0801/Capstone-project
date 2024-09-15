@@ -39,6 +39,7 @@ const News = () => {
   const onFinish = async (values) => {
     const data = {
       newsTitle: values.newsTitle,
+      subTitle: values.subTitle,
       newsContent: values.newsContent,
       newsType: parseInt(values.newsType),
       newsArticleStatus: true,
@@ -61,6 +62,7 @@ const News = () => {
   const onFinishEdit = async (values) => {
     const data = {
       newsTitle: values.newsTitle,
+      subTitle: values.subTitle,
       newsContent: values.newsContent,
       newsType: parseInt(values.newsType),
       newsArticleStatus: true,
@@ -68,7 +70,7 @@ const News = () => {
     };
     try {
       const res = await axios.put(`${URL}/${detail.current.id}`, data);
-      if (res.status === 204) {
+      if (res.status === 200) {
         toast.success("News edited successfully!");
         form.resetFields();
         fetchData();
