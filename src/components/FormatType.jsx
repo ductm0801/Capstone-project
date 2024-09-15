@@ -111,7 +111,7 @@ const FormatType = ({ tournamentId }) => {
                 />
 
                 <div>
-                  <h1 className="text-3xl font-bold ml-4 group-hover:text-[#C6C61A] flex items-center gap-2">
+                  <h1 className="text-3xl font-bold ml-4 group-hover:text-[#C6C61A] flex items-center gap-2 ">
                     {tournament.tournamentName} -{" "}
                     {tournament.currentParticipants}/
                     {tournament.requiredAthletesNumber}

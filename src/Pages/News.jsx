@@ -84,7 +84,7 @@ const News = () => {
                 {newz.newsTitle}
               </h1>
               <div className="text-[20px] text-[#344054] mt-4 max-w-[800px]">
-                {newz.newsSubtitle}
+                {newz.subTitle}
               </div>
             </div>
           </div>

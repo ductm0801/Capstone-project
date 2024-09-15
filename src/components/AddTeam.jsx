@@ -65,7 +65,11 @@ const AddTeam = ({
 
   const assignTeam = async (data) => {
     try {
-      const res = await axios.put(`${URL2}/${match.matchId}`, data);
+      const res = await axios.put(`${URL2}/${match.matchId}`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       if (res.status === 200 || res.status === 201) {
         toast.success("Teams assigned successfully");
         onSave();

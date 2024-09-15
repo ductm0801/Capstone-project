@@ -3,25 +3,31 @@ import axios from "axios";
 import "../styles/header.css";
 import defaultImg from "../images/competitor-img.png";
 import UserContext from "../context/UserContext";
-import { CgSoftwareUpload } from "react-icons/cg";
+import { Button, Upload, message } from "antd";
+import {
+  LoadingOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { toast } from "react-toastify";
-import { message } from "antd";
 
 const Profile = ({ show, handleClose }) => {
   const { user, setUser } = useContext(UserContext);
-  const [imageSrc, setImageSrc] = useState(defaultImg);
+  const [imageSrc, setImageSrc] = useState("");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     dateOfBirth: "",
     email: "",
     phoneNumber: "",
-    address: "", // Changed password to address
-    gender: "male", // Added gender field
+    address: "",
+    gender: "male",
+    imageUrl: imageSrc, // This will be updated when the image is uploaded
   });
+
   const showHideClassName = show ? "popup display-block" : "popup display-none";
 
   useEffect(() => {
-    // Fetch user data from API
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
@@ -35,52 +41,66 @@ const Profile = ({ show, handleClose }) => {
           phoneNumber: data.phoneNumber || "",
           address: data.address || "",
           gender: data.gender || "male",
+          imageUrl: data.imageUrl || defaultImg, // If no image URL, use the default image
         });
-        setImageSrc(
-          data.image ? `data:image/png;base64,${data.image}` : defaultImg
-        );
+        setImageSrc(data.imageUrl || defaultImg); // Initialize the imageSrc with the user's current image
       } catch (error) {
         message.error(error.response.data);
       }
     };
 
     fetchUserData();
-  }, [user.id]);
+  }, [user.UserId]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const uploadURL = "https://nhub.site/api/image/upload";
 
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64String = event.target.result.split(",")[1];
-        setFormData({
-          ...formData,
-          image: base64String,
-        });
-        setImageSrc(event.target.result);
-      };
-      reader.readAsDataURL(e.target.files[0]);
+  // Function to handle image upload
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await axios.post(uploadURL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (res.status === 200) {
+        setImageSrc(res.data.url); // Set the new image URL to imageSrc
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          imageUrl: res.data.url, // Update the imageUrl in formData
+        }));
+        message.success("Image uploaded successfully!");
+        return res.data.url;
+      }
+    } catch (error) {
+      message.error("Image upload failed.");
     }
+    return null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Update imageUrl in formData with the latest imageSrc
+    const updatedFormData = {
+      ...formData,
+      imageUrl: imageSrc, // Ensure imageUrl is the latest uploaded image
+    };
+
     try {
       const res = await axios.put(
         `https://nhub.site/api/users/${user.UserId}`,
-        formData
+        updatedFormData
       );
-      if (res.status === 204) {
+      if (res.status === 200) {
         toast.success("Profile updated successfully!");
-        setUser({ ...user, ...formData });
+        setUser({ ...user, ...updatedFormData });
         handleClose();
       }
     } catch (error) {
       console.error("Error updating user data:", error);
+      toast.error("Failed to update profile");
     }
   };
 
@@ -91,23 +111,26 @@ const Profile = ({ show, handleClose }) => {
           &times;
         </button>
         <div className="flex">
-          <div className="relative">
-            <img
-              src={imageSrc}
-              className="w-[400px] h-[560px] object-scale-down"
-              alt="Profile Pic"
-            />
-            <input
-              type="file"
+          <div className="flex flex-col gap-4">
+            <img src={imageSrc} width={200} height={200} />
+            <Upload
+              maxCount={1}
               accept="image/*"
-              onChange={handleImageChange}
-              id="image-input"
-              className="hidden"
-            />
-            <label htmlFor="image-input">
-              <CgSoftwareUpload className="text-white text-3xl p-4 w-16 h-16 bg-black bg-opacity-50 rounded-lg absolute top-3 right-5" />
-            </label>
+              customRequest={({ file, onSuccess }) => {
+                uploadImage(file).then((url) => {
+                  if (url) {
+                    onSuccess(url);
+                  }
+                });
+              }}
+              showUploadList={false}
+            >
+              <div>
+                <Button icon={<UploadOutlined />}>Select File</Button>
+              </div>
+            </Upload>
           </div>
+
           <form
             className="ml-[64px] w-[320px] mr-[106px] flex flex-col grow-1"
             onSubmit={handleSubmit}
@@ -121,7 +144,9 @@ const Profile = ({ show, handleClose }) => {
                 name="fullName"
                 value={formData.fullName || ""}
                 placeholder="Enter your name"
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, fullName: e.target.value })
+                }
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -133,7 +158,9 @@ const Profile = ({ show, handleClose }) => {
                 type="date"
                 name="dateOfBirth"
                 value={formData.dateOfBirth || ""}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, dateOfBirth: e.target.value })
+                }
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -145,7 +172,9 @@ const Profile = ({ show, handleClose }) => {
                 type="email"
                 name="email"
                 value={formData.email || ""}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -157,7 +186,9 @@ const Profile = ({ show, handleClose }) => {
                 type="tel"
                 name="phoneNumber"
                 value={formData.phoneNumber || ""}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, phoneNumber: e.target.value })
+                }
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -169,7 +200,9 @@ const Profile = ({ show, handleClose }) => {
                 type="text"
                 name="address"
                 value={formData.address || ""}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, address: e.target.value })
+                }
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
@@ -180,7 +213,9 @@ const Profile = ({ show, handleClose }) => {
               <select
                 name="gender"
                 value={formData.gender || "male"}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setFormData({ ...formData, gender: e.target.value })
+                }
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option value="male">Male</option>

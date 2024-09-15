@@ -42,16 +42,16 @@ const News = () => {
       newsContent: values.newsContent,
       newsType: parseInt(values.newsType),
       newsArticleStatus: true,
-      imageUrl, // Include image URL if available
+      imageUrl,
     };
 
     try {
       const res = await axios.post(URL, data);
-      if (res.status === 201) {
+      if (res.status === 200) {
         toast.success("News posted successfully!");
-        setCreate(false);
         form.resetFields();
         fetchData();
+        handleClose();
       }
     } catch (error) {
       handleError(error);
@@ -64,15 +64,15 @@ const News = () => {
       newsContent: values.newsContent,
       newsType: parseInt(values.newsType),
       newsArticleStatus: true,
-      imageUrl, // Include image URL if available
+      imageUrl,
     };
     try {
       const res = await axios.put(`${URL}/${detail.current.id}`, data);
       if (res.status === 204) {
         toast.success("News edited successfully!");
-        setEdit(false);
         form.resetFields();
         fetchData();
+        handleCloseEdit();
       }
     } catch (error) {
       handleError(error);
@@ -205,6 +205,18 @@ const News = () => {
               <Input type="text" />
             </Form.Item>
             <Form.Item
+              label={<b>Sub Title</b>}
+              name="subTitle"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input sub title!",
+                },
+              ]}
+            >
+              <Input type="text" />
+            </Form.Item>
+            <Form.Item
               label={<b>News Type</b>}
               name="newsType"
               rules={[
@@ -312,6 +324,18 @@ const News = () => {
                 {
                   required: true,
                   message: "Please input title!",
+                },
+              ]}
+            >
+              <Input type="text" />
+            </Form.Item>
+            <Form.Item
+              label={<b>Sub Title</b>}
+              name="subTitle"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input sub title!",
                 },
               ]}
             >

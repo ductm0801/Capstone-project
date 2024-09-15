@@ -5,20 +5,30 @@ import { FaPlus } from "react-icons/fa6";
 import FormAddUser from "./FormAddUser";
 import axios from "axios";
 import FormEditUser from "./FormEditUser";
+import { Pagination } from "antd";
 
 const ManageUser = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [users, setUsers] = useState([]);
   const [showUpdate, setShowUpdate] = useState(false);
   const [user, setUser] = useState({});
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
 
-  const URL = "https://nhub.site/api/users";
+  const URL = "https://nhub.site/api/users/paged";
 
   const getUsers = async () => {
     try {
-      const res = await axios.get(URL);
+      const res = await axios.get(URL, {
+        params: {
+          pageIndex: pageIndex - 1,
+          pageSize,
+        },
+      });
       if (res.status === 200) {
-        setUsers(res.data);
+        setUsers(res.data.items);
+        setTotalItemsCount(res.data.totalItemsCount);
       }
     } catch (err) {
       console.error(err);
@@ -44,7 +54,12 @@ const ManageUser = () => {
 
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [pageIndex, pageSize]);
+
+  const handlePageChange = (page, pageSize) => {
+    setPageIndex(page);
+    setPageSize(pageSize);
+  };
 
   return (
     <div className="flex flex-col px-[32px]">
@@ -148,6 +163,16 @@ const ManageUser = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex w-full justify-center mt-10">
+        <Pagination
+          current={pageIndex}
+          pageSize={pageSize}
+          total={totalItemsCount}
+          showSizeChanger
+          onChange={handlePageChange}
+          pageSizeOptions={[5, 10, 20, 50]}
+        />
       </div>
     </div>
   );
