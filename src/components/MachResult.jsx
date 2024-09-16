@@ -10,6 +10,7 @@ const MatchResult = ({
   onSave2,
   onSave3,
   onSave4,
+  onSave5,
 }) => {
   const showHideClassName = openPopup
     ? "popup display-block"
@@ -33,10 +34,11 @@ const MatchResult = ({
         }
       );
       message.success("Match result updated successfully!");
+      handleClose();
+      onSave4();
       onSave();
       onSave2();
-      onSave4();
-      handleClose();
+      onSave5();
       console.log(`Set ${setId} updated successfully`, res.data);
     } catch (error) {
       message.error(error.response?.data);

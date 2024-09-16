@@ -8,6 +8,8 @@ import axios from "axios";
 import MatchResult from "./MachResult";
 import { renderBgColorStatus } from "../utils";
 import { Empty, Pagination } from "antd";
+import UpdateDate from "./UpdateDate";
+import UpdateCourt from "./UpdateCourt";
 
 const Schedule = ({
   match,
@@ -15,6 +17,7 @@ const Schedule = ({
   roundId,
   onSave2,
   onSave3,
+  onSave5,
   isCompleted,
   pageSize,
   pageIndex,
@@ -22,12 +25,36 @@ const Schedule = ({
   handlePageChange,
 }) => {
   const [openPopup, setOpenPopup] = useState(false);
+  const [openPopup2, setOpenPopup2] = useState(false);
+  const [openPopup3, setOpenPopup3] = useState(false);
   const [set, setSet] = useState([]);
   const [matchId, setMatchId] = useState(null);
 
   const handleOpenPopup = async (matchId) => {
     setOpenPopup(true);
     fetchSet(matchId);
+  };
+
+  const handleClosePopup = (matchId) => {
+    setOpenPopup(false);
+    fetchSet(matchId);
+  };
+  const handleOpenUpdateDate = (matchId) => {
+    setOpenPopup2(true);
+    setMatchId(matchId);
+  };
+  const handleCloseUpdateDate = () => {
+    setOpenPopup2(false);
+    setMatchId(null);
+  };
+
+  const handleOpenUpdateCourt = (matchId) => {
+    setOpenPopup3(true);
+    setMatchId(matchId);
+  };
+  const handleCloseUpdateCourt = () => {
+    setOpenPopup3(false);
+    setMatchId(null);
   };
 
   const fetchSet = async (matchId) => {
@@ -64,44 +91,61 @@ const Schedule = ({
                   </span>
                 </div>
               </div>
-              <div className="border relative h-[134px] bg-white w-[750px] flex gap-4 items-center justify-between p-4">
-                <div>
-                  <div className="flex flex-col mx-[32px]">
-                    <div className="text-[48px] font-bold text-[#C6C61A]">
-                      {moment(item.matchDate).format("HH")}
-                    </div>
-                    <span className="text-[#1244A2] text-[16px] absolute top-8 left-[105px] font-bold">
-                      {moment(item.matchDate).format("mm")}
-                    </span>
-                    <div>
-                      {moment(item.matchDate).format("dddd, DD/MM/YYYY")}
+              <div className="border relative h-[170px] bg-white w-[750px] flex flex-col gap-4 items-center justify-between p-4">
+                <div className="flex justify-between items-center w-full">
+                  <div>
+                    <div className="flex flex-col mx-[32px]">
+                      <div className="text-[48px] font-bold text-[#C6C61A]">
+                        {moment(item.matchDate).format("HH")}
+                      </div>
+                      <span className="text-[#1244A2] text-[16px] absolute top-8 left-[105px] font-bold">
+                        {moment(item.matchDate).format("mm")}
+                      </span>
+                      <div>
+                        {moment(item.matchDate).format("dddd, DD/MM/YYYY")}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex gap-4 items-center ">
-                  <span className="text-xl flex items-center font-semibold">
-                    {item.firstTeam || "Team 1"} {item.firstTeamScore}
-                  </span>
-                  <span className="text-[#C6C61A] text-lg">VS</span>
-                  <span className="text-xl flex items-center font-semibold">
-                    {item.secondTeam || "Team 2"}
-                  </span>
-                </div>
-                <div
-                  className={` bg-gradient-to-tl  px-3 text-md rounded-lg py-2 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white ${renderBgColorStatus(
-                    item.matchStatus
-                  )}`}
-                >
-                  {item.matchStatus}
+                  <div className="flex gap-4 items-center ">
+                    <span className="text-xl flex items-center font-semibold">
+                      {item.firstTeam || "Team 1"} {item.firstTeamScore}
+                    </span>
+                    <span className="text-[#C6C61A] text-lg">VS</span>
+                    <span className="text-xl flex items-center font-semibold">
+                      {item.secondTeam || "Team 2"}
+                    </span>
+                  </div>
+
+                  <div
+                    className={` bg-gradient-to-tl  px-3 text-md rounded-lg py-2 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white ${renderBgColorStatus(
+                      item.matchStatus
+                    )}`}
+                  >
+                    {item.matchStatus}
+                  </div>
                 </div>
                 <div>
                   {item.matchStatus === "Scheduling" && (
-                    <button
-                      className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2"
-                      onClick={() => handleOpenPopup(item.matchId)}
-                    >
-                      Update
-                    </button>
+                    <div className="flex gap-4">
+                      <button
+                        className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2"
+                        onClick={() => handleOpenPopup(item.matchId)}
+                      >
+                        Update Result
+                      </button>
+                      <button
+                        className="bg-green-300 text-green-700 font-semibold  rounded-full px-2"
+                        onClick={() => handleOpenUpdateDate(item.matchId)}
+                      >
+                        Update Time
+                      </button>
+                      <button
+                        className="bg-violet-300 text-violet-700 font-semibold  rounded-full px-2"
+                        onClick={() => handleOpenUpdateCourt(item.matchId)}
+                      >
+                        Update Court
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -124,12 +168,29 @@ const Schedule = ({
       {openPopup && (
         <MatchResult
           openPopup={openPopup}
-          handleClose={() => setOpenPopup(false)}
+          handleClose={handleClosePopup}
           set={set}
           onSave={onSave}
           onSave2={onSave2}
           onSave3={onSave3}
+          onSave5={onSave5}
           onSave4={() => fetchSet(matchId)}
+        />
+      )}
+      {openPopup2 && (
+        <UpdateDate
+          open={openPopup2}
+          handleClose={handleCloseUpdateDate}
+          matchId={matchId}
+          onSave={onSave5}
+        />
+      )}
+      {openPopup3 && (
+        <UpdateCourt
+          open={openPopup3}
+          handleClose={handleCloseUpdateCourt}
+          matchId={matchId}
+          onSave={onSave}
         />
       )}
     </div>

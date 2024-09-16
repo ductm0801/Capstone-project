@@ -69,7 +69,7 @@ const AddParticipant = ({
       if (res.status === 200 || res.status === 201) {
         toast.success("Participants assigned successfully");
         onSave();
-        onSave2();
+        // onSave2();
         closePopup();
       }
     } catch (error) {

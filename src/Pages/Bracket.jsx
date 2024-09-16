@@ -16,18 +16,20 @@ const Bracket = () => {
   const [selectedMatch, setSelectedMatch] = useState(null);
   const { bracketId } = useParams();
   const [match, setMatch] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [schedule, setSchedule] = useState([]);
   const [lastRound, setLastRound] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
-  const URL = `https://nhub.site/api/pickleball-match/paging`;
+  const URL = `https://nhub.site/api/pickleball-match`;
 
   const location = useLocation();
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
-  const { data } = location.state || [];
+  // const { data } = location.state || [];
 
   const handlePageChange = (page, pageSize) => {
     setPageIndex(page);
@@ -44,15 +46,24 @@ const Bracket = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${URL}/${bracketId}`, {
-        params: {
-          pageIndex: pageIndex - 1,
-          pageSize,
-        },
+      const res = await axios.get(`${URL}/${bracketId}`);
+      if (res.status === 200) {
+        setData(res.data);
+        setMatch(res.data);
+        // setTotalItemsCount(res.data.totalItemsCount);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchSchedule = async () => {
+    try {
+      const res = await axios.get(`${URL}/paging/${bracketId}`, {
+        params: { pageIndex: pageIndex - 1, pageSize },
       });
       if (res.status === 200) {
-        // setData(res.data);
-        setMatch(res.data.items);
+        setSchedule(res.data.items);
         setTotalItemsCount(res.data.totalItemsCount);
       }
     } catch (error) {
@@ -61,8 +72,11 @@ const Bracket = () => {
   };
 
   useEffect(() => {
-    fetchData(pageSize, pageIndex);
-  }, [pageIndex, pageSize]);
+    fetchData();
+  }, []);
+  useEffect(() => {
+    fetchSchedule();
+  }, [pageSize, pageIndex]);
   const onLastRound = () => {
     setLastRound(true);
   };
@@ -104,6 +118,7 @@ const Bracket = () => {
 
   const closePopup = () => {
     setSelectedMatch(null);
+    fetchData();
   };
 
   const paddingLeft = data.length === 63 ? "350px" : "0";
@@ -249,10 +264,11 @@ const Bracket = () => {
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="Schedule" key="1">
             <Schedule
-              match={match}
+              match={schedule}
               handlePageChange={handlePageChange}
               pageIndex={pageIndex}
               pageSize={pageSize}
+              onSave5={fetchSchedule}
               totalItemsCount={totalItemsCount}
             />
           </Tabs.TabPane>

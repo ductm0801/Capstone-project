@@ -19,8 +19,9 @@ const Competitor = () => {
 
   const { id } = useParams();
   const role = localStorage.getItem("role");
+  console.log(id);
 
-  const getListCompetitor = async (id, pageIndex, pageSize) => {
+  const getListCompetitor = async () => {
     try {
       const res = await axios.get(`${URL}/${id}`, {
         headers: {
