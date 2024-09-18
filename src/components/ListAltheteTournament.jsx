@@ -7,6 +7,7 @@ const ListAthleteTournament = ({
   handleClose,
   tournamentId,
   onSave,
+  onSave2,
 }) => {
   const showHideClassName = openPopup
     ? "popup display-block"
@@ -75,6 +76,7 @@ const ListAthleteTournament = ({
       if (res.status === 200) {
         message.success("Successfully added");
         onSave();
+        onSave2();
         handleClose();
       } else {
         console.error("Error adding competitors:", res.data);

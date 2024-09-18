@@ -1,4 +1,13 @@
-import { Button, Form, Input, message, Popover, Select, Tabs } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Popover,
+  Select,
+  Tabs,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import roundGroupbg from "../images/roundGroupbg.png";
 import "../App.css";
@@ -49,23 +58,34 @@ const RoundGroup = () => {
   };
 
   const handleCreateMatch = async (groupId) => {
-    try {
-      const res = await axios.post(
-        `https://nhub.site/api/pickleball-match/${groupId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+    Modal.confirm({
+      title: "Create Match",
+      content: "Are you sure you want to create a new match?",
+      okText: "Yes",
+      cancelText: "No",
+      onOk: async () => {
+        try {
+          const res = await axios.post(
+            `https://nhub.site/api/pickleball-match/${groupId}`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          if (res.status === 200 || res.status === 201) {
+            fetchMatch(roundId);
+            message.success("Match was successfully created");
+          }
+        } catch (e) {
+          message.error(e.response?.data?.message || "Failed to create match");
         }
-      );
-      if (res.status === 200 || res.status === 201) {
-        fetchMatch(roundId);
-        message.success("Match was successfully created");
-      }
-    } catch (e) {
-      message.error(e.response?.data?.message || "Failed to create match");
-    }
+      },
+      onCancel() {
+        message.info("Match creation canceled");
+      },
+    });
   };
 
   const isCompleted = () => {
@@ -651,13 +671,7 @@ const RoundGroup = () => {
                     <tfoot>
                       <tr>
                         <td colSpan="5">
-                          <div className="flex gap-4 my-[16px] justify-center w-full">
-                            <Button
-                              className="text-[#1244A2] font-semibold"
-                              onClick={() => handleDeleteTable(tableIndex)}
-                            >
-                              Delete Table
-                            </Button>
+                          <div className="flex gap-4 my-[16px] justify-between px-4 w-full">
                             {formatType === "MenSingles" ||
                             formatType === "WomenSingles" ? (
                               <Button
@@ -707,7 +721,10 @@ const RoundGroup = () => {
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Competitors" key="2">
-            <TournamentCompetitor tournamentId={id} />
+            <TournamentCompetitor
+              tournamentId={id}
+              onSave={() => fetchUser()}
+            />
           </Tabs.TabPane>
         </Tabs>
       </div>

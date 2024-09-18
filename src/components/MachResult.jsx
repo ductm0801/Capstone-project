@@ -25,7 +25,7 @@ const MatchResult = ({
       };
 
       const res = await axios.put(
-        `https://nhub.site/api/accounts/${setId}`,
+        `https://nhub.site/api/set/${setId}`,
         payload,
         {
           headers: {
@@ -34,11 +34,11 @@ const MatchResult = ({
         }
       );
       message.success("Match result updated successfully!");
-      handleClose();
-      onSave4();
-      onSave();
-      onSave2();
       onSave5();
+      // onSave();
+      onSave4();
+      handleClose();
+      onSave2();
       console.log(`Set ${setId} updated successfully`, res.data);
     } catch (error) {
       message.error(error.response?.data);

@@ -8,7 +8,7 @@ import ListRegistration from "./ListRegistration";
 import ListTournamentRegis from "./ListTournamentRegist";
 import ListAthlete from "./ListAthlete";
 import ListAthleteTournament from "./ListAltheteTournament";
-const TournamentCompetitor = ({ tournamentId }) => {
+const TournamentCompetitor = ({ tournamentId, onSave }) => {
   const [competitors, setCompetitor] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
@@ -120,6 +120,7 @@ const TournamentCompetitor = ({ tournamentId }) => {
           competitors={competitors}
           tournamentId={tournamentId}
           onSave={getListCompetitor}
+          onSave2={onSave}
         />
       )}
     </div>

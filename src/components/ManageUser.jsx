@@ -25,6 +25,9 @@ const ManageUser = () => {
           pageIndex: pageIndex - 1,
           pageSize,
         },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       if (res.status === 200) {
         setUsers(res.data.items);

@@ -12,6 +12,7 @@ import MatchResultRound from "./MatchResultRound";
 const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [set, setSet] = useState([]);
+  const [matchId, setMatchId] = useState(null);
   const handleOpenPopup = async (matchId) => {
     setOpenPopup(true);
     fetchSet(matchId);
@@ -19,6 +20,7 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
 
   const fetchSet = async (matchId) => {
     try {
+      setMatchId(matchId);
       const response = await axios.get(
         `https://nhub.site/api/accounts/${matchId}`
       );
@@ -100,7 +102,7 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
           handleClose={() => setOpenPopup(false)}
           set={set}
           onSave3={onSave3}
-          onSave4={() => fetchSet()}
+          onSave4={() => fetchSet(matchId)}
         />
       )}
     </div>

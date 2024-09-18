@@ -3,9 +3,11 @@ import { Button, Form, Input } from "antd";
 import { toast } from "react-toastify";
 import { MailOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ResetPassword = () => {
   const [form] = Form.useForm();
+  const [success, setSuccess] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
   const onFinish = async (values) => {
@@ -22,6 +24,7 @@ const ResetPassword = () => {
           res.data?.message || "Password reset link sent to your email!"
         );
         setCountdown(60);
+        setSuccess(true);
       }
     } catch (error) {
       toast.error(
@@ -65,6 +68,17 @@ const ResetPassword = () => {
             </div>
           </Form.Item>
         </Form>
+        {success && (
+          <div className="flex flex-col items-center justify-center mt-8">
+            <p>
+              Password reset link has been sent to your email. Please check your
+              inbox for further instructions. {""}
+            </p>
+            <div className="underline text-blue-500">
+              <Link to="/login">Go to Login</Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
