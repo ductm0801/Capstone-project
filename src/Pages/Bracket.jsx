@@ -60,7 +60,10 @@ const Bracket = () => {
   const fetchSchedule = async () => {
     try {
       const res = await axios.get(`${URL}/paging/${bracketId}`, {
-        params: { pageIndex: pageIndex - 1, pageSize },
+        params: {
+          pageIndex: pageIndex ? pageIndex - 1 : 0,
+          pageSize: pageSize || 10,
+        },
       });
       if (res.status === 200) {
         setSchedule(res.data.items);
@@ -208,6 +211,7 @@ const Bracket = () => {
               tournamentId={tournamentId}
               bracketId={bracketId}
               onSave={fetchData}
+              onSave5={fetchSchedule}
               loading={loading}
             />
           )}
@@ -224,6 +228,7 @@ const Bracket = () => {
               tournamentId={tournamentId}
               bracketId={bracketId}
               onSave={fetchData}
+              onSave5={fetchSchedule}
               loading={loading}
             />
           )}
@@ -268,7 +273,7 @@ const Bracket = () => {
               handlePageChange={handlePageChange}
               pageIndex={pageIndex}
               pageSize={pageSize}
-              onSave5={fetchSchedule}
+              fetchEliMatch={fetchData}
               totalItemsCount={totalItemsCount}
             />
           </Tabs.TabPane>

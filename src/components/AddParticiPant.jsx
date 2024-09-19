@@ -23,6 +23,7 @@ const AddParticipant = ({
   onSave,
   bracketId,
   onSave2,
+  onSave5,
 }) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
@@ -68,7 +69,13 @@ const AddParticipant = ({
       });
       if (res.status === 200 || res.status === 201) {
         toast.success("Participants assigned successfully");
-        onSave();
+        // onSave();
+        // onSave5();
+        await Promise.allSettled([
+          typeof onSave === "function" ? onSave() : Promise.resolve(),
+          typeof onSave5 === "function" ? onSave5() : Promise.resolve(),
+          typeof onSave2 === "function" ? onSave2() : Promise.resolve(),
+        ]);
         // onSave2();
         closePopup();
       }

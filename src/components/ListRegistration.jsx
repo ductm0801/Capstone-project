@@ -1,4 +1,4 @@
-import { Empty } from "antd";
+import { Empty, message } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -25,7 +25,7 @@ const ListRegistration = ({ openPopup, handleClose, campaignId, onSave }) => {
   const handleAction = async (registId, action) => {
     try {
       await axios.put(
-        `https://nhub.site/api/tournament-registration/${registId}`,
+        `https://nhub.site/api/campaign-registration/${registId}`,
         { status: action },
         {
           headers: {
@@ -35,6 +35,7 @@ const ListRegistration = ({ openPopup, handleClose, campaignId, onSave }) => {
       );
       onSave();
       handleClose();
+      message.success("Form register approved successful ");
     } catch (error) {
       console.error("Error updating action:", error);
     }

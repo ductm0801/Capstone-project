@@ -25,6 +25,7 @@ const Tournament = () => {
   const [page, setPage] = useState(1);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
   const [open, setOpen] = useState(false);
+  const [tournamentId, setTournamentId] = useState(null);
 
   const URL = "https://nhub.site/api/tournament-campaign/paging";
   const URL2 = "https://nhub.site/api/campaign-registration/user";
@@ -84,6 +85,10 @@ const Tournament = () => {
     setOpen(false);
   };
 
+  const handleGuestRegistration = (tournamentId) => {
+    setOpen(true);
+    setTournamentId(tournamentId);
+  };
   const optionsStatus = [
     "Scheduling",
     "In Progress",
@@ -323,17 +328,20 @@ const Tournament = () => {
                         <div className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-normal">
                           In Progress
                         </div>
-                        {userRole === "Athlete" ? (
+                        {userRole === "Athlete" && (
                           <Button
                             className="bg-violet-500 text-white hover:scale-150 mr-4"
                             onClick={() => handleRegister(tournament.id)}
                           >
                             Register
                           </Button>
-                        ) : (
+                        )}{" "}
+                        {userRole !== "Athlete" && userRole !== "Manager" && (
                           <Button
                             className="bg-violet-500 text-white hover:scale-150 mr-4"
-                            onClick={() => setOpen(true)}
+                            onClick={() =>
+                              handleGuestRegistration(tournament.id)
+                            }
                           >
                             Register
                           </Button>
@@ -353,7 +361,13 @@ const Tournament = () => {
           />
         </div>
       </div>
-      {open && <SignUp show={open} closePopup={handleClose}></SignUp>}
+      {open && (
+        <SignUp
+          show={open}
+          tournamentId={tournamentId}
+          closePopup={handleClose}
+        ></SignUp>
+      )}
     </div>
   );
 };

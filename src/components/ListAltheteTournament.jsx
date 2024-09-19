@@ -73,16 +73,21 @@ const ListAthleteTournament = ({
           },
         }
       );
+
       if (res.status === 200) {
         message.success("Successfully added");
-        onSave();
-        onSave2();
-        handleClose();
+
+        await Promise.allSettled([
+          typeof onSave === "function" ? onSave() : Promise.resolve(),
+          typeof onSave2 === "function" ? onSave2() : Promise.resolve(),
+        ]);
       } else {
         console.error("Error adding competitors:", res.data);
       }
     } catch (error) {
-      message.error(error?.data?.message);
+      message.error(error?.data?.message || "An error occurred");
+    } finally {
+      handleClose();
     }
   };
 

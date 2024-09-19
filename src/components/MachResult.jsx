@@ -11,6 +11,7 @@ const MatchResult = ({
   onSave3,
   onSave4,
   onSave5,
+  fetchEliMatch,
 }) => {
   const showHideClassName = openPopup
     ? "popup display-block"
@@ -33,12 +34,22 @@ const MatchResult = ({
           },
         }
       );
+
       message.success("Match result updated successfully!");
-      onSave5();
+      await Promise.allSettled([
+        typeof onSave === "function" ? onSave() : Promise.resolve(),
+        typeof onSave2 === "function" ? onSave2() : Promise.resolve(),
+        typeof onSave5 === "function" ? onSave5() : Promise.resolve(),
+        typeof onSave4 === "function" ? onSave4() : Promise.resolve(),
+        typeof fetchEliMatch === "function"
+          ? fetchEliMatch()
+          : Promise.resolve(),
+      ]);
       // onSave();
-      onSave4();
-      handleClose();
-      onSave2();
+      // onSave4();
+      // fetchEliMatch();
+      // handleClose();
+      // onSave2();
       console.log(`Set ${setId} updated successfully`, res.data);
     } catch (error) {
       message.error(error.response?.data);

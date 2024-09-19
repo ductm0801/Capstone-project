@@ -60,7 +60,8 @@ const RoundGroup = () => {
   const handleCreateMatch = async (groupId) => {
     Modal.confirm({
       title: "Create Match",
-      content: "Are you sure you want to create a new match?",
+      content:
+        "Are you sure you want to create the match? Once the match is created, no more participants can be added to the bracket",
       okText: "Yes",
       cancelText: "No",
       onOk: async () => {

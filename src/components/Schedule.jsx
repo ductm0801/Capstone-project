@@ -23,6 +23,7 @@ const Schedule = ({
   pageIndex,
   totalItemsCount,
   handlePageChange,
+  fetchEliMatch,
 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
@@ -113,13 +114,17 @@ const Schedule = ({
                       {item.secondTeam || "Team 2"}
                     </span>
                   </div>
-
-                  <div
-                    className={` bg-gradient-to-tl  px-3 text-md rounded-lg py-2 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white ${renderBgColorStatus(
-                      item.matchStatus
-                    )}`}
-                  >
-                    {item.matchStatus}
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={` bg-gradient-to-tl  px-3 text-md rounded-lg py-2 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white ${renderBgColorStatus(
+                        item.matchStatus
+                      )}`}
+                    >
+                      {item.matchStatus}
+                    </div>
+                    <div className="text-lg font-semibold">
+                      Court: {item.court ? item.court : "To be determined"}
+                    </div>
                   </div>
                 </div>
                 <div>
@@ -172,6 +177,7 @@ const Schedule = ({
           onSave2={onSave2}
           onSave3={onSave3}
           onSave5={onSave5}
+          fetchEliMatch={fetchEliMatch}
           onSave4={() => fetchSet(matchId)}
         />
       )}

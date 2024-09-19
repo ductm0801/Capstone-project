@@ -1,35 +1,37 @@
 import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import customMarker from "../images/marker.png";
 
-delete L.Icon.Default.prototype._getIconUrl;
+// Set the container styles for the Google Map
+const containerStyle = {
+  width: "100%",
+  height: "400px",
+};
 
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
-
-const MapComponent = ({ lat, lng, address }) => {
+const MapComponent = ({ lat, lng, apiKey }) => {
+  const center = {
+    lat: lat, // Your latitude
+    lng: lng, // Your longitude
+  };
+  const customIcon = {
+    url: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBojXVm4IkBJ93o_kf4kOGfcLbGIjI1YdY&callback=initMap&v=weekly&libraries=marker",
+  };
   return (
-    <MapContainer
-      center={[lat, lng]}
-      zoom={14}
-      maxZoom={18}
-      style={{ height: "400px", width: "100%" }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <Marker position={[lat, lng]}>
-        <Popup>{address}</Popup>
-      </Marker>
-    </MapContainer>
+    <LoadScript googleMapsApiKey={"AIzaSyBojXVm4IkBJ93o_kf4kOGfcLbGIjI1YdY"}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center} // Set the map's initial center to your lat and lng
+        zoom={14} // Adjust the zoom level as needed
+      >
+        {/* Marker placed at the given lat and lng */}
+        <Marker
+          position={center}
+          options={{
+            icon: customMarker,
+          }}
+        />
+      </GoogleMap>
+    </LoadScript>
   );
 };
 

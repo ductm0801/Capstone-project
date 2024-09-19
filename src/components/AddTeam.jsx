@@ -73,7 +73,7 @@ const AddTeam = ({
       if (res.status === 200 || res.status === 201) {
         toast.success("Teams assigned successfully");
         onSave();
-        onSave2();
+        // onSave2();
         closePopup();
       }
     } catch (error) {

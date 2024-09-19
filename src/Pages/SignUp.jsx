@@ -7,16 +7,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import popImg from "../images/signup.png";
 import { Button, Form, Input, message, Select } from "antd";
 
-const SignUp = ({ closePopup, show, onSave, campaignId }) => {
+const SignUp = ({ closePopup, show, onSave, tournamentId }) => {
   const showHideClassName = show ? "popup display-block" : "popup display-none";
-  const { id } = useParams();
-  const baseURL = `https://nhub.site/api/campaign-registration/guest/${campaignId}`;
+
+  const baseURL = `https://nhub.site/api/campaign-registration/guest/${tournamentId}`;
 
   const handleSubmit = async (values) => {
     try {
       let res = await axios.post(baseURL, {
         ...values,
-        tournamentCampaignId: parseInt(id),
       });
       message.success(
         res.data?.message ||
@@ -40,7 +39,7 @@ const SignUp = ({ closePopup, show, onSave, campaignId }) => {
 
           <div>
             <h2 className="text-3xl text-white font-bold m-8">
-              Tournament Register{" "}
+              Campaign Register{" "}
             </h2>
             <button
               className="text-white top-2 right-3 absolute text-3xl "
