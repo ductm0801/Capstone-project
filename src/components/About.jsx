@@ -34,7 +34,7 @@ const items = (handleEditClick, handleDeleteClick) => [
   },
 ];
 
-const About = () => {
+const About = ({ tournament }) => {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
   const [userRole, setUserRole] = useState(null);
@@ -46,6 +46,8 @@ const About = () => {
   const jwtToken = localStorage.getItem("token");
   const { id } = useParams();
   const [address, setAddress] = useState([]);
+
+  console.log(tournament);
 
   function getRelativeTime(dateString) {
     const date = new Date(dateString);
@@ -160,6 +162,27 @@ const About = () => {
       message.error(error.response?.data || "Failed to update comment");
     }
   };
+  const [courtGroups, setCourtGroups] = useState([]);
+
+  useEffect(() => {
+    const fetchCourtGroups = async () => {
+      try {
+        const responses = await Promise.all(
+          tournament.location.map((location) =>
+            axios.get(
+              `https://nhub.site/api/courtGroups/${location.courtGroupId}`
+            )
+          )
+        );
+
+        setCourtGroups(responses.map((response) => response.data));
+      } catch (error) {
+        console.error("Error fetching court groups:", error);
+      }
+    };
+
+    fetchCourtGroups();
+  }, [tournament.location]);
 
   const fetchComments = async () => {
     try {
@@ -224,12 +247,24 @@ const About = () => {
         <h1 className="flex items-center gap-2 text-4xl text-[#C6C61A] mb-[24px]">
           Address
         </h1>
-        <div className="w-[500px] h-[300px] mb-12">
-          <MapComponent
-            lat={10.811953}
-            lng={106.627433}
-            address="130 Chế Lan Viên, Tây thạnh, Tân phú"
-          />
+        <div className="w-full text-3xl px-3">
+          Location:
+          {courtGroups.map((l) => (
+            <div
+              key={l.courtGroupId}
+              className="flex justify-between w-full px-8"
+            >
+              <div className="px-3">
+                <div>Name: {l.courtGroupName}</div>
+                <div>Address: {l.address}</div>
+                <div>Email: {l.emailContact}</div>
+                <div>Phone: {l.phoneNumber}</div>
+              </div>
+              <div className="w-[600px] h-[600px] mb-12">
+                <MapComponent locations={courtGroups} />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
       <h1>

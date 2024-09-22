@@ -68,7 +68,6 @@ const TournamentDetail = () => {
     try {
       const res = await axios.get(`${URL}/${id}`);
       if (res.status === 200) {
-        console.log("Tournament data:", res.data);
         setTournament(res.data);
       } else {
         console.error("Failed to fetch tournament details", res);
@@ -157,7 +156,7 @@ const TournamentDetail = () => {
         className={`tab-content ${activeTab === "About" ? "active" : ""}`}
         id="About"
       >
-        <About />
+        <About tournament={tournament} />
       </div>
 
       <Register show={register} closePopup={handleClosePopup} campaignId={id} />

@@ -1,37 +1,41 @@
 import React from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import customMarker from "../images/marker.png";
+import GoogleMapReact from "google-map-react";
 
-// Set the container styles for the Google Map
+import customMarker from "../images/marker.png";
+import { FaMapMarkerAlt } from "react-icons/fa";
+
 const containerStyle = {
   width: "100%",
   height: "400px",
 };
 
-const MapComponent = ({ lat, lng, apiKey }) => {
-  const center = {
-    lat: lat, // Your latitude
-    lng: lng, // Your longitude
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
+
+const MapComponent = ({ lat, lng, locations }) => {
+  const defaultProps = {
+    center: {
+      lat: 10.8117367,
+      lng: 106.6248365,
+    },
+    zoom: 13,
   };
-  const customIcon = {
-    url: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBojXVm4IkBJ93o_kf4kOGfcLbGIjI1YdY&callback=initMap&v=weekly&libraries=marker",
-  };
+
   return (
-    <LoadScript googleMapsApiKey={"AIzaSyBojXVm4IkBJ93o_kf4kOGfcLbGIjI1YdY"}>
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center} // Set the map's initial center to your lat and lng
-        zoom={14} // Adjust the zoom level as needed
+    <div style={{ height: "100%", width: "100%" }}>
+      <GoogleMapReact
+        bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_API_KEY }}
+        defaultCenter={defaultProps.center}
+        defaultZoom={defaultProps.zoom}
       >
-        {/* Marker placed at the given lat and lng */}
-        <Marker
-          position={center}
-          options={{
-            icon: customMarker,
-          }}
-        />
-      </GoogleMap>
-    </LoadScript>
+        {locations.map((l) => (
+          <AnyReactComponent
+            lat={l.lat}
+            lng={l.lng}
+            text={<FaMapMarkerAlt color="red" size={"30px"} />}
+          />
+        ))}
+      </GoogleMapReact>
+    </div>
   );
 };
 
