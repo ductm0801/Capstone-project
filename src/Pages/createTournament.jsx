@@ -34,6 +34,9 @@ const CreateTournament = () => {
   const disabledDate2 = (current) => {
     return current && current > dayjs(formData.startDate).endOf("day");
   };
+  const disabledDate3 = (current) => {
+    return current && current < dayjs(formData.startDate).endOf("day");
+  };
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -241,7 +244,8 @@ const CreateTournament = () => {
                     format="YYYY-MM-DD"
                     id="endDate"
                     name="endDate"
-                    disabledDate={disabledDate}
+                    disabledDate={disabledDate3}
+                    disabled={!formData.startDate}
                     placeholder="dd/mm/yyyy"
                     value={formData.endDate ? dayjs(formData.endDate) : null}
                     onChange={(date, dateString) =>

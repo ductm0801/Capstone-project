@@ -48,7 +48,7 @@ const MatchResult = ({
       // onSave();
       // onSave4();
       // fetchEliMatch();
-      // handleClose();
+      handleClose();
       // onSave2();
       console.log(`Set ${setId} updated successfully`, res.data);
     } catch (error) {

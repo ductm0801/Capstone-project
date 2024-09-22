@@ -93,7 +93,7 @@ const ClubRegister = () => {
     <div className="flex flex-col px-[32px]">
       <div className="relative">
         <h1 className="text-2xl text-[#033987] font-bold border-b border-[#C6C61A] mb-[32px] py-6">
-          Tournament Register
+          Club Register
         </h1>
       </div>
       <div className="overflow-hidden rounded-lg border">
@@ -110,7 +110,7 @@ const ClubRegister = () => {
                 Phone
               </th>
               <th className="border border-slate-400 pl-[20px] h-[56px]">
-                Rank
+                Date of birth
               </th>
               <th className="border border-slate-400 pl-[20px] h-[56px]">
                 Address
@@ -146,6 +146,9 @@ const ClubRegister = () => {
                 </td>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
                   {row.gender}
+                </td>
+                <td className="border border-slate-300 pl-[20px] h-[48px]">
+                  {row.status}
                 </td>
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
                   {row.status === "WaitingApprove" && (

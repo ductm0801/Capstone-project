@@ -97,7 +97,7 @@ const TournamentDetail = () => {
               {moment(tournament.endDate).format("DD-MM-YYYY")}
             </p>
 
-            {!userRole && (
+            {/* {!userRole && (
               <div>
                 <button
                   className="text-white bg-[#C6C61A] border-[#C6C61A] mt-[32px] px-12 py-2 rounded-lg text-2xl hover:text-black hover:bg-white hover:border-white "
@@ -106,7 +106,7 @@ const TournamentDetail = () => {
                   Register
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
         <div className="text-white">
@@ -159,7 +159,7 @@ const TournamentDetail = () => {
         <About tournament={tournament} />
       </div>
 
-      <Register show={register} closePopup={handleClosePopup} campaignId={id} />
+      {/* <Register show={register} closePopup={handleClosePopup} campaignId={id} /> */}
     </div>
   );
 };

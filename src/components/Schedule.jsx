@@ -30,6 +30,7 @@ const Schedule = ({
   const [openPopup3, setOpenPopup3] = useState(false);
   const [set, setSet] = useState([]);
   const [matchId, setMatchId] = useState(null);
+  const userRole = localStorage.getItem("role");
 
   const handleOpenPopup = async (matchId) => {
     setOpenPopup(true);
@@ -128,28 +129,29 @@ const Schedule = ({
                   </div>
                 </div>
                 <div>
-                  {item.matchStatus === "Scheduling" && (
-                    <div className="flex gap-4">
-                      <button
-                        className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2"
-                        onClick={() => handleOpenPopup(item.matchId)}
-                      >
-                        Update Result
-                      </button>
-                      <button
-                        className="bg-green-300 text-green-700 font-semibold  rounded-full px-2"
-                        onClick={() => handleOpenUpdateDate(item.matchId)}
-                      >
-                        Update Time
-                      </button>
-                      <button
-                        className="bg-violet-300 text-violet-700 font-semibold  rounded-full px-2"
-                        onClick={() => handleOpenUpdateCourt(item.matchId)}
-                      >
-                        Update Court
-                      </button>
-                    </div>
-                  )}
+                  {item.matchStatus === "Scheduling" &&
+                    userRole === "Manager" && (
+                      <div className="flex gap-4">
+                        <button
+                          className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2"
+                          onClick={() => handleOpenPopup(item.matchId)}
+                        >
+                          Update Result
+                        </button>
+                        <button
+                          className="bg-green-300 text-green-700 font-semibold  rounded-full px-2"
+                          onClick={() => handleOpenUpdateDate(item.matchId)}
+                        >
+                          Update Time
+                        </button>
+                        <button
+                          className="bg-violet-300 text-violet-700 font-semibold  rounded-full px-2"
+                          onClick={() => handleOpenUpdateCourt(item.matchId)}
+                        >
+                          Update Court
+                        </button>
+                      </div>
+                    )}
                 </div>
               </div>
             </div>
