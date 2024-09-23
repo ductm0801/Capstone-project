@@ -157,7 +157,7 @@ const RoundBracket = () => {
             return (
               <ul
                 key={index}
-                className={`bracket bracket-${round} ${
+                className={`bracket bracket-${round - 1} ${
                   +round === Math.max(...rounds) - 1
                     ? "after:[&>*:nth-of-type(odd)]:!h-0"
                     : ""

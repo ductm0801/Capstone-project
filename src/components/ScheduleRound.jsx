@@ -21,9 +21,7 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
   const fetchSet = async (matchId) => {
     try {
       setMatchId(matchId);
-      const response = await axios.get(
-        `https://nhub.site/api/accounts/${matchId}`
-      );
+      const response = await axios.get(`https://nhub.site/api/set/${matchId}`);
       if (response.status === 200) {
         setSet(response.data);
         onSave(roundId);

@@ -24,7 +24,7 @@ const MatchResultRound = ({
       };
 
       const res = await axios.put(
-        `https://nhub.site/api/accounts/${setId}`,
+        `https://nhub.site/api/set/${setId}`,
         payload,
         {
           headers: {
@@ -33,8 +33,14 @@ const MatchResultRound = ({
         }
       );
       message.success("Match result updated successfully!");
-      onSave3();
-      onSave4();
+      await Promise.allSettled([
+        typeof onSave === "function" ? onSave() : Promise.resolve(),
+        typeof onSave3 === "function" ? onSave3() : Promise.resolve(),
+        typeof onSave4 === "function" ? onSave4() : Promise.resolve(),
+        typeof onSave2 === "function" ? onSave2() : Promise.resolve(),
+      ]);
+      // onSave3();
+      // onSave4();
       handleClose();
       console.log(`Set ${setId} updated successfully`, res.data);
     } catch (error) {
