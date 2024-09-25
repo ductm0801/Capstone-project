@@ -29,7 +29,7 @@ const Tournament = () => {
 
   const URL = "https://nhub.site/api/tournament-campaign/paging";
   const URL2 = "https://nhub.site/api/campaign-registration/user";
-  const pageSize = 3;
+  const pageSize = search ? 999 : isGridLayout ? 8 : 3;
 
   const userRole = localStorage.getItem("role");
   const token = localStorage.getItem("token");
@@ -61,7 +61,6 @@ const Tournament = () => {
           pageSize,
         },
       });
-      console.log(response.data);
       if (response.status === 200 && Array.isArray(response.data.items)) {
         setTournaments(response.data.items);
         setTotalItemsCount(response.data.totalItemsCount);
@@ -79,7 +78,7 @@ const Tournament = () => {
 
   useEffect(() => {
     getListTournament(page, pageSize);
-  }, [page]);
+  }, [page, pageSize]);
 
   const handleClose = () => {
     setOpen(false);
@@ -194,7 +193,7 @@ const Tournament = () => {
       <div className="bg-slate-200">
         <div className="flex justify-between">
           <p className="ml-[112px] pt-[40px] mb-[56px]">
-            {Array.isArray(tournaments) ? tournaments.length : 0} Tournaments
+            {Array.isArray(tournaments) ? totalItemsCount : 0} Tournaments
           </p>
           <div className="flex flex-wrap justify-center items-center mr-[112px] pt-[40px] mb-[56px]">
             <div

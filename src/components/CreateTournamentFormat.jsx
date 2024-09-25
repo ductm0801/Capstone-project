@@ -149,6 +149,7 @@ const CreateTournamentFormat = ({ handleClose, show, onSave }) => {
           <Upload
             accept="image/*"
             id="imageUrl"
+            maxCount={1}
             customRequest={({ file, onSuccess }) => {
               uploadImage(file).then((url) => {
                 onSuccess(url);

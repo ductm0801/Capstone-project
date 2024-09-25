@@ -6,14 +6,34 @@ import { Link, useLocation } from "react-router-dom";
 import DropdownProfile from "./DropDownProfile";
 import Avatar from "../images/Avatar.png";
 import UserContext from "../context/UserContext";
+import axios from "axios";
 
 const Header = () => {
   const { setUser } = useContext(UserContext);
   const [userRole, setUserRole] = useState(null);
   const [openProfile, setOpenProfile] = useState(false);
   const [navbar, setNavbar] = useState(false);
+  const [profile, setProfile] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const location = useLocation();
+
+  const fetchUser = async () => {
+    const res = await axios.get(`https://nhub.site/api/users/current-user`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    setProfile(res.data);
+  };
+  console.log(profile);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetchUser();
+    }
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -154,7 +174,7 @@ const Header = () => {
               <img
                 className="h-12 w-12 mr-[112px] rounded-full cursor-pointer"
                 onClick={() => setOpenProfile(!openProfile)}
-                src={Avatar}
+                src={profile?.imageUrl ? profile?.imageUrl : Avatar}
                 alt="Avatar"
               />
               {openProfile && <DropdownProfile />}
@@ -218,7 +238,7 @@ const Header = () => {
               <img
                 className="h-8 w-8 rounded-full cursor-pointer mb-6"
                 onClick={() => setOpenProfile(!openProfile)}
-                src={Avatar}
+                src={profile?.imageUrl ? profile?.imageUrl : Avatar}
                 alt="Avatar"
               />
               {openProfile && <DropdownProfile />}

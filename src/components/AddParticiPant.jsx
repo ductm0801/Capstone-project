@@ -27,6 +27,7 @@ const AddParticipant = ({
 }) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
+  const [selectedParticipants, setSelectedParticipants] = useState([]);
   const [errors, setErrors] = useState(errorInit);
   const { firstAthleteId, secondAthleteId } = state;
   const navigate = useNavigate();
@@ -36,7 +37,6 @@ const AddParticipant = ({
   const getParticipants = async () => {
     try {
       const res = await axios.get(`${URL}/${bracketId}`);
-      const { success, message } = res.data;
       if (res.status === 200) {
         setParticipants(res.data);
       }
@@ -49,15 +49,22 @@ const AddParticipant = ({
     getParticipants();
   }, []);
 
-  const options = participants.map((participant) => ({
-    label: `${participant.athleteName} (${participant.athleteType})`,
-    value: participant.id,
-  }));
+  // Filter out selected participants from the dropdown options
+  const filteredOptions = (excludeId) =>
+    participants
+      .filter(
+        (participant) =>
+          participant.id !== excludeId &&
+          !selectedParticipants.includes(participant.id)
+      )
+      .map((participant) => ({
+        label: `${participant.athleteName} (${participant.athleteType})`,
+        value: participant.id,
+      }));
 
   const handleSave = async (e) => {
     e.preventDefault();
     assignParticipants(state);
-    // navigate(`/bracket/${bracketId}`);
   };
 
   const assignParticipants = async (data) => {
@@ -69,14 +76,11 @@ const AddParticipant = ({
       });
       if (res.status === 200 || res.status === 201) {
         toast.success("Participants assigned successfully");
-        // onSave();
-        // onSave5();
         await Promise.allSettled([
           typeof onSave === "function" ? onSave() : Promise.resolve(),
           typeof onSave5 === "function" ? onSave5() : Promise.resolve(),
           typeof onSave2 === "function" ? onSave2() : Promise.resolve(),
         ]);
-        // onSave2();
         closePopup();
       }
     } catch (error) {
@@ -89,6 +93,9 @@ const AddParticipant = ({
       ...prevState,
       [fieldName]: value,
     }));
+
+    // Add the selected value to the selectedParticipants array
+    setSelectedParticipants((prevSelected) => [...prevSelected, value]);
   };
 
   return (
@@ -116,7 +123,7 @@ const AddParticipant = ({
               showSearch
               placeholder="First Participant"
               optionFilterProp="label"
-              options={options}
+              options={filteredOptions(secondAthleteId)} // Filter out the selected second athlete
               onChange={(value) => handleInputChange(value, "firstAthleteId")}
               className="w-[180px]"
             />
@@ -132,7 +139,7 @@ const AddParticipant = ({
               showSearch
               placeholder="Second Participant"
               optionFilterProp="label"
-              options={options}
+              options={filteredOptions(firstAthleteId)} // Filter out the selected first athlete
               onChange={(value) => handleInputChange(value, "secondAthleteId")}
               className="w-[180px]"
             />

@@ -36,13 +36,11 @@ const AddParticipantGroup = ({
   const getParticipants = async () => {
     try {
       const res = await axios.get(`${URL}/${round2Id}`);
-      const { success, message } = res.data;
       if (res.status === 200) {
         setParticipants(res.data);
       }
     } catch (error) {
-      message.error(error.response.data);
-      console.log("aaa");
+      message.error(error.response?.data || "Failed to load participants");
     }
   };
 
@@ -50,15 +48,17 @@ const AddParticipantGroup = ({
     getParticipants();
   }, []);
 
-  const options = participants.map((participant) => ({
-    label: `${participant.teamName}`,
-    value: participant.teamId,
-  }));
+  const filteredOptions = (excludeId) =>
+    participants
+      .filter((participant) => participant.teamId !== excludeId)
+      .map((participant) => ({
+        label: `${participant.teamName}`,
+        value: participant.teamId,
+      }));
 
   const handleSave = async (e) => {
     e.preventDefault();
     assignParticipants(state);
-    // navigate(`/bracket/${bracketId}`);
   };
 
   const assignParticipants = async (data) => {
@@ -71,11 +71,10 @@ const AddParticipantGroup = ({
       if (res.status === 200 || res.status === 201) {
         toast.success("Participants assigned successfully");
         onSave();
-        // onSave2();
         closePopup();
       }
     } catch (error) {
-      // message.error(error.response?.data);
+      message.error(error.response?.data || "Failed to assign participants");
     }
   };
 
@@ -111,7 +110,7 @@ const AddParticipantGroup = ({
               showSearch
               placeholder="First Team"
               optionFilterProp="label"
-              options={options}
+              options={filteredOptions(secondTeamId)} // Filter options based on second team's selection
               onChange={(value) => handleInputChange(value, "firstTeamId")}
               className="w-[180px]"
             />
@@ -127,7 +126,7 @@ const AddParticipantGroup = ({
               showSearch
               placeholder="Second Team"
               optionFilterProp="label"
-              options={options}
+              options={filteredOptions(firstTeamId)} // Filter options based on first team's selection
               onChange={(value) => handleInputChange(value, "secondTeamId")}
               className="w-[180px]"
             />

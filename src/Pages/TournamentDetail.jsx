@@ -85,7 +85,7 @@ const TournamentDetail = () => {
         <div className="flex">
           <img
             className="w-[120px] h-[120px] rounded-full mt-[32px] ml-[112px] mb-[97px]"
-            src={tournament.img ? tournament.img : defaultImg}
+            src={tournament.imageUrl ? tournament.imageUrl : defaultImg}
             alt={tournament.id}
           />
           <div className="mt-[32px] ml-[24px]">
@@ -143,7 +143,7 @@ const TournamentDetail = () => {
         className={`tab-content ${activeTab === "Format" ? "active" : ""}`}
         id="Format"
       >
-        <FormatType tournamentId={id} refresh={refreshFormatType} />
+        <FormatType tournamentId={id} campaign={tournament} />
       </div>
       <div
         className={`tab-content ${activeTab === "Competitor" ? "active" : ""}`}

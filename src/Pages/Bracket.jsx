@@ -29,7 +29,7 @@ const Bracket = () => {
   const location = useLocation();
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
-  // const { data } = location.state || [];
+  const { campaign } = location.state || {};
 
   const handlePageChange = (page, pageSize) => {
     setPageIndex(page);
@@ -134,7 +134,7 @@ const Bracket = () => {
     >
       <div>
         <div
-          className="tournament-brackets pt-[300px]"
+          className="tournament-brackets pt-[300px] relative"
           style={{
             background: `url(${tourbg})`,
             backgroundRepeat: "no-repeat",
@@ -142,6 +142,23 @@ const Bracket = () => {
             backgroundSize: "cover",
           }}
         >
+          <div className="absolute top-10 left-[50%] -translate-x-[50%] flex gap-4 items-center">
+            <div
+              className="text-3xl font-bold"
+              style={{
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                background:
+                  "linear-gradient(45deg,#E3A835 0%,#FFD79B 15%,#E3A835 36%,#FFD79B 61%,#F3AC42 81%",
+                backgroundClip: "text",
+              }}
+            >
+              {campaign.tournamentName}
+            </div>
+            <div className="text-2xl font-semibold text-white">
+              {formatType}
+            </div>
+          </div>
           {rounds.map((round, index) => {
             let matches = matchesByRound[round];
             const position = index < rounds.length / 2 ? "left" : "right";
@@ -274,6 +291,7 @@ const Bracket = () => {
               pageIndex={pageIndex}
               pageSize={pageSize}
               fetchEliMatch={fetchData}
+              fetchSchedule={fetchSchedule}
               totalItemsCount={totalItemsCount}
             />
           </Tabs.TabPane>

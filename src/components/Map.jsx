@@ -11,13 +11,13 @@ const containerStyle = {
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-const MapComponent = ({ lat, lng, locations }) => {
+const MapComponent = ({ locations }) => {
   const defaultProps = {
     center: {
-      lat: 10.8117367,
-      lng: 106.6248365,
+      lat: 10.811921,
+      lng: 106.627465,
     },
-    zoom: 13,
+    zoom: 15,
   };
 
   return (
@@ -26,11 +26,12 @@ const MapComponent = ({ lat, lng, locations }) => {
         bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_API_KEY }}
         defaultCenter={defaultProps.center}
         defaultZoom={defaultProps.zoom}
+        yesIWantToUseGoogleMapApiInternals
       >
         {locations.map((l) => (
           <AnyReactComponent
-            lat={l.lat}
-            lng={l.lng}
+            lat={l.latitude}
+            lng={l.longitude}
             text={<FaMapMarkerAlt color="red" size={"30px"} />}
           />
         ))}

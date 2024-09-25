@@ -34,6 +34,7 @@ const AddTeam = ({
 }) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
+  const [selectedParticipants, setSelectedParticipants] = useState([]);
   const [errors, setErrors] = useState(errorInit);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -58,7 +59,12 @@ const AddTeam = ({
     // navigate(`/bracket/${bracketId}`);
   }, []);
 
-  const options = participants.map((participant) => ({
+  // Filter out selected participants from options
+  const filteredOptions = participants.filter(
+    (participant) => !selectedParticipants.includes(participant.id)
+  );
+
+  const options = filteredOptions.map((participant) => ({
     label: `${participant.athleteName} (${participant.athleteType})`,
     value: participant.id,
   }));
@@ -94,6 +100,8 @@ const AddTeam = ({
         [key]: value,
       },
     }));
+
+    setSelectedParticipants((prevSelected) => [...prevSelected, value]);
   };
 
   return (

@@ -81,7 +81,7 @@ export const renderColorStatus = (status) => {
       return 'text-green-700';
     case 'reject':
       return 'text-red-700';
-    case 'cancel':
+    case 'Canceled':
       return 'text-red-700';
     case 'updating':
       return 'text-yellow-400';
@@ -107,8 +107,8 @@ export const renderBgColorStatus = (status) => {
       return 'from-orange-600 to-orange-300';
     case 'updating':
       return 'from-slate-600 to-slate-300';
-      case 'cancel':
-      return 'from-slate-600 to-slate-300';
+      case 'Canceled':
+      return 'from-red-600 to-red-300';
     case 'reject':
         return 'from-red-600 to-red-300';
     default:

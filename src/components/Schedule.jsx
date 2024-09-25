@@ -24,12 +24,14 @@ const Schedule = ({
   totalItemsCount,
   handlePageChange,
   fetchEliMatch,
+  fetchSchedule,
 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
   const [openPopup3, setOpenPopup3] = useState(false);
   const [set, setSet] = useState([]);
   const [matchId, setMatchId] = useState(null);
+  const [options, setOptions] = useState(false);
   const userRole = localStorage.getItem("role");
 
   const handleOpenPopup = async (matchId) => {
@@ -91,7 +93,7 @@ const Schedule = ({
                   </span>
                 </div>
               </div>
-              <div className="border relative h-[170px] bg-white w-[750px] flex flex-col gap-4 items-center justify-between p-4">
+              <div className="border relative h-[180px] rounded-lg bg-white w-[1000px] flex flex-col gap-4 items-center justify-between p-4">
                 <div className="flex justify-between items-center w-full">
                   <div>
                     <div className="flex flex-col mx-[32px]">
@@ -104,6 +106,50 @@ const Schedule = ({
                       <div>
                         {moment(item.matchDate).format("dddd, DD/MM/YYYY")}
                       </div>
+                      <div>
+                        {userRole === "Manager" &&
+                          item.matchStatus !== "Completed" &&
+                          item.matchStatus !== "Canceled" && (
+                            <div className="relative">
+                              <button
+                                className="bg-orange-300 text-white font-semibold rounded-full px-6 py-1"
+                                onClick={() => setOptions((prev) => !prev)}
+                              >
+                                Options
+                              </button>
+                              {options && (
+                                <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
+                                  <div className="flex flex-col gap-2 p-2">
+                                    <button
+                                      className="bg-blue-300 text-blue-700 font-semibold rounded-full px-2"
+                                      onClick={() =>
+                                        handleOpenPopup(item.matchId)
+                                      }
+                                    >
+                                      Update Result
+                                    </button>
+                                    <button
+                                      className="bg-green-300 text-green-700 font-semibold rounded-full px-2"
+                                      onClick={() =>
+                                        handleOpenUpdateDate(item.matchId)
+                                      }
+                                    >
+                                      Update Detail
+                                    </button>
+                                    <button
+                                      className="bg-violet-300 text-violet-700 font-semibold rounded-full px-2"
+                                      onClick={() =>
+                                        handleOpenUpdateCourt(item.matchId)
+                                      }
+                                    >
+                                      Update Status
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                      </div>
                     </div>
                   </div>
                   <div className="flex gap-4 items-center ">
@@ -115,7 +161,7 @@ const Schedule = ({
                       {item.secondTeam || "Team 2"}
                     </span>
                   </div>
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col space-between items-center">
                     <div
                       className={` bg-gradient-to-tl  px-3 text-md rounded-lg py-2 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white ${renderBgColorStatus(
                         item.matchStatus
@@ -127,31 +173,6 @@ const Schedule = ({
                       Court: {item.court ? item.court : "To be determined"}
                     </div>
                   </div>
-                </div>
-                <div>
-                  {item.matchStatus === "Scheduling" &&
-                    userRole === "Manager" && (
-                      <div className="flex gap-4">
-                        <button
-                          className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2"
-                          onClick={() => handleOpenPopup(item.matchId)}
-                        >
-                          Update Result
-                        </button>
-                        <button
-                          className="bg-green-300 text-green-700 font-semibold  rounded-full px-2"
-                          onClick={() => handleOpenUpdateDate(item.matchId)}
-                        >
-                          Update Time
-                        </button>
-                        <button
-                          className="bg-violet-300 text-violet-700 font-semibold  rounded-full px-2"
-                          onClick={() => handleOpenUpdateCourt(item.matchId)}
-                        >
-                          Update Court
-                        </button>
-                      </div>
-                    )}
                 </div>
               </div>
             </div>
@@ -181,6 +202,7 @@ const Schedule = ({
           onSave5={onSave5}
           fetchEliMatch={fetchEliMatch}
           onSave4={() => fetchSet(matchId)}
+          fetchSchedule={fetchSchedule}
         />
       )}
       {openPopup2 && (
@@ -188,7 +210,9 @@ const Schedule = ({
           open={openPopup2}
           handleClose={handleCloseUpdateDate}
           matchId={matchId}
+          onSave2={onSave2}
           onSave={onSave5}
+          fetchSchedule={fetchSchedule}
         />
       )}
       {openPopup3 && (
@@ -197,6 +221,8 @@ const Schedule = ({
           handleClose={handleCloseUpdateCourt}
           matchId={matchId}
           onSave={onSave}
+          onSave2={onSave2}
+          fetchSchedule={fetchSchedule}
         />
       )}
     </div>

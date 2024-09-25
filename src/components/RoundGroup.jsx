@@ -20,9 +20,10 @@ import TournamentCompetitor from "./TournamentCompetitors";
 
 const RoundGroup = () => {
   const [tables, setTables] = useState([]);
+  const [selectedParticipants, setSelectedParticipants] = useState([]);
   const URL = "https://nhub.site/api/round";
   const URL2 = "https://nhub.site/api/round-group";
-  const URL3 = "https://nhub.site/single-team";
+  const URL3 = "https://nhub.site/api/teams/single-team";
   const URL4 = "https://nhub.site/api/team-group/ranked-team";
   const { id } = useParams();
   const [roundIds, setRoundIds] = useState([]);
@@ -39,6 +40,8 @@ const RoundGroup = () => {
   const location = useLocation();
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
+  const { campaign } = location.state || {};
+
   const navigate = useNavigate();
 
   const hide = () => {
@@ -359,6 +362,7 @@ const RoundGroup = () => {
     if (updatedParticipants[roundGroupId]) {
       updatedParticipants[roundGroupId][teamIndex].teamId = value;
       setParticipants(updatedParticipants);
+      setSelectedParticipants((prevSelected) => [...prevSelected, value]); // Track selected participants
     } else {
       console.error(`Round group with ID ${roundGroupId} does not exist.`);
     }
@@ -374,6 +378,7 @@ const RoundGroup = () => {
         updatedParticipants[roundGroupId][teamIndex].secondAthleteId = value;
       }
       setParticipants(updatedParticipants);
+      setSelectedParticipants((prevSelected) => [...prevSelected, value]); // Track selected participants
     } else {
       console.error(`Round group with ID ${roundGroupId} does not exist.`);
     }
@@ -387,7 +392,7 @@ const RoundGroup = () => {
 
     try {
       const response = await axios.post(
-        `https://nhub.site/double-team/${roundGroupId}`,
+        `https://nhub.site/api/teams/doube-team/${roundGroupId}`,
         data,
         {
           headers: {
@@ -439,6 +444,14 @@ const RoundGroup = () => {
     }
   };
 
+  // Filtered options to exclude selected participants
+  const getFilteredOptions = (excludeId) =>
+    userOptions.filter(
+      (option) =>
+        !selectedParticipants.includes(option.value) ||
+        option.value === excludeId
+    );
+
   return (
     <>
       <div
@@ -450,7 +463,23 @@ const RoundGroup = () => {
         }}
       >
         <div className="flex justify-between items-center text-3xl font-semibold text-white">
-          PickleBall Round Group
+          <div className="flex gap-4 items-center">
+            <div
+              className="text-3xl font-bold"
+              style={{
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                background:
+                  "linear-gradient(45deg,#E3A835 0%,#FFD79B 15%,#E3A835 36%,#FFD79B 61%,#F3AC42 81%",
+                backgroundClip: "text",
+              }}
+            >
+              {campaign.tournamentName}
+            </div>
+            <div className="text-2xl font-semibold text-white">
+              {formatType}
+            </div>
+          </div>
           <div className="flex justify-end gap-4">
             {role === "Manager" && matches.length === 0 ? (
               <Button
@@ -572,7 +601,7 @@ const RoundGroup = () => {
                                         value
                                       )
                                     }
-                                    options={userOptions}
+                                    options={getFilteredOptions(team.teamId)} // Filter options for single team
                                   />
                                 ) : (
                                   <div className="flex gap-4">
@@ -589,7 +618,9 @@ const RoundGroup = () => {
                                           value
                                         )
                                       }
-                                      options={userOptions}
+                                      options={getFilteredOptions(
+                                        team.firstAthleteId
+                                      )} // Filter options for dual team first athlete
                                     />
                                     <Select
                                       className="w-full text-white"
@@ -604,7 +635,9 @@ const RoundGroup = () => {
                                           value
                                         )
                                       }
-                                      options={userOptions}
+                                      options={getFilteredOptions(
+                                        team.secondAthleteId
+                                      )} // Filter options for dual team second athlete
                                     />
                                   </div>
                                 ))}

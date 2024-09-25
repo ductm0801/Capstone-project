@@ -8,7 +8,7 @@ import { Button, Empty, message } from "antd";
 import { FaUser } from "react-icons/fa";
 import TournamentRegist from "./TournamentRegist";
 
-const FormatType = ({ tournamentId }) => {
+const FormatType = ({ tournamentId, campaign }) => {
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [selectedTournamentId, setSelectedTournamentId] = useState(null);
@@ -67,6 +67,7 @@ const FormatType = ({ tournamentId }) => {
               formatType: tournament.formatType,
               tournamentId: id,
               data: res.data,
+              campaign: campaign,
             },
           });
         } else if (tournament.tournamentType === "GroupStage") {
@@ -74,6 +75,7 @@ const FormatType = ({ tournamentId }) => {
             state: {
               formatType: tournament.formatType,
               tournamentId: id,
+              campaign: campaign,
             },
           });
         }
@@ -111,7 +113,7 @@ const FormatType = ({ tournamentId }) => {
             <div key={tournament.tournamentId}>
               <div className="flex flex-col max-w-[488px] hover:bg-white group hover:rounded-lg">
                 <img
-                  src={tournament.img ? tournament.img : defaultImg}
+                  src={tournament.imageUrl ? tournament.imageUrl : defaultImg}
                   alt={tournament.tournamentId}
                   className="max-w-[488px] min-h-[366px]"
                   onClick={() => handleTournamentClick(tournament)}

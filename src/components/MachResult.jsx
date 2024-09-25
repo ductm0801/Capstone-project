@@ -12,6 +12,7 @@ const MatchResult = ({
   onSave4,
   onSave5,
   fetchEliMatch,
+  fetchSchedule,
 }) => {
   const showHideClassName = openPopup
     ? "popup display-block"
@@ -43,6 +44,9 @@ const MatchResult = ({
         typeof onSave4 === "function" ? onSave4() : Promise.resolve(),
         typeof fetchEliMatch === "function"
           ? fetchEliMatch()
+          : Promise.resolve(),
+        typeof fetchSchedule === "function"
+          ? fetchSchedule()
           : Promise.resolve(),
       ]);
       // onSave();

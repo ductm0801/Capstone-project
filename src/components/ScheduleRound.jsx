@@ -12,6 +12,11 @@ import MatchResultRound from "./MatchResultRound";
 const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [set, setSet] = useState([]);
+
+  const [openPopup2, setOpenPopup2] = useState(false);
+  const [openPopup3, setOpenPopup3] = useState(false);
+  const [options, setOptions] = useState(false);
+  const userRole = localStorage.getItem("role");
   const [matchId, setMatchId] = useState(null);
   const handleOpenPopup = async (matchId) => {
     setOpenPopup(true);
@@ -31,6 +36,23 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
     } catch (error) {
       console.error("Error fetching set:", error);
     }
+  };
+  const handleOpenUpdateDate = (matchId) => {
+    setOpenPopup2(true);
+    setMatchId(matchId);
+  };
+  const handleCloseUpdateDate = () => {
+    setOpenPopup2(false);
+    setMatchId(null);
+  };
+
+  const handleOpenUpdateCourt = (matchId) => {
+    setOpenPopup3(true);
+    setMatchId(matchId);
+  };
+  const handleCloseUpdateCourt = () => {
+    setOpenPopup3(false);
+    setMatchId(null);
   };
   return (
     <div className="bg-[#EFEFEF] pt-[48px] pb-[48px]">
@@ -62,6 +84,50 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
                     <div>
                       {moment(item.matchDate).format("dddd, DD/MM/YYYY")}
                     </div>
+                    <div>
+                      {userRole === "Manager" &&
+                        item.matchStatus !== "Completed" &&
+                        item.matchStatus !== "Canceled" && (
+                          <div className="relative">
+                            <button
+                              className="bg-orange-300 text-white font-semibold rounded-full px-6 py-1"
+                              onClick={() => setOptions((prev) => !prev)}
+                            >
+                              Options
+                            </button>
+                            {options && (
+                              <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
+                                <div className="flex flex-col gap-2 p-2">
+                                  <button
+                                    className="bg-blue-300 text-blue-700 font-semibold rounded-full px-2"
+                                    onClick={() =>
+                                      handleOpenPopup(item.matchId)
+                                    }
+                                  >
+                                    Update Result
+                                  </button>
+                                  <button
+                                    className="bg-green-300 text-green-700 font-semibold rounded-full px-2"
+                                    onClick={() =>
+                                      handleOpenUpdateDate(item.matchId)
+                                    }
+                                  >
+                                    Update Detail
+                                  </button>
+                                  <button
+                                    className="bg-violet-300 text-violet-700 font-semibold rounded-full px-2"
+                                    onClick={() =>
+                                      handleOpenUpdateCourt(item.matchId)
+                                    }
+                                  >
+                                    Update Status
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-4 items-center ">
@@ -80,15 +146,8 @@ const ScheduleRound = ({ match, onSave, roundId, onSave2, onSave3 }) => {
                 >
                   {item.matchStatus}
                 </div>
-                <div>
-                  {item.matchStatus === "Scheduling" && (
-                    <button
-                      className="bg-blue-300 text-blue-700 font-semibold  rounded-full px-2"
-                      onClick={() => handleOpenPopup(item.matchId)}
-                    >
-                      Update
-                    </button>
-                  )}
+                <div className="text-lg font-semibold">
+                  Court: {item.court ? item.court : "To be determined"}
                 </div>
               </div>
             </div>

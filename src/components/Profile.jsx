@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/header.css";
 import defaultImg from "../images/competitor-img.png";
+import femaleImg from "../images/defaultFemale.png";
 import UserContext from "../context/UserContext";
 import { Button, Upload, message } from "antd";
 import {
@@ -10,6 +11,7 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 const Profile = ({ show, handleClose }) => {
   const { user, setUser } = useContext(UserContext);
@@ -22,7 +24,7 @@ const Profile = ({ show, handleClose }) => {
     phoneNumber: "",
     address: "",
     gender: "male",
-    imageUrl: imageSrc, // This will be updated when the image is uploaded
+    imageUrl: imageSrc,
   });
 
   const showHideClassName = show ? "popup display-block" : "popup display-none";
@@ -46,9 +48,11 @@ const Profile = ({ show, handleClose }) => {
           phoneNumber: data.phoneNumber || "",
           address: data.address || "",
           gender: data.gender || "male",
-          imageUrl: data.imageUrl || defaultImg, // If no image URL, use the default image
+          imageUrl: data.imageUrl,
         });
-        setImageSrc(data.imageUrl || defaultImg); // Initialize the imageSrc with the user's current image
+        setImageSrc(
+          data.imageUrl || (data.gender === "Male" ? defaultImg : femaleImg)
+        );
       } catch (error) {
         message.error(error.response.data);
       }
@@ -59,7 +63,6 @@ const Profile = ({ show, handleClose }) => {
 
   const uploadURL = "https://nhub.site/api/image/upload";
 
-  // Function to handle image upload
   const uploadImage = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -70,10 +73,10 @@ const Profile = ({ show, handleClose }) => {
         },
       });
       if (res.status === 200) {
-        setImageSrc(res.data.url); // Set the new image URL to imageSrc
+        setImageSrc(res.data.url);
         setFormData((prevFormData) => ({
           ...prevFormData,
-          imageUrl: res.data.url, // Update the imageUrl in formData
+          imageUrl: res.data.url,
         }));
         message.success("Image uploaded successfully!");
         return res.data.url;
@@ -87,16 +90,16 @@ const Profile = ({ show, handleClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Update imageUrl in formData with the latest imageSrc
-    const updatedFormData = {
+    const params = {
       ...formData,
-      imageUrl: imageSrc, // Ensure imageUrl is the latest uploaded image
+      imageUrl: imageSrc,
+      dateOfBirth: moment(formData.dateOfBirth).format("DD-MM-YYYY"),
     };
 
     try {
       const res = await axios.put(
         `https://nhub.site/api/users/${user.UserId}`,
-        { updatedFormData },
+        { ...params },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -105,7 +108,7 @@ const Profile = ({ show, handleClose }) => {
       );
       if (res.status === 200) {
         toast.success("Profile updated successfully!");
-        setUser({ ...user, ...updatedFormData });
+        setUser({ ...user, ...params });
         handleClose();
       }
     } catch (error) {
@@ -122,7 +125,7 @@ const Profile = ({ show, handleClose }) => {
         </button>
         <div className="flex">
           <div className="flex flex-col gap-4">
-            <img src={imageSrc} width={200} height={200} />
+            <img src={imageSrc} width={200} height={200} alt="" />
             <Upload
               maxCount={1}
               accept="image/*"
