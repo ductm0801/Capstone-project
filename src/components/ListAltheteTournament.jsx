@@ -8,6 +8,7 @@ const ListAthleteTournament = ({
   tournamentId,
   onSave,
   onSave2,
+  requireNumber,
 }) => {
   const showHideClassName = openPopup
     ? "popup display-block"
@@ -22,7 +23,6 @@ const ListAthleteTournament = ({
   const fetchData = async () => {
     const res = await axios.get(
       `https://nhub.site/api/athletes/athletes-not-in-tournament/paging/${tournamentId}`,
-
       {
         params: {
           pageIndex: pageIndex - 1,
@@ -125,30 +125,43 @@ const ListAthleteTournament = ({
                 </tr>
               </thead>
               <tbody>
-                {competitors.map((competitor) => (
-                  <tr key={competitor.id}>
-                    <td className="border border-slate-300 px-[20px] h-[48px]">
-                      <Checkbox
-                        onChange={(e) =>
-                          handleCheckboxChange(competitor.id, e.target.checked)
-                        }
-                      />
-                    </td>
-                    <td className="border border-slate-300 px-[20px] h-[48px]">
-                      {competitor.athleteName}
-                    </td>
-                    <td className="border border-slate-300 px-[20px] h-[48px]">
-                      {competitor.athleteType}
-                    </td>
+                {competitors.map((competitor) => {
+                  const isSelected = selectedCompetitors.includes(
+                    competitor.id
+                  );
+                  const isDisabled =
+                    !isSelected && selectedCompetitors.length >= requireNumber;
 
-                    <td className="border border-slate-300 px-[20px] h-[48px]">
-                      {competitor.gender}
-                    </td>
-                    <td className="border border-slate-300 px-[20px] h-[48px]">
-                      {competitor.rank}
-                    </td>
-                  </tr>
-                ))}
+                  return (
+                    <tr key={competitor.id}>
+                      <td className="border border-slate-300 px-[20px] h-[48px]">
+                        <Checkbox
+                          onChange={(e) =>
+                            handleCheckboxChange(
+                              competitor.id,
+                              e.target.checked
+                            )
+                          }
+                          checked={isSelected}
+                          disabled={isDisabled} // Disable the checkbox if the limit is reached
+                        />
+                      </td>
+                      <td className="border border-slate-300 px-[20px] h-[48px]">
+                        {competitor.athleteName}
+                      </td>
+                      <td className="border border-slate-300 px-[20px] h-[48px]">
+                        {competitor.athleteType}
+                      </td>
+
+                      <td className="border border-slate-300 px-[20px] h-[48px]">
+                        {competitor.gender}
+                      </td>
+                      <td className="border border-slate-300 px-[20px] h-[48px]">
+                        {competitor.rank}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           ) : (
@@ -168,7 +181,11 @@ const ListAthleteTournament = ({
           />
         </div>
         <div className="mt-4">
-          <Button className="text-white bg-blue-500" onClick={handleAction}>
+          <Button
+            className="text-white bg-blue-500"
+            onClick={handleAction}
+            disabled={selectedCompetitors.length === 0}
+          >
             Save
           </Button>
         </div>
@@ -176,4 +193,5 @@ const ListAthleteTournament = ({
     </div>
   );
 };
+
 export default ListAthleteTournament;

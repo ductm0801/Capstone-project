@@ -68,6 +68,7 @@ const FormatType = ({ tournamentId, campaign }) => {
               tournamentId: id,
               data: res.data,
               campaign: campaign,
+              requireNumber: tournament.requiredAthletesNumber,
             },
           });
         } else if (tournament.tournamentType === "GroupStage") {
@@ -76,6 +77,7 @@ const FormatType = ({ tournamentId, campaign }) => {
               formatType: tournament.formatType,
               tournamentId: id,
               campaign: campaign,
+              requireNumber: tournament.requiredAthletesNumber,
             },
           });
         }

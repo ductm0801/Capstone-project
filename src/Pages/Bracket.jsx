@@ -30,6 +30,7 @@ const Bracket = () => {
   const { formatType } = location.state || {};
   const { tournamentId } = location.state || {};
   const { campaign } = location.state || {};
+  const { requireNumber } = location.state || {};
 
   const handlePageChange = (page, pageSize) => {
     setPageIndex(page);
@@ -296,7 +297,10 @@ const Bracket = () => {
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Competitors" key="2">
-            <TournamentCompetitor tournamentId={bracketId} />
+            <TournamentCompetitor
+              tournamentId={bracketId}
+              requireNumber={requireNumber}
+            />
           </Tabs.TabPane>
         </Tabs>
       </div>

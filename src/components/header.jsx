@@ -172,7 +172,7 @@ const Header = () => {
           {(userRole === "Manager" || userRole === "Athlete") && (
             <li>
               <img
-                className="h-12 w-12 mr-[112px] rounded-full cursor-pointer"
+                className="h-12 w-12 mr-[112px] rounded-full border border-[#C6C61A] cursor-pointer"
                 onClick={() => setOpenProfile(!openProfile)}
                 src={profile?.imageUrl ? profile?.imageUrl : Avatar}
                 alt="Avatar"
@@ -236,7 +236,7 @@ const Header = () => {
           {(userRole === "Manager" || userRole === "Athlete") && (
             <li>
               <img
-                className="h-8 w-8 rounded-full cursor-pointer mb-6"
+                className="h-8 w-8 rounded-full cursor-pointer  border border-[#C6C61A] mb-6"
                 onClick={() => setOpenProfile(!openProfile)}
                 src={profile?.imageUrl ? profile?.imageUrl : Avatar}
                 alt="Avatar"
