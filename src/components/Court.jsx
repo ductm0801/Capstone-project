@@ -52,7 +52,7 @@ const Court = () => {
   };
 
   const handleClick = (index) => {
-    const selectedGroupId = courtGroups[index].courtId;
+    const selectedGroupId = courtGroups[index].id;
     setCourtId(selectedGroupId);
     setOpen(true);
     fetchCourtsByGroupId(selectedGroupId);
