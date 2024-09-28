@@ -34,14 +34,14 @@ import ResetPassword from "./Pages/ResetPassword";
 
 const App = () => {
   return (
-    <AuthProvider>
-      <UserProvider>
+    <UserProvider>
         <BrowserRouter>
+        <AuthProvider>
           <ConditionalLayout />
           <ToastContainer position="top-right" autoClose={2000} />
+    </AuthProvider>
         </BrowserRouter>
       </UserProvider>
-    </AuthProvider>
   );
 };
 

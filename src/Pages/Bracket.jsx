@@ -242,6 +242,7 @@ const Bracket = () => {
           selectedMatch.roundOrder === 1 && (
             <AddTeam
               match={selectedMatch}
+              formatType={formatType}
               closePopup={closePopup}
               tournamentId={tournamentId}
               bracketId={bracketId}

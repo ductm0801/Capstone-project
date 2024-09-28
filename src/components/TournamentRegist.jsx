@@ -22,7 +22,9 @@ const TournamentRegist = ({ handleClose, show, onSave, tournamentId }) => {
       handleClose();
       onSave();
     } catch (error) {
-      message.error(error?.message?.data);
+      message.error(
+        error?.message?.data || "Email or Phone Number is not valid!"
+      );
     }
   };
   return (

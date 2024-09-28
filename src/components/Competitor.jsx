@@ -1,5 +1,6 @@
 import "../styles/competitor.css";
 import defaultImg from "../images/competitor-img.png";
+import femaleImg from "../images/defaultFemale.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -74,7 +75,13 @@ const Competitor = () => {
             <div className="gradient-bg" key={competitor.id}>
               <img
                 className="w-[360px] h-[480px]"
-                src={competitor.avatar ? competitor.avatar : defaultImg}
+                src={
+                  competitor.avatar
+                    ? competitor.avatar
+                    : competitor.gender === "Male"
+                    ? defaultImg
+                    : femaleImg
+                }
                 alt={competitor.id}
               />
               <div className="card-bg">
@@ -82,7 +89,7 @@ const Competitor = () => {
                 <div className="textAndSupportingText">
                   <div className="text">{competitor.rank || "unknown"}</div>
                   <div className="supportingText">
-                    {competitor.gender || "unknown"}
+                    {competitor.gender || "unknown"} ( {competitor.athleteType})
                   </div>
                 </div>
               </div>

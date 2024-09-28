@@ -7,7 +7,7 @@ import axios from "axios";
 import { message } from "antd";
 import UserContext from "../context/UserContext";
 
-const DropdownProfile = () => {
+const DropdownProfile = ({ profile }) => {
   const [showPopup, setShowPopup] = useState(false);
   const { user, setUser } = useContext(UserContext);
   const [userName, setUserName] = useState();
@@ -20,6 +20,8 @@ const DropdownProfile = () => {
   const Logout = () => {
     localStorage.clear();
   };
+
+  console.log(user.UserId);
 
   useEffect(() => {
     const fetchUserData = async () => {

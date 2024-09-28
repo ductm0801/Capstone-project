@@ -147,9 +147,7 @@ const ClubRegister = () => {
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
                   {row.gender}
                 </td>
-                <td className="border border-slate-300 pl-[20px] h-[48px]">
-                  {row.status}
-                </td>
+
                 <td className="border border-slate-300 pl-[20px] h-[48px]">
                   {row.status === "WaitingApprove" && (
                     <div className="flex gap-2">
@@ -186,16 +184,16 @@ const ClubRegister = () => {
                     </div>
                   )}
                 </td>
-                {row.status === "Approved" && (
-                  <td className="border border-slate-300 pl-[20px] h-[48px]">
-                    <Button
-                      className="bg-[#C6C61A] text-white border-[#C6C61A]"
-                      onClick={() => handleCreate(row.email, row.userId)}
-                    >
-                      Create Account
-                    </Button>
-                  </td>
-                )}
+
+                <td className="border border-slate-300 pl-[20px] h-[48px]">
+                  <Button
+                    disabled={row.status !== "Approved"}
+                    className="bg-[#C6C61A] text-white border-[#C6C61A]"
+                    onClick={() => handleCreate(row.email, row.userId)}
+                  >
+                    Create Account
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>

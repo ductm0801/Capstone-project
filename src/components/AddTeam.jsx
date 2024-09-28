@@ -31,6 +31,7 @@ const AddTeam = ({
   bracketId,
   onSave,
   onSave2,
+  formatType,
 }) => {
   const [participants, setParticipants] = useState([]);
   const [state, setState] = useState(initialState);
@@ -39,6 +40,7 @@ const AddTeam = ({
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  console.log(formatType);
   const URL = "https://nhub.site/api/athletes/non-teams";
   const URL2 = "https://nhub.site/api/pickleball-match/assign-double-team";
 
@@ -59,15 +61,29 @@ const AddTeam = ({
     // navigate(`/bracket/${bracketId}`);
   }, []);
 
-  // Filter out selected participants from options
-  const filteredOptions = participants.filter(
-    (participant) => !selectedParticipants.includes(participant.id)
-  );
+  const filteredOptions = (gender) =>
+    participants.filter(
+      (participant) =>
+        !selectedParticipants.includes(participant.id) &&
+        (formatType === "DualMixed" ? participant.gender === gender : true)
+    );
 
-  const options = filteredOptions.map((participant) => ({
-    label: `${participant.athleteName} (${participant.athleteType})`,
-    value: participant.id,
-  }));
+  const options = {
+    male: filteredOptions("Male").map((participant) => ({
+      label: `${participant.athleteName} (${participant.athleteType})`,
+      value: participant.id,
+    })),
+    female: filteredOptions("Female").map((participant) => ({
+      label: `${participant.athleteName} (${participant.athleteType})`,
+      value: participant.id,
+    })),
+    all: participants
+      .filter((participant) => !selectedParticipants.includes(participant.id))
+      .map((participant) => ({
+        label: `${participant.athleteName} (${participant.athleteType})`,
+        value: participant.id,
+      })),
+  };
 
   const assignTeam = async (data) => {
     try {
@@ -131,7 +147,9 @@ const AddTeam = ({
                   showSearch
                   placeholder="First Participant of Team 1"
                   optionFilterProp="label"
-                  options={options}
+                  options={
+                    formatType === "DualMixed" ? options.male : options.all
+                  }
                   onChange={(value) =>
                     handleInputChange("firstTeam", "firstAthleteId", value)
                   }
@@ -146,7 +164,9 @@ const AddTeam = ({
                   showSearch
                   placeholder="Second Participant of Team 1"
                   optionFilterProp="label"
-                  options={options}
+                  options={
+                    formatType === "DualMixed" ? options.female : options.all
+                  }
                   onChange={(value) =>
                     handleInputChange("firstTeam", "secondAthleteId", value)
                   }
@@ -163,7 +183,9 @@ const AddTeam = ({
                   showSearch
                   placeholder="First Participant of Team 2"
                   optionFilterProp="label"
-                  options={options}
+                  options={
+                    formatType === "DualMixed" ? options.male : options.all
+                  }
                   onChange={(value) =>
                     handleInputChange("secondTeam", "firstAthleteId", value)
                   }
@@ -178,7 +200,9 @@ const AddTeam = ({
                   showSearch
                   placeholder="Second Participant of Team 2"
                   optionFilterProp="label"
-                  options={options}
+                  options={
+                    formatType === "DualMixed" ? options.female : options.all
+                  }
                   onChange={(value) =>
                     handleInputChange("secondTeam", "secondAthleteId", value)
                   }

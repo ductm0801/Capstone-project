@@ -121,14 +121,6 @@ const Schedule = ({
                                 <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
                                   <div className="flex flex-col gap-2 p-2">
                                     <button
-                                      className="bg-blue-300 text-blue-700 font-semibold rounded-full px-2"
-                                      onClick={() =>
-                                        handleOpenPopup(item.matchId)
-                                      }
-                                    >
-                                      Update Result
-                                    </button>
-                                    <button
                                       className="bg-green-300 text-green-700 font-semibold rounded-full px-2"
                                       onClick={() =>
                                         handleOpenUpdateDate(item.matchId)
@@ -143,6 +135,14 @@ const Schedule = ({
                                       }
                                     >
                                       Update Status
+                                    </button>
+                                    <button
+                                      className="bg-blue-300 text-blue-700 font-semibold rounded-full px-2"
+                                      onClick={() =>
+                                        handleOpenPopup(item.matchId)
+                                      }
+                                    >
+                                      Update Result
                                     </button>
                                   </div>
                                 </div>

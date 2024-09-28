@@ -18,7 +18,7 @@ const Register = () => {
       message.success("Form submitted successfully");
       form.resetFields();
     } catch (err) {
-      message.error(err.response.data);
+      message.error(err?.response?.data);
     }
   };
   return (

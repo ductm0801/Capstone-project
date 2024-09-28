@@ -241,7 +241,7 @@ const Header = () => {
                 src={profile?.imageUrl ? profile?.imageUrl : Avatar}
                 alt="Avatar"
               />
-              {openProfile && <DropdownProfile />}
+              {openProfile && <DropdownProfile data={profile} />}
             </li>
           )}
         </ul>

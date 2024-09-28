@@ -20,6 +20,10 @@ const RoundBracket = () => {
   const [match, setMatch] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [schedule, setSchedule] = useState([]);
+  const [totalItemsCount, setTotalItemsCount] = useState(0);
   const [lastRound, setLastRound] = useState(false);
   const URL = `https://nhub.site/api/pickleball-match/next-rounds-match`;
 
@@ -30,13 +34,32 @@ const RoundBracket = () => {
   const { roundId } = location.state || [];
   const { round2Id } = location.state || [];
 
-  console.log(round2Id);
-
   useEffect(() => {
     const role = localStorage.getItem("role");
 
     setUserRole(role);
   }, []);
+
+  const fetchMatchesPaging = async () => {
+    try {
+      const res = await axios.get(
+        `https://nhub.site/api/pickleball-match/next-rounds-match/paging/${bracketId}`,
+        {
+          params: {
+            pageIndex: pageIndex - 1,
+            pageSize: pageSize,
+          },
+        }
+      );
+      if (res.status === 200) {
+        setSchedule(res.data.data);
+        setTotalItemsCount(res.data.totalItemsCount);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const fetchMatches = async () => {
     try {
@@ -54,7 +77,13 @@ const RoundBracket = () => {
 
   useEffect(() => {
     fetchMatches();
+    fetchMatchesPaging();
   }, []);
+
+  const handlePageChange = (page, pageSize) => {
+    setPageIndex(page);
+    setPageSize(pageSize);
+  };
 
   // const fetchData = async () => {
   //   try {
@@ -257,7 +286,14 @@ const RoundBracket = () => {
         )} */}
       </div>
       <div>
-        <ScheduleRound match={match} onSave3={fetchMatches} />
+        <ScheduleRound
+          match={match}
+          onSave3={fetchMatches}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          totalItemsCount={totalItemsCount}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </div>
   );

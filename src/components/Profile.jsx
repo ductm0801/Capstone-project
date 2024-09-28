@@ -13,7 +13,7 @@ import {
 import { toast } from "react-toastify";
 import moment from "moment";
 
-const Profile = ({ show, handleClose }) => {
+const Profile = ({ show, handleClose, profile }) => {
   const { user, setUser } = useContext(UserContext);
   const [imageSrc, setImageSrc] = useState("");
   const [loading, setLoading] = useState(false);

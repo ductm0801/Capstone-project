@@ -301,6 +301,7 @@ const RoundGroup = () => {
     return {
       label: u.athleteName,
       value: u.id,
+      gender: u.gender,
     };
   });
 
@@ -362,7 +363,7 @@ const RoundGroup = () => {
     if (updatedParticipants[roundGroupId]) {
       updatedParticipants[roundGroupId][teamIndex].teamId = value;
       setParticipants(updatedParticipants);
-      setSelectedParticipants((prevSelected) => [...prevSelected, value]); // Track selected participants
+      setSelectedParticipants((prevSelected) => [...prevSelected, value]);
     } else {
       console.error(`Round group with ID ${roundGroupId} does not exist.`);
     }
@@ -378,7 +379,7 @@ const RoundGroup = () => {
         updatedParticipants[roundGroupId][teamIndex].secondAthleteId = value;
       }
       setParticipants(updatedParticipants);
-      setSelectedParticipants((prevSelected) => [...prevSelected, value]); // Track selected participants
+      setSelectedParticipants((prevSelected) => [...prevSelected, value]);
     } else {
       console.error(`Round group with ID ${roundGroupId} does not exist.`);
     }
@@ -392,7 +393,7 @@ const RoundGroup = () => {
 
     try {
       const response = await axios.post(
-        `https://nhub.site/api/teams/doube-team/${roundGroupId}`,
+        `https://nhub.site/api/teams/double-team/${roundGroupId}`,
         data,
         {
           headers: {
@@ -445,13 +446,25 @@ const RoundGroup = () => {
   };
 
   // Filtered options to exclude selected participants
-  const getFilteredOptions = (excludeId) =>
-    userOptions.filter(
-      (option) =>
-        !selectedParticipants.includes(option.value) ||
-        option.value === excludeId
-    );
+  const getFilteredOptions = (excludeId, athleteType = null) => {
+    return userOptions.filter((option) => {
+      const isSelected =
+        selectedParticipants.includes(option.value) &&
+        option.value !== excludeId;
 
+      // Check for "DualMixed" formatType and filter by gender
+      if (formatType === "DualMixed") {
+        if (athleteType === "first") {
+          return option.gender === "Male" && !isSelected;
+        } else if (athleteType === "second") {
+          return option.gender === "Female" && !isSelected;
+        }
+      }
+
+      // For other formatTypes or general filtering
+      return !isSelected;
+    });
+  };
   return (
     <>
       <div
@@ -601,7 +614,7 @@ const RoundGroup = () => {
                                         value
                                       )
                                     }
-                                    options={getFilteredOptions(team.teamId)} // Filter options for single team
+                                    options={getFilteredOptions(team.teamId)}
                                   />
                                 ) : (
                                   <div className="flex gap-4">
@@ -619,8 +632,9 @@ const RoundGroup = () => {
                                         )
                                       }
                                       options={getFilteredOptions(
-                                        team.firstAthleteId
-                                      )} // Filter options for dual team first athlete
+                                        team.firstAthleteId,
+                                        "first"
+                                      )}
                                     />
                                     <Select
                                       className="w-full text-white"
@@ -636,8 +650,9 @@ const RoundGroup = () => {
                                         )
                                       }
                                       options={getFilteredOptions(
-                                        team.secondAthleteId
-                                      )} // Filter options for dual team second athlete
+                                        team.secondAthleteId,
+                                        "second"
+                                      )}
                                     />
                                   </div>
                                 ))}
