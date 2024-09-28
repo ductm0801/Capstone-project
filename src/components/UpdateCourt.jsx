@@ -19,7 +19,7 @@ const UpdateCourt = ({
     { label: "Scheduling", value: "Scheduling" },
     { label: "In Progress", value: "InProgress" },
     { label: "Postponed", value: "Postponed" },
-    { label: "Canceled", value: "Canceled" },
+    // { label: "Canceled", value: "Canceled" },
   ];
 
   const fetchData = async () => {

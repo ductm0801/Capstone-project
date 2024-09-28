@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import searchicon from "../images/Frame 4.png";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { MdFormatListBulleted } from "react-icons/md";
 import { FiGrid } from "react-icons/fi";
 import axios from "axios";
 import SignUp from "../Pages/SignUp";
 import { Link } from "react-router-dom";
 import defaultImg from "../images/defaultImg.png";
-import { Button, message, Pagination } from "antd";
+import { Button, message, Pagination, Popover, Select } from "antd"; // Import Popover and Select
 import "../styles/tournament.css";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment";
 dayjs.extend(customParseFormat);
+
+const { Option } = Select;
 
 const Tournament = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,13 @@ const Tournament = () => {
   const [totalItemsCount, setTotalItemsCount] = useState(0);
   const [open, setOpen] = useState(false);
   const [tournamentId, setTournamentId] = useState(null);
+  const [statusOptions] = useState([
+    "Scheduling",
+    "InProgress",
+    "Completed",
+    "Postponed",
+    "Canceled",
+  ]);
 
   const URL = "https://nhub.site/api/tournament-campaign/paging";
   const URL2 = "https://nhub.site/api/campaign-registration/user";
@@ -50,6 +58,26 @@ const Tournament = () => {
     } catch (error) {
       console.error("Error:", error);
       message.error("Failed to register. Please try again.");
+    }
+  };
+
+  const updateTournamentStatus = async (id, newStatus) => {
+    try {
+      const res = await axios.put(
+        `https://nhub.site/api/tournament-campaign/status/${id}`,
+        { campaignStatus: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      message.success("Status updated successfully");
+      getListTournament(page, pageSize);
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("Failed to update status. Please try again.");
     }
   };
 
@@ -88,14 +116,10 @@ const Tournament = () => {
     setOpen(true);
     setTournamentId(tournamentId);
   };
-  const optionsStatus = [
-    "Scheduling",
-    "In Progress",
-    "Completed",
-    "Postponed",
-    "Canceled",
-  ];
-  const optionsTime = ["Last Update", "Newest", "Oldest"];
+
+  const handleStatusChange = (tournamentId, newStatus) => {
+    updateTournamentStatus(tournamentId, newStatus);
+  };
 
   const handlePageChange = (page) => {
     setPage(page);
@@ -179,25 +203,41 @@ const Tournament = () => {
                           <p className="font-bold text-2xl">
                             {tournament.tournamentName}
                           </p>
-                          {userRole === "Athlete" ? (
-                            <Button
-                              className="bg-violet-500 text-white hover:scale-150 mr-4"
-                              onClick={() => handleRegister(tournament.id)}
+
+                          {userRole === "Manager" &&
+                          tournament.campaignStatus !== "Canceled" ? (
+                            <Popover
+                              content={
+                                <Select
+                                  defaultValue={tournament.campaignStatus}
+                                  onChange={(newStatus) =>
+                                    handleStatusChange(tournament.id, newStatus)
+                                  }
+                                  style={{ width: 120 }}
+                                >
+                                  {statusOptions.map((status) => (
+                                    <Option key={status} value={status}>
+                                      {status}
+                                    </Option>
+                                  ))}
+                                </Select>
+                              }
+                              title="Change Status"
+                              trigger="click"
                             >
-                              Register
-                            </Button>
+                              <Button className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-pointer">
+                                {tournament.campaignStatus}
+                              </Button>
+                            </Popover>
                           ) : (
-                            <Button
-                              className="bg-violet-500 text-white hover:scale-150 mr-4"
-                              onClick={() => setOpen(true)}
-                            >
-                              Register
-                            </Button>
+                            <div className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-normal">
+                              {tournament.campaignStatus}
+                            </div>
                           )}
+
                           <p className="text-md mx-4">
                             {moment(tournament.startDate).format("DD-MM-YYYY")}{" "}
-                            - {moment(tournament.endDate).format("DD-MM-YYYY")}{" "}
-                            {""}
+                            - {moment(tournament.endDate).format("DD-MM-YYYY")}
                           </p>
                           <p>
                             Registration deadline{" "}
@@ -258,9 +298,37 @@ const Tournament = () => {
                             </div>
                           </div>
                         </Link>
-                        <div className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-normal">
-                          In Progress
-                        </div>
+
+                        {userRole === "Manager" ? (
+                          <Popover
+                            content={
+                              <Select
+                                defaultValue={tournament.campaignStatus}
+                                onChange={(newStatus) =>
+                                  handleStatusChange(tournament.id, newStatus)
+                                }
+                                style={{ width: 120 }}
+                              >
+                                {statusOptions.map((status) => (
+                                  <Option key={status} value={status}>
+                                    {status}
+                                  </Option>
+                                ))}
+                              </Select>
+                            }
+                            title="Change Status"
+                            trigger="click"
+                          >
+                            <Button className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-pointer">
+                              {tournament.campaignStatus}
+                            </Button>
+                          </Popover>
+                        ) : (
+                          <div className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-normal">
+                            {tournament.campaignStatus}
+                          </div>
+                        )}
+
                         {userRole === "Athlete" && (
                           <Button
                             className="bg-violet-500 text-white hover:scale-150 mr-4"
@@ -268,7 +336,7 @@ const Tournament = () => {
                           >
                             Register
                           </Button>
-                        )}{" "}
+                        )}
                         {userRole !== "Athlete" && userRole !== "Manager" && (
                           <Button
                             className="bg-violet-500 text-white hover:scale-150 mr-4"

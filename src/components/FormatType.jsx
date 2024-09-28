@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import defaultImg from "../images/defaultImg.png";
 import CreateTournamentFormat from "./CreateTournamentFormat";
-import { jwtDecode } from "jwt-decode";
-import { Button, Empty, message } from "antd";
+import { Button, Empty, message, Popover, Select } from "antd"; // Add Popover and Select
 import { FaUser } from "react-icons/fa";
 import TournamentRegist from "./TournamentRegist";
+
+const { Option } = Select;
 
 const FormatType = ({ tournamentId, campaign }) => {
   const [tournaments, setTournaments] = useState([]);
@@ -16,15 +17,25 @@ const FormatType = ({ tournamentId, campaign }) => {
   const [userRole, setUserRole] = useState(null);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [statusOptions] = useState([
+    "Scheduling",
+    "InProgress",
+    "Completed",
+    "Postponed",
+    "Canceled",
+  ]); // Status options for manager
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     const role = localStorage.getItem("role");
     setUserRole(role);
   }, []);
+
   const { id } = useParams();
   const URL = "https://nhub.site/api/tournament/campaign";
   const URL2 = "https://nhub.site/api/tournament-registration/user";
+  const URL3 = "https://nhub.site/api/pickleball-match";
+  const URL_UPDATE_STATUS = "https://nhub.site/api/tournament/update-status"; // URL to update tournament status
   const navigate = useNavigate();
 
   const handleRegister = async (id) => {
@@ -54,7 +65,6 @@ const FormatType = ({ tournamentId, campaign }) => {
     setSelectedTournamentId(tournamentId);
   };
 
-  const URL3 = `https://nhub.site/api/pickleball-match`;
   const handleTournamentClick = async (tournament) => {
     setSelectedTournament(tournament);
     try {
@@ -86,6 +96,7 @@ const FormatType = ({ tournamentId, campaign }) => {
       console.error("Error fetching tournament data:", error);
     }
   };
+
   const getAllTournament = async () => {
     try {
       const res = await axios.get(`${URL}/${id}`);
@@ -96,16 +107,37 @@ const FormatType = ({ tournamentId, campaign }) => {
       message.error(error.response.data);
     }
   };
+
   const handleAddButtonClick = () => {
     setShowPopup(true);
   };
+
   const handleClosePopup = () => {
     setShowPopup(false);
   };
 
+  const handleStatusChange = async (tournamentId, newStatus) => {
+    try {
+      await axios.put(
+        `https://nhub.site/api/tournament/status/${tournamentId}`,
+        { tournamentStatus: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      message.success("Tournament status updated successfully!");
+      getAllTournament();
+    } catch (error) {
+      message.error("Failed to update status. Please try again.");
+    }
+  };
+
   useEffect(() => {
     getAllTournament();
-  }, [tournaments.length]);
+  }, []);
 
   return (
     <div>
@@ -122,23 +154,58 @@ const FormatType = ({ tournamentId, campaign }) => {
                 />
 
                 <div>
-                  <h1 className="text-3xl font-bold ml-4 group-hover:text-[#C6C61A] flex items-center gap-2 ">
+                  <h1 className="text-3xl font-bold ml-4 group-hover:text-[#C6C61A] flex items-center gap-2 whitespace-nowrap  ">
                     {tournament.tournamentName} -{" "}
-                    {tournament.currentParticipants}/
-                    {tournament.requiredAthletesNumber}
-                    <FaUser />
+                    <div className="flex gap-2 items-center">
+                      {tournament.currentParticipants}/
+                      {tournament.requiredAthletesNumber}
+                      <FaUser />
+                    </div>
                   </h1>
                   <div className="font-semibold ml-6">
-                    {" "}
                     Type : {tournament.formatType} ,{tournament.tournamentType}{" "}
                     <br />
+                  </div>
+                  <div className="flex gap-4 items-center justify-center">
                     Number of Sets: {tournament.numberOfSets}
+                    {userRole === "Manager" ? (
+                      <Popover
+                        content={
+                          <Select
+                            defaultValue={tournament.tournamentStatus}
+                            onChange={(newStatus) =>
+                              handleStatusChange(
+                                tournament.tournamentId,
+                                newStatus
+                              )
+                            }
+                            style={{ width: 120 }}
+                          >
+                            {statusOptions.map((status) => (
+                              <Option key={status} value={status}>
+                                {status}
+                              </Option>
+                            ))}
+                          </Select>
+                        }
+                        title="Change Status"
+                        trigger="click"
+                      >
+                        <Button className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-pointer">
+                          {tournament.tournamentStatus}
+                        </Button>
+                      </Popover>
+                    ) : (
+                      <div className="border px-4 py-1 rounded-lg text-white bg-orange-500 cursor-normal">
+                        {tournament.tournamentStatus}
+                      </div>
+                    )}
                   </div>
                   {userRole !== "Manager" && (
                     <div className="ml-4 pb-4">
                       {userRole === "Athlete" ? (
                         <Button
-                          className="bg-violet-500 text-white  mr-4"
+                          className="bg-violet-500 text-white mr-4"
                           onClick={() =>
                             handleRegister(tournament.tournamentId)
                           }
@@ -147,7 +214,7 @@ const FormatType = ({ tournamentId, campaign }) => {
                         </Button>
                       ) : (
                         <Button
-                          className="bg-violet-500 text-white  mr-4"
+                          className="bg-violet-500 text-white mr-4"
                           onClick={() =>
                             handleGuestRegistration(tournament.tournamentId)
                           }
@@ -167,16 +234,19 @@ const FormatType = ({ tournamentId, campaign }) => {
           </div>
         )}
       </div>
+
       {userRole === "Manager" && (
         <button className="add-button" onClick={handleAddButtonClick}>
           +
         </button>
       )}
+
       <CreateTournamentFormat
         show={showPopup}
         handleClose={handleClosePopup}
         onSave={getAllTournament}
-      ></CreateTournamentFormat>
+      />
+
       {open && (
         <TournamentRegist
           show={open}
