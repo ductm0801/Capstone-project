@@ -58,6 +58,11 @@ const Court = () => {
     fetchCourtsByGroupId(selectedGroupId);
   };
 
+  const handleCreateCourt = (id) => {
+    setAddCourt(true);
+    setCourtId(id);
+  };
+
   useEffect(() => {
     fetchCourtGroups();
   }, []);
@@ -158,7 +163,7 @@ const Court = () => {
                   <td className="flex gap-2">
                     <button
                       className="text-white bg-[#155ABE] px-10 py-2 rounded-lg hover:bg-[#033987]"
-                      onClick={() => setAddCourt(true)}
+                      onClick={() => handleCreateCourt(group.id)}
                     >
                       Add Courts
                     </button>
