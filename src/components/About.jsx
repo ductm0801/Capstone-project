@@ -248,21 +248,9 @@ const About = ({ tournament }) => {
           Address
         </h1>
         <div className="w-full text-3xl px-3">
-          Location:
           {courtGroups.map((l) => (
-            <div
-              key={l.courtGroupId}
-              className="flex justify-between w-full px-8"
-            >
-              <div className="px-3">
-                <div>Name: {l.courtGroupName}</div>
-                <div>Address: {l.address}</div>
-                <div>Email: {l.emailContact}</div>
-                <div>Phone: {l.phoneNumber}</div>
-              </div>
-              <div className="w-[600px] h-[600px] mb-12">
-                <MapComponent locations={courtGroups} />
-              </div>
+            <div className="w-full h-[600px] mb-12">
+              <MapComponent locations={l} />
             </div>
           ))}
         </div>

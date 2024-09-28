@@ -17,7 +17,7 @@ const CourtCreate = ({ open, handleClose, courtId }) => {
 
     try {
       const res = await axios.post(
-        `http://apis-pickleball.runasp.net/api/courts/court/${courtId}`,
+        `https://nhub.site/api/courts/court/${courtId}`,
         courts,
         {
           headers: {
