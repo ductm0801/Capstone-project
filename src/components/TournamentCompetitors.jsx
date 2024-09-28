@@ -2,12 +2,13 @@ import "../styles/competitor.css";
 import defaultImg from "../images/competitor-img.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import { Empty, Pagination } from "antd";
 import ListRegistration from "./ListRegistration";
 import ListTournamentRegis from "./ListTournamentRegist";
 import ListAthlete from "./ListAthlete";
 import ListAthleteTournament from "./ListAltheteTournament";
+
 const TournamentCompetitor = ({ tournamentId, onSave, requireNumber }) => {
   const [competitors, setCompetitor] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
@@ -18,6 +19,9 @@ const TournamentCompetitor = ({ tournamentId, onSave, requireNumber }) => {
   const jwtToken = localStorage.getItem("token");
 
   const role = localStorage.getItem("role");
+  const location = useLocation();
+  const basePath = location.pathname.split("/")[1];
+  console.log(basePath);
   const handlePageChange = (page, pageSize) => {
     setPageIndex(page);
     setPageSize(pageSize);
@@ -41,7 +45,9 @@ const TournamentCompetitor = ({ tournamentId, onSave, requireNumber }) => {
         setCompetitor(res.data.items);
         setTotalItemsCount(res.data.totalItemsCount);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error fetching competitors:", error);
+    }
   };
 
   useEffect(() => {
@@ -50,7 +56,7 @@ const TournamentCompetitor = ({ tournamentId, onSave, requireNumber }) => {
 
   return (
     <div>
-      {role === "Manager" && (
+      {role === "Manager" && basePath !== "roundBracket" && (
         <div>
           <button
             className="bg-[#1244a2] rounded-lg px-2 py-4 m-4 text-white"
@@ -127,4 +133,5 @@ const TournamentCompetitor = ({ tournamentId, onSave, requireNumber }) => {
     </div>
   );
 };
+
 export default TournamentCompetitor;

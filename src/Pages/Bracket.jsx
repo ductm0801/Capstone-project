@@ -11,6 +11,7 @@ import { message, Tabs } from "antd";
 import UpdateLastRound from "../components/UpdateLastRound";
 import Schedule from "../components/Schedule";
 import TournamentCompetitor from "../components/TournamentCompetitors";
+import Ranking from "../components/Ranking";
 
 const Bracket = () => {
   const [selectedMatch, setSelectedMatch] = useState(null);
@@ -302,6 +303,9 @@ const Bracket = () => {
               tournamentId={bracketId}
               requireNumber={requireNumber}
             />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Ranking" key="3">
+            <Ranking tournamentId={bracketId} />
           </Tabs.TabPane>
         </Tabs>
       </div>

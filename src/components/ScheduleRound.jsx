@@ -22,6 +22,7 @@ const ScheduleRound = ({
   totalItemsCount,
   pageIndex,
   handlePageChange,
+  fetchMatchesPaging,
 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [set, setSet] = useState([]);
@@ -188,6 +189,7 @@ const ScheduleRound = ({
           handleClose={() => setOpenPopup(false)}
           set={set}
           onSave={onSave}
+          fetchMatchesPaging={fetchMatchesPaging}
           onSave2={onSave2}
           onSave3={onSave3}
           // onSave5={onSave5}
@@ -201,6 +203,7 @@ const ScheduleRound = ({
           open={openPopup2}
           handleClose={handleCloseUpdateDate}
           matchId={matchId}
+          fetchMatchesPaging={fetchMatchesPaging}
           onSave2={onSave2}
           // onSave={onSave5}
           // fetchSchedule={fetchSchedule}
@@ -211,6 +214,7 @@ const ScheduleRound = ({
           open={openPopup3}
           handleClose={handleCloseUpdateCourt}
           matchId={matchId}
+          fetchMatchesPaging={fetchMatchesPaging}
           onSave={onSave}
           onSave2={onSave2}
           // fetchSchedule={fetchSchedule}

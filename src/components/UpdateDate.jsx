@@ -10,6 +10,7 @@ const UpdateDate = ({
   onSave,
   fetchSchedule,
   onSave2,
+  fetchMatchesPaging,
 }) => {
   const showHideClassName = open ? "popup display-block" : "popup display-none";
   const [form] = Form.useForm();
@@ -67,6 +68,9 @@ const UpdateDate = ({
         typeof onSave2 === "function" ? onSave2() : Promise.resolve(),
         typeof fetchSchedule === "function"
           ? fetchSchedule()
+          : Promise.resolve(),
+        typeof fetchMatchesPaging === "function"
+          ? fetchMatchesPaging()
           : Promise.resolve(),
       ]);
     } catch (e) {

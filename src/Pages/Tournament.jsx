@@ -299,7 +299,8 @@ const Tournament = () => {
                           </div>
                         </Link>
 
-                        {userRole === "Manager" ? (
+                        {userRole === "Manager" &&
+                        tournament.campaignStatus !== "Canceled" ? (
                           <Popover
                             content={
                               <Select

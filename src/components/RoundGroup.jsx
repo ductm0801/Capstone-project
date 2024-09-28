@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import Schedule from "./Schedule";
 import { useForm } from "antd/es/form/Form";
 import TournamentCompetitor from "./TournamentCompetitors";
+import Ranking from "./Ranking";
 
 const RoundGroup = () => {
   const [tables, setTables] = useState([]);
@@ -50,7 +51,7 @@ const RoundGroup = () => {
 
   const isRound2 = () =>
     Array.isArray(roundIds) &&
-    roundIds.some((round) => round.roundName === "Round 2");
+    roundIds.some((round) => round.roundName === "Semi Final");
 
   const isProgress = () =>
     Array.isArray(matches) &&
@@ -435,6 +436,7 @@ const RoundGroup = () => {
             tournamentId: tournamentId,
             roundId: roundId,
             round2Id: round2Id,
+            campaign: campaign,
           },
         });
       }
@@ -774,6 +776,9 @@ const RoundGroup = () => {
               tournamentId={id}
               onSave={() => fetchUser()}
             />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Ranking" key="3">
+            <Ranking tournamentId={id} />
           </Tabs.TabPane>
         </Tabs>
       </div>

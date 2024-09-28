@@ -9,6 +9,7 @@ const UpdateCourt = ({
   onSave,
   fetchSchedule,
   onSave2,
+  fetchMatchesPaging,
 }) => {
   const showHideClassName = open ? "popup display-block" : "popup display-none";
   const [form] = Form.useForm();
@@ -52,6 +53,9 @@ const UpdateCourt = ({
           typeof onSave2 === "function" ? onSave2() : Promise.resolve(),
           typeof fetchSchedule === "function"
             ? fetchSchedule()
+            : Promise.resolve(),
+          typeof fetchMatchesPaging === "function"
+            ? fetchMatchesPaging()
             : Promise.resolve(),
         ]);
         handleClose();

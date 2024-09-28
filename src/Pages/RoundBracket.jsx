@@ -7,11 +7,13 @@ import AddTeam from "../components/AddTeam";
 import UpdateWinningTeam from "../components/UpdateWinningTeam";
 import tourbg from "../images/tournament-bg.png";
 import { jwtDecode } from "jwt-decode";
-import { Button, message } from "antd";
+import { Button, message, Tabs } from "antd";
 import UpdateLastRound from "../components/UpdateLastRound";
 import Schedule from "../components/Schedule";
 import AddParticipantGroup from "../components/AddParticipantGroup";
 import ScheduleRound from "../components/ScheduleRound";
+import TournamentCompetitor from "../components/TournamentCompetitors";
+import Ranking from "../components/Ranking";
 
 const RoundBracket = () => {
   const [data, setData] = useState([]);
@@ -33,6 +35,7 @@ const RoundBracket = () => {
   // const { data } = location.state || [];
   const { roundId } = location.state || [];
   const { round2Id } = location.state || [];
+  const { campaign } = location.state || {};
 
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -144,7 +147,9 @@ const RoundBracket = () => {
   };
   const navigate = useNavigate();
   const handleBack = () => {
-    navigate(`/roundGroup/${bracketId}`);
+    navigate(`/roundGroup/${bracketId}`, {
+      state: { campaign: campaign, formatType: formatType },
+    });
   };
 
   const paddingLeft = data.length === 63 ? "350px" : "0";
@@ -285,15 +290,26 @@ const RoundBracket = () => {
           />
         )} */}
       </div>
-      <div>
-        <ScheduleRound
-          match={match}
-          onSave3={fetchMatches}
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          totalItemsCount={totalItemsCount}
-          handlePageChange={handlePageChange}
-        />
+      <div className="container mx-auto mt-8">
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="Schedule" key="1">
+            <ScheduleRound
+              match={match}
+              onSave3={fetchMatches}
+              pageIndex={pageIndex}
+              fetchMatchesPaging={fetchMatchesPaging}
+              pageSize={pageSize}
+              totalItemsCount={totalItemsCount}
+              handlePageChange={handlePageChange}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Competitors" key="2">
+            <TournamentCompetitor tournamentId={bracketId} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Ranking" key="3">
+            <Ranking tournamentId={bracketId} />
+          </Tabs.TabPane>
+        </Tabs>
       </div>
     </div>
   );

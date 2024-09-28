@@ -10,6 +10,7 @@ const MatchResultRound = ({
   onSave2,
   onSave3,
   onSave4,
+  fetchMatchesPaging,
 }) => {
   const showHideClassName = openPopup
     ? "popup display-block"
@@ -38,6 +39,9 @@ const MatchResultRound = ({
         typeof onSave3 === "function" ? onSave3() : Promise.resolve(),
         typeof onSave4 === "function" ? onSave4() : Promise.resolve(),
         typeof onSave2 === "function" ? onSave2() : Promise.resolve(),
+        typeof fetchMatchesPaging === "function"
+          ? fetchMatchesPaging()
+          : Promise.resolve(),
       ]);
       // onSave3();
       // onSave4();
