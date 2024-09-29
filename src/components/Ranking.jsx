@@ -71,11 +71,6 @@ const Ranking = ({ tournamentId, fetchEliMatch }) => {
       dataIndex: "totalPoints",
       key: "totalPoints",
     },
-    {
-      title: "Prize Money",
-      dataIndex: "prizeMoney",
-      key: "prizeMoney",
-    },
   ];
 
   const handleTableChange = (pagination) => {
