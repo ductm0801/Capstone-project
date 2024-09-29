@@ -294,7 +294,7 @@ const RoundBracket = () => {
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="Schedule" key="1">
             <ScheduleRound
-              match={match}
+              match={schedule}
               onSave3={fetchMatches}
               pageIndex={pageIndex}
               fetchMatchesPaging={fetchMatchesPaging}
