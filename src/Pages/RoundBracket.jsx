@@ -55,7 +55,7 @@ const RoundBracket = () => {
         }
       );
       if (res.status === 200) {
-        setSchedule(res.data.data);
+        setSchedule(res.data.items);
         setTotalItemsCount(res.data.totalItemsCount);
         setLoading(false);
       }
