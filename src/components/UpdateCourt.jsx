@@ -59,7 +59,7 @@ const UpdateCourt = ({
             : Promise.resolve(),
         ]);
         handleClose();
-        message.success("Court updated successfully");
+        message.success("Match Status updated successfully");
       }
     } catch (error) {
       console.error("Error updating court:", error);
